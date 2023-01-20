@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title%} Register Host {% endblock title%}
+{% block body%}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% render_field form.first_name placeholder="name" %}
+        {% render_field form.last_name %}
+        {% render_field form.email %}
+        <input type="password" name="password" placeholder="password"/>
+        <input type="submit" value="Create host"/>
+    </form>
+{% endblock body%}
+

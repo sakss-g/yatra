@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %} <link rel="stylesheet" href="{% static 'css/home.css' %}">{% endblock css %}
+{% block title%} Home Page {% endblock title%}
+
+{% block body %}
+
+    
+<h1>This is the initila test page </h1>
+{% if request.user.is_authenticated %}
+{{ request.user.username }}
+{% endif %}
+{% endblock body %}
+    
+    

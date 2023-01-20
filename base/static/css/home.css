@@ -1,0 +1,13 @@
+.black{
+    background-color: black;
+}
+
+.header{
+    height: 80px ;
+    background-color: black;
+    color:white;
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; */
+}

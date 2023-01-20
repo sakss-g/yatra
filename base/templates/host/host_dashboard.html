@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title%} Host Dashboard {% endblock title%}
+{% block body%}
+<h1>This is host dashboard {{request.user.host.first_name}}</h1>
+{% endblock body %}
