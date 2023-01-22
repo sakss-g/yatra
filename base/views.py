@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html', {'sakshi':'singhwalalaiki'})
+    return render(request, 'base/home.html')
 
 def register_host(request):
     host_form = Form()
@@ -64,18 +64,22 @@ def login_user(request):
         if user is not None:
             login(request, user)
             print("user was created and logged in")
-            if str(user.groups.first()) == 'host':
-                return redirect('host_dashboard')
-            elif str(user.groups.first()) == 'enduser':
-                return redirect('home')
+            
+            if user.is_superuser:
+                return redirect('admin_dashboard')
             else:
-                error = "User group was not found"
-                return render(request, 'login.html', {'error':error})
+                if str(user.groups.first()) == 'host':
+                    return redirect('host_dashboard')
+                elif str(user.groups.first()) == 'enduser':
+                    return redirect('home')
+                else:
+                    error = "User group was not found"
+                    return render(request, 'base/login.html', {'error':error})
         else:
             error = "User was not found"
-            return render(request, 'login.html', {'error':error})
+            return render(request, 'base/login.html', {'error':error})
 
-    return render(request, 'login.html')
+    return render(request, 'base/login.html')
 
 @login_required
 def host_dashboard(request):
@@ -85,3 +89,12 @@ def host_dashboard(request):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+def admin_dashboard(request):
+    return render(request, 'admin/admin_dashboard.html')
+
+def end_users_admin(request):
+    return render(request, 'enduser/end_users_admin.html')
+
+def hosts_admin(request):
+    return render(request, 'host/hosts_admin.html')

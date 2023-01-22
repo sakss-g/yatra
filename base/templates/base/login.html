@@ -1,0 +1,27 @@
+{% extends 'base/base_header.html' %}
+{% block title%} Login {% endblock title%}
+{% block body%}
+{{error}}
+<div class="flex justify-center items-center my-auto mx-auto h-full">
+    <div class="w-full bg-white  px-20 py-12 mx-auto my-auto rounded-xl shadow-2xl shadow-black">
+        <div class="flex flex-col text-xl">
+            <p class="text-center font-bold text-4xl pb-12">LOG IN</p>
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="flex flex-col text-xl text-dark-gray">
+                    <label class="mb-3">Email</label>
+                    <input type="text" name="email" class="input-fields"/>
+
+                    <label class="mb-3">Password</label>
+                    <input type="password"  name="password" class="input-fields"/>
+                    <input type="submit" value="Login" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray w-96"/>
+                </div>
+                <div class="flex justify-center pt-16 text-dark-gray">
+                    <span>Don't have an account? <a href="{% url 'register_enduser' %}" class="font-medium text-black text-justify">Sign Up</a></span>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body%}

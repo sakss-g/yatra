@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base_header.html' %}
 {% load widget_tweaks %}
 {% block title%} Register Host {% endblock title%}
 {% block body%}
@@ -9,6 +9,6 @@
         {% render_field form.last_name %}
         {% render_field form.email %}
         <input type="password" name="password" placeholder="password"/>
-        <input type="submit" value="Create host"/>
+        <input type="submit" value="Create end user"/>
     </form>
 {% endblock body%}

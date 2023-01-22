@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+{% block title%} Host Dashboard {% endblock title%}
+{% block content%}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col justify-between shadow-xl">
+        <div class="p-3">
+            <h1 class="text-center text-3xl font-semibold pt-2 pb-6">End Users</h1>
+            <table class="w-full">
+                <thead class="h-16 text-center">
+                    <tr class="bg-theme text-xl">
+                        <th class="font-medium">Name</th>
+                        <th class="font-medium">Email</th>
+                        <th class="font-medium">Contact No.</th>
+                        <th class="font-medium">Citizineship ID</th>
+                        <th class="font-medium">License No.</th>
+                        <th class="font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
