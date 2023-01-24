@@ -5,6 +5,8 @@ from .models import Host, EndUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, logout, authenticate 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+
 # Create your views here.
 
 def home(request):
@@ -52,6 +54,9 @@ def register_enduser(request):
 
     return render(request, 'enduser/register_enduser.html', {'form':enduser_form})
 
+def delete_user(request, pk):
+    user = User.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def login_user(request):
 
@@ -91,10 +96,28 @@ def logout_user(request):
     return redirect('home')
 
 def admin_dashboard(request):
-    return render(request, 'admin/admin_dashboard.html')
+    host_count = Host.objects.all().count()
+    enduser_count = EndUser.objects.all().count()
+    #vehicle_count = Vehicle.objects.all().count()
+    #blog_count = Travelogue.objects.all().count()
+    context={
+        'hostcount':host_count,
+        'endusercount':enduser_count,
+        #'vehiclecount':vehicle_count,
+        #'blogcount':blog_count
+    }
+    return render(request, 'admin/admin_dashboard.html', context)
 
 def end_users_admin(request):
-    return render(request, 'enduser/end_users_admin.html')
+    endUsers = EndUser.objects.all()
+    context={
+        'users':endUsers
+    }
+    return render(request, 'enduser/end_users_admin.html', context)
 
 def hosts_admin(request):
-    return render(request, 'host/hosts_admin.html')
+    hosts = Host.objects.all()
+    context={
+        'users':hosts
+    }
+    return render(request, 'host/hosts_admin.html', context)

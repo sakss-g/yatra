@@ -16,5 +16,8 @@ urlpatterns = [
     path('hostdashboard/', views.host_dashboard, name='host_dashboard'),
 
     #enduser related urls
-    path('registerenduser/', views.register_enduser, name='register_enduser')
+    path('registerenduser/', views.register_enduser, name='register_enduser'),
+         
+    #delete user
+    path('deleteuser/<int:pk>', views.delete_user, name='delete_user')
 ]

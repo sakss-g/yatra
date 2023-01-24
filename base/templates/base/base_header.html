@@ -12,11 +12,11 @@
 
     {% tailwind_css %}
 </head>
-<body class="bg-theme h-screen">
+<body class="bg-theme h-screen font-poppins">
     <div class="flex flex-col h-full">
         <div class="flex flex-row justify between text-white bg-black h-24 w-full">
             <div class="flex my-auto mx-5 w-4/5">
-                <a href="{% url 'home' %}" class="text-4xl semi-bold">YATRA</a>
+                <a href="{% url 'home' %}" class="text-4xl font-semibold">YATRA</a>
             </div>
             <div class="flex flex-row my-auto w-1/5 text-xl justify-between mx-20">
                 {% with request.resolver_match.url_name as url_name %}

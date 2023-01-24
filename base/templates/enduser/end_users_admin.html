@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block title%} Host Dashboard {% endblock title%}
 {% block content%}
 <div class="h-screen w-full px-6 py-10 bg-theme">
@@ -7,7 +8,7 @@
             <h1 class="text-center text-3xl font-semibold pt-2 pb-6">End Users</h1>
             <table class="w-full">
                 <thead class="h-16 text-center">
-                    <tr class="bg-theme text-xl">
+                    <tr class="bg-black text-white text-xl">
                         <th class="font-medium">Name</th>
                         <th class="font-medium">Email</th>
                         <th class="font-medium">Contact No.</th>
@@ -17,9 +18,31 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
+                    {% for user in users %}
+                    <tr class="text-xl h-14">
+                        <td>{{user.first_name}} {{user.last_name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{% if user.phone_number %}{{user.phone_number}}{% else %}N/A{% endif %}</td>
+                        <td>{% if user.citizenship_id %}{{user.citizenship_id}}{% else %}N/A{% endif %}</td>
+                        <td>{% if user.license_no %}{{user.license_no}}{% else %}N/A{% endif %}</td>
+                        <td>
+                            <div class="flex flex-row justify-around">
+                                <a href="{% url 'delete_user' user.user.id %}" onclick="return ConfirmDelete()">
+                                    <img src="{% static 'images/delete.svg' %}">
+                                </a>       
+                            </div>
+                            <!-- <a href="{% url 'delete_user' user.user.id %}">Delete</a> -->
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<script>
+    function ConfirmDelete() {
+      return confirm("Are you sure you want to delete?");
+    }
+</script>
 {% endblock content %}

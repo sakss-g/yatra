@@ -16,8 +16,14 @@
                     <input type="password"  name="password" class="input-fields"/>
                     <input type="submit" value="Login" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray w-96"/>
                 </div>
-                <div class="flex justify-center pt-16 text-dark-gray">
-                    <span>Don't have an account? <a href="{% url 'register_enduser' %}" class="font-medium text-black text-justify">Sign Up</a></span>
+                <div class="flex flex-col items-center justify-center pt-14 text-dark-gray">
+                    <span>Don't have an account?</span> 
+                    <div class="flex justify-between pt-3">
+                        Sign up as &nbsp;
+                        <a href="{% url 'register_enduser' %}" class="text-black font-medium text-justify hover:underline"> end user</a>&nbsp;/&nbsp;
+                        <a href="{% url 'register_host' %}" class="text-black font-medium hover:underline text-justify">host</a>
+                    </div>
+                    
                 </div>
                 
             </form>

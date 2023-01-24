@@ -46,6 +46,8 @@ module.exports = {
             colors: {
                 "theme": "#F8F8F8",
                 "dark-gray": "#676767",
+                "medium-gray": "#E8E8E8",
+                "red": "#ff0000",
             },
             fontFamily:{
                 "poppins": "Poppins",

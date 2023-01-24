@@ -25,5 +25,13 @@
 }
 
 .input-fields{
-    @apply rounded-md py-3 mb-10 bg-theme border-theme shadow-sm shadow-dark-gray
+    @apply rounded-md py-3 mb-4 bg-theme border-theme shadow-sm shadow-dark-gray
+}
+
+tbody tr:nth-child(even){
+    @apply bg-theme
+}
+
+tbody tr:nth-child(odd){
+    @apply bg-medium-gray
 }
