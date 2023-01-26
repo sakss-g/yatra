@@ -1,11 +1,14 @@
 {% extends 'base/base_header.html' %}
-<!-- {% load widget_tweaks %} -->
+{% load widget_tweaks %}
+
 {% block title%} Register Host {% endblock title%}
-{% block body%}
+
+
+{% block body %}
 <div class="flex justify-center items-center my-auto mx-auto h-full">
     <div class="w-full bg-white  px-20 py-12 mx-auto my-auto rounded-xl shadow-2xl shadow-black">
         <div class="flex flex-col text-xl">
-            <p class="text-center font-bold text-4xl pb-12">Become a host</p>
+            <p class="text-center font-bold text-4xl pb-12">Become a renter</p>
             <form action="" method="post">
                 {% csrf_token %}
                 <div class="text-xl text-dark-gray w-full">
@@ -39,13 +42,4 @@
         </div>
     </div>
 </div>
-<!-- <h1>End user</h1>
-    <form action="" method="POST">
-        {% csrf_token %}
-        {% render_field form.first_name %}
-        {% render_field form.last_name %}
-        {% render_field form.email %}
-        <input type="password" name="password" placeholder="password"/>
-        <input type="submit" value="Create end user"/>
-    </form> -->
-{% endblock body%}
+{% endblock body %}

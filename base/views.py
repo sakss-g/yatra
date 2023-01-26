@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import Form
+from .forms import HostForm, EndUserForm, EndUserUpdateForm
 from django.contrib.auth.models import User, Group
 from .models import Host, EndUser
 from django.contrib.auth.hashers import make_password
@@ -13,7 +13,7 @@ def home(request):
     return render(request, 'base/home.html')
 
 def register_host(request):
-    host_form = Form()
+    host_form = HostForm()
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -25,7 +25,7 @@ def register_host(request):
         user.save()
         host = Host()
         host.user = user
-        host_form = Form(request.POST, instance=host)
+        host_form = HostForm(request.POST, instance=host)
 
         if host_form.is_valid:
             host_form.save()
@@ -34,7 +34,7 @@ def register_host(request):
     return render(request, 'host/register_host.html', {'form':host_form})
 
 def register_enduser(request):
-    enduser_form = Form()
+    enduser_form = EndUserForm()
 
     if request.method == "POST":
         email = request.POST.get('email')
@@ -46,7 +46,7 @@ def register_enduser(request):
         user.save()
         host = EndUser()
         host.user = user
-        enduser_form = Form(request.POST, instance=host)
+        enduser_form = EndUserForm(request.POST, instance=host)
 
         if enduser_form.is_valid:
             enduser_form.save()
@@ -74,26 +74,26 @@ def login_user(request):
                 return redirect('admin_dashboard')
             else:
                 if str(user.groups.first()) == 'host':
-                    return redirect('host_dashboard')
+                    return redirect('host_profile')
                 elif str(user.groups.first()) == 'enduser':
                     return redirect('home')
                 else:
-                    error = "User group was not found"
-                    return render(request, 'base/login.html', {'error':error})
+                    message = "User group was not found"
+                    return render(request, 'base/login.html', {'error':message})
         else:
-            error = "User was not found"
-            return render(request, 'base/login.html', {'error':error})
-
+            message = "User was not found"
+            return render(request, 'base/login.html', {'error':message})
     return render(request, 'base/login.html')
-
-@login_required
-def host_dashboard(request):
-    return render(request, 'host/host_dashboard.html')
 
 @login_required
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+@login_required
+def host_dashboard(request):
+    return render(request, 'host/host_dashboard.html')
+
 
 def admin_dashboard(request):
     host_count = Host.objects.all().count()
@@ -108,12 +108,17 @@ def admin_dashboard(request):
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
+def enduser_dashboard(request):
+    return render(request, 'enduser/enduser_dashboard.html')
+
+
+
 def end_users_admin(request):
     endUsers = EndUser.objects.all()
     context={
         'users':endUsers
     }
-    return render(request, 'enduser/end_users_admin.html', context)
+    return render(request, 'enduser/endusers_admin.html', context)
 
 def hosts_admin(request):
     hosts = Host.objects.all()
@@ -121,3 +126,31 @@ def hosts_admin(request):
         'users':hosts
     }
     return render(request, 'host/hosts_admin.html', context)
+
+def enduser_profile(request):
+    return render(request, 'enduser/enduser_profile.html')
+
+
+def enduser_update_profile(request):
+    enduser = request.user.enduser
+    enduser_update_form = EndUserUpdateForm(instance=enduser)
+
+    if request.method == "POST":
+        enduser_update_form = EndUserUpdateForm(request.POST, request.FILES, instance=enduser)
+        if enduser_update_form.is_valid():
+            enduser_update_form.save()
+            return redirect('enduser_profile')
+    context = {
+        'enduser_update_form': enduser_update_form
+    }
+    return render(request, 'enduser/enduser_update_profile.html', context)
+
+
+
+
+def host_profile(request):
+    return render(request, 'host/host_profile.html')
+
+def host_update_profile(request):
+    return render(request, 'host/host_update_profile.html')
+

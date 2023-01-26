@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static tailwind_tags%}
+{% load user_group %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,9 +52,19 @@
                         {% endif %}
                     </div>
                     <div class="flex my-auto">
-                        {% if request.user.is_authenticated %}
-                        <p class="pr-4">{{ request.user.username }}</p>
-                        <a href="#"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                                <a href="{% url 'admin_dashboard' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            {% endif %}
+
+                            {% if user|has_group:'enduser' %}
+                                <span class="pr-4 pt-1">{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}</span><a href="{% url 'enduser_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            {% endif %}
+
+                            {% if user|has_group:'host' %}
+                                <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span><a href="#"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            {% endif %}
+
                         {% endif %}
                     </div>
                 {% endwith %}
@@ -63,7 +75,7 @@
         </div>
         <div class="flex h-full">
             {% block body %}
-            {% endblock body%}
+            {% endblock body %}
         </div>
     </div>
     

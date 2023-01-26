@@ -1,0 +1,91 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load user_group %}
+
+{% block title%} End User Profile {% endblock title%}
+
+{% block content%}
+<div class="flex flex-col h-screen px-6 py-10 w-full bg-theme">
+    <p class="text-center text-3xl font-semibold pt pb-4">Profile</p>
+    <div class="flex flex-row h-full gap-6">
+        <div class="bg-white h-full flex flex-col w-1/3 py-12 rounded-xl justify-between shadow-xl">
+            <img src="{{ user.enduser.pic.url }}" style="object-fit: contain" alt="" class="mx-auto mb-5 w-40 h-40 object-cover rounded-full ">
+            <div class="flex flex-col bg-theme  mx-8 p-8 text-lg rounded-xl">
+                <div class="flex mb-5">
+                    <p class="font-medium">Name:</p>
+                    <p class="ml-3">{{ user.enduser.first_name }} {{ user.enduser.last_name }}</p>
+                </div>
+
+                <div class="flex mb-5">
+                    <p class="font-medium">Email:</p>
+                    <p class="ml-3">{{ user.enduser.email }}</p>
+                </div>
+
+                <div class="flex">
+                    <p class="font-medium">Contact Number:</p>
+                    <p class="ml-3">{% if user.enduser.phone_number %}{{user.enduser.phone_number}}{% else %}N/A{% endif %}</p>
+                </div>
+
+            </div>
+            <div class="flex flex-col bg-theme mb-4 mx-8 p-8 text-lg justify-between rounded-xl">
+                <div class="flex mb-5">
+                    <p class="font-medium">License Status:</p>
+                    <p class="ml-3"></p>
+                </div>
+
+                <div class="flex">
+                    <p class="font-medium">Citizenship Status:</p>
+                    <p class="ml-3"></p>
+                </div>
+            </div> 
+
+            <div class="flex mx-8 text-lg justify-between">
+                <a href="{% url 'enduser_update_profile' %}"> <button class="py-1.5 px-6 btn">Update Profile</button></a>
+                <button class="py-1.5 px-6 btn">Change Password</button>
+
+            </div>
+        </div>
+
+        <div class="bg-white h-full flex flex-col w-2/3 justify-between rounded-xl shadow-xl">
+            <div class="flex flex-col bg-theme m-10 p-8 text-lg rounded-xl h-full relative">
+                <div class="flex mb-3">
+                    <p class="font-medium">Citizenship ID:</p>
+                    <p class="ml-3">{{ user.enduser.citizenship_id }}</p>
+                </div>
+                <div class="flex">
+                    <p class="mb-12"><img src="{% static 'images/default_photo.jpg' %}" alt="" class="h-60 w-auto border-black"></p>
+                    <!-- <p class="ml-3 mb-5">{{ user.enduser.citizenship }}</p> -->
+                </div>
+
+                <div class="flex mb-3">
+                    <p class="font-medium">License Number:</p>
+                    <p class="ml-3">{{ user.enduser.license_no }}</p>
+                </div>
+                <div class="flex">
+                    <p><img src="{% static 'images/default_photo.jpg' %}" alt="" class="h-60 w-auto border-black"></p>
+                    <!-- <p class="ml-3">{{ user.enduser.license }}</p> -->
+                </div>
+
+                <div class="flex mb-4 mr-4 right-0 bottom-0 absolute">
+                    <button class="py-1.5 px-6 btn">Upload Documents</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- <div class="flex flex-col w-full bg-theme">
+    <div class="flex h-1/4 bg-profile-gray">
+        <img src="{% static 'images/default_profile.jpg' %}" style="object-fit: contain" alt="" class="my-auto ml-10 w-40 h-40 object-cover rounded-full ">
+        <div class="my-auto flex flex-col">
+            {% if user|has_group:'enduser' %}
+            <span class="text-2xl font-medium">{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}</span>
+            <span class="text-2xl font-medium">{{ request.user.username }}</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="flex h-3/4">
+
+    </div> 
+</div> -->
+{% endblock content%}

@@ -10,7 +10,8 @@ class Host(models.Model):
     address = models.CharField(max_length=100, null= True, blank=True)
     citizenship_id = models.CharField(max_length=20, null= True, blank=True)
     citizenship = models.ImageField(upload_to='host/profile', null = True, blank = True)
-    pic = models.ImageField(upload_to='host/profile', default='default_profile.png')
+    pic = models.ImageField(upload_to='host/profile', default='default_profile.jpg')
+    is_approved = models.BooleanField(default=False)
 
 class EndUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="enduser")
@@ -22,12 +23,11 @@ class EndUser(models.Model):
     citizenship = models.ImageField(upload_to='enduser/profile', null = True, blank = True)
     license_no = models.CharField(max_length=20, null= True, blank=True)
     license = models.ImageField(upload_to='enduser/profile', null = True, blank = True)
-    pic = models.ImageField(upload_to='enduser/profile', default='default_profile.png')
-
+    pic = models.ImageField(upload_to='enduser/profile', default='default_profile.jpg')
+    is_approved = models.BooleanField(default=False)
 
 class Location(models.Model):
     name=models.CharField(max_length=25)
-
 
 class Vehicle(models.Model):
     types = (
