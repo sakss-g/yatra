@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import HostForm, EndUserForm, EndUserUpdateForm
+from .forms import *
 from django.contrib.auth.models import User, Group
 from .models import Host, EndUser
 from django.contrib.auth.hashers import make_password
@@ -130,7 +130,6 @@ def hosts_admin(request):
 def enduser_profile(request):
     return render(request, 'enduser/enduser_profile.html')
 
-
 def enduser_update_profile(request):
     enduser = request.user.enduser
     enduser_update_form = EndUserUpdateForm(instance=enduser)
@@ -145,12 +144,20 @@ def enduser_update_profile(request):
     }
     return render(request, 'enduser/enduser_update_profile.html', context)
 
-
-
-
 def host_profile(request):
     return render(request, 'host/host_profile.html')
 
 def host_update_profile(request):
-    return render(request, 'host/host_update_profile.html')
+    host = request.user.host
+    host_update_form = HostUpdateForm(instance=host)
+
+    if request.method == "POST":
+        host_update_form = HostUpdateForm(request.POST, request.FILES, instance=host)
+        if host_update_form.is_valid():
+            host_update_form.save()
+            return redirect('host_profile')
+    context = {
+        'host_update_form': host_update_form
+    }
+    return render(request, 'host/host_update_profile.html', context)
 
