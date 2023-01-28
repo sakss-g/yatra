@@ -754,9 +754,9 @@ select{
   margin-right: 1.25rem;
 }
 
-.mx-20{
-  margin-left: 5rem;
-  margin-right: 5rem;
+.mx-4{
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .mx-8{
@@ -815,6 +815,10 @@ select{
 
 .mt-6{
   margin-top: 1.5rem;
+}
+
+.mb-8{
+  margin-bottom: 2rem;
 }
 
 .mr-5{
@@ -899,6 +903,14 @@ select{
 
 .w-4\/5{
   width: 80%;
+}
+
+.w-3\/4{
+  width: 75%;
+}
+
+.w-1\/4{
+  width: 25%;
 }
 
 .w-96{

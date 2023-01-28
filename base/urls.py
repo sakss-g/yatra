@@ -18,12 +18,15 @@ urlpatterns = [
     path('hostdashboard/', views.host_dashboard, name='host_dashboard'),
     path('hostprofile/', views.host_profile, name='host_profile'),
     path('host_update_profile/', views.host_update_profile, name='host_update_profile'),
+    path('host_upload_documents/', views.host_upload_documents, name='host_upload_documents'),
+
 
     #enduser related urls
     path('registerenduser/', views.register_enduser, name='register_enduser'),
     path('enduserdashboard/', views.enduser_dashboard, name='enduser_dashboard'),
     path('enduserprofile/', views.enduser_profile, name='enduser_profile'),
     path('enduser_update_profile/', views.enduser_update_profile, name='enduser_update_profile'),
+    path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
          
     #delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user')

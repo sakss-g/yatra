@@ -22,3 +22,13 @@ class HostUpdateForm(forms.ModelForm):
     class Meta:
         model = Host
         fields = ['first_name', 'last_name', 'address', 'phone_number', 'pic']
+
+class EndUserDocumentsForm(forms.ModelForm):
+    class Meta:
+        model = EndUser
+        fields = ['citizenship_id', 'citizenship', 'license_no', 'license' ]
+
+class HostDocumentsForm(forms.ModelForm):
+    class Meta:
+        model = Host
+        fields = ['citizenship_id', 'citizenship' ]

@@ -17,29 +17,23 @@
                     <div class="flex justify-between mt-4">
                         <div class="flex flex-col">
                             <label class="mb-2">First Name</label>
-                            <div class="">
-                                {% render_field enduser_update_form.first_name class="input-fields w-64"  %}
-                            </div>
+                            {% render_field enduser_update_form.first_name class="input-fields w-64"  %}
                         </div>
                         
                         <div class="flex flex-col">
                             <label class="mb-2">Last Name</label>
-                            <div class="">
-                                {% render_field enduser_update_form.last_name class="input-fields w-64"  %}
-                            </div>
+                            {% render_field enduser_update_form.last_name class="input-fields w-64"  %}
                         </div>
                     </div>
 
                     <div class="flex flex-col mt-4">
                         <label class="mb-2">Conatct Number</label>
-                        <div class="">
-                            {% render_field enduser_update_form.phone_number class="input-fields w-full"  %}
-                        </div>
+                        {% render_field enduser_update_form.phone_number class="input-fields w-full"  %}
                     </div>
 
                     <div class="flex flex-col mt-4">
                         <label class="mb-2">Profile Photo</label>
-                        <div class="">
+                        <div>
                             {% render_field enduser_update_form.pic  %}
                         </div>
                     </div>

@@ -91,7 +91,7 @@
                 <div class="text-xl">
                     {% with request.resolver_match.url_name as url_name %}
                     <ul class="px-4">
-                        <a href="{% url 'enduser_profile' %}" class="nav-bar-items {% if url_name == 'enduser_profile' or url_name == 'enduser_update_profile' %}active{% endif %}">
+                        <a href="{% url 'enduser_profile' %}" class="nav-bar-items {% if url_name == 'enduser_profile' or url_name == 'enduser_update_profile' or url_name == 'enduser_upload_documents' %}active{% endif %}">
                             <img src="{% static 'images/user.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                 Profile
@@ -177,7 +177,7 @@
                 </div>
                 
                 <div class="flex flex-row absolute bottom-0 justify-evenly py-3 px-4 w-full">
-                    <a href="{% url 'enduser_profile' %}" class=" ">
+                    <a href="{% url 'host_profile' %}" class=" ">
                         <img src="{% static 'images/default_profile.jpg' %}" style="object-fit: contain" alt="" class="w-20 h-20 object-cover rounded-full ">
                     </a>
     

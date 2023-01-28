@@ -50,24 +50,25 @@
             <div class="flex flex-col bg-theme m-10 p-8 text-lg rounded-xl h-full relative">
                 <div class="flex mb-3">
                     <p class="font-medium">Citizenship ID:</p>
-                    <p class="ml-3">{{ user.enduser.citizenship_id }}</p>
+                    <p class="ml-3">{% if user.enduser.citizenship_id %}{{user.enduser.citizenship_id}}{% else %}N/A{% endif %}</p>
                 </div>
                 <div class="flex">
-                    <p class="mb-12"><img src="{% static 'images/default_photo.jpg' %}" alt="" class="h-60 w-auto border-black"></p>
+                    <p class="mb-12"><img src="{{ user.enduser.citizenship.url }}" alt="" class="h-60 w-auto border-black"></p>
                     <!-- <p class="ml-3 mb-5">{{ user.enduser.citizenship }}</p> -->
                 </div>
 
                 <div class="flex mb-3">
                     <p class="font-medium">License Number:</p>
-                    <p class="ml-3">{{ user.enduser.license_no }}</p>
+                    <p class="ml-3">{% if user.enduser.license_no %}{{user.enduser.license_no}}{% else %}N/A{% endif %}</p>
                 </div>
                 <div class="flex">
-                    <p><img src="{% static 'images/default_photo.jpg' %}" alt="" class="h-60 w-auto border-black"></p>
+                    <p><img src="{{ user.enduser.license.url }}" alt="" class="h-60 w-auto border-black"></p>
                     <!-- <p class="ml-3">{{ user.enduser.license }}</p> -->
                 </div>
 
                 <div class="flex mb-4 mr-4 right-0 bottom-0 absolute">
-                    <button class="py-1.5 px-6 btn">Upload Documents</button>
+                    
+                    <a  href="{% url 'enduser_upload_documents' %}"><button class="py-1.5 px-6 btn">Upload Documents</button></a>
                 </div>
             </div>
             

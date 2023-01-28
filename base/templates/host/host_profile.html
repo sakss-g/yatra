@@ -50,14 +50,14 @@
             <div class="flex flex-col bg-theme m-10 p-8 text-lg rounded-xl h-full relative">
                 <div class="flex mb-3">
                     <p class="font-medium">Citizenship ID:</p>
-                    <p class="ml-3">{{ user.enduser.citizenship_id }}</p>
+                    <p class="ml-3">{% if user.host.citizenship_id %}{{user.host.citizenship_id}}{% else %}N/A{% endif %}</p>
                 </div>
                 <div class="flex">
-                    <p class="mb-12"><img src="{% static 'images/default_photo.jpg' %}" alt="" class="h-72 w-auto border-black"></p>
+                    <p class="mb-12"><img src="{{ user.host.citizenship.url }}" alt="" class="h-72 w-auto border-black"></p>
                 </div>
 
                 <div class="flex mb-6 mr-6 right-0 bottom-0 absolute">
-                    <button class="py-1.5 px-6 btn">Upload Documents</button>
+                    <a  href="{% url 'host_upload_documents' %}"><button class="py-1.5 px-6 btn">Upload Documents</button></a>
                 </div>
             </div>
             

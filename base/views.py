@@ -127,8 +127,11 @@ def hosts_admin(request):
     }
     return render(request, 'host/hosts_admin.html', context)
 
+
+
 def enduser_profile(request):
     return render(request, 'enduser/enduser_profile.html')
+
 
 def enduser_update_profile(request):
     enduser = request.user.enduser
@@ -144,8 +147,25 @@ def enduser_update_profile(request):
     }
     return render(request, 'enduser/enduser_update_profile.html', context)
 
+
+def enduser_upload_documents(request):
+    enduser = request.user.enduser
+    enduser_documents_form = EndUserDocumentsForm(instance=enduser)
+
+    if request.method == "POST":
+        enduser_documents_form = EndUserDocumentsForm(request.POST, request.FILES, instance=enduser)
+        if enduser_documents_form.is_valid():
+            enduser_documents_form.save()
+            return redirect('enduser_profile')
+    context = {
+        'form': enduser_documents_form
+    }
+    return render(request, 'enduser/enduser_upload_documents.html', context)
+
+
 def host_profile(request):
     return render(request, 'host/host_profile.html')
+
 
 def host_update_profile(request):
     host = request.user.host
@@ -161,3 +181,17 @@ def host_update_profile(request):
     }
     return render(request, 'host/host_update_profile.html', context)
 
+
+def host_upload_documents(request):
+    host = request.user.host
+    host_documents_form = HostDocumentsForm(instance=host)
+
+    if request.method == "POST":
+        host_documents_form = HostDocumentsForm(request.POST, request.FILES, instance=host)
+        if host_documents_form.is_valid():
+            host_documents_form.save()
+            return redirect('host_profile')
+    context = {
+        'form': host_documents_form
+    }
+    return render(request, 'host/host_upload_documents.html', context)

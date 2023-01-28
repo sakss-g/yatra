@@ -9,7 +9,7 @@ class Host(models.Model):
     phone_number = models.CharField(max_length=10, null= True, blank=True)
     address = models.CharField(max_length=100, null= True, blank=True)
     citizenship_id = models.CharField(max_length=20, null= True, blank=True)
-    citizenship = models.ImageField(upload_to='host/profile', null = True, blank = True)
+    citizenship = models.ImageField(upload_to='host/profile', default='default_photo.jpg')
     pic = models.ImageField(upload_to='host/profile', default='default_profile.jpg')
     is_approved = models.BooleanField(default=False)
 
@@ -20,9 +20,9 @@ class EndUser(models.Model):
     email = models.EmailField()
     phone_number = models.CharField(max_length=10, null= True, blank=True)
     citizenship_id = models.CharField(max_length=20, null= True, blank=True)
-    citizenship = models.ImageField(upload_to='enduser/profile', null = True, blank = True)
+    citizenship = models.ImageField(upload_to='enduser/profile',  default='default_photo.jpg')
     license_no = models.CharField(max_length=20, null= True, blank=True)
-    license = models.ImageField(upload_to='enduser/profile', null = True, blank = True)
+    license = models.ImageField(upload_to='enduser/profile',  default='default_photo.jpg')
     pic = models.ImageField(upload_to='enduser/profile', default='default_profile.jpg')
     is_approved = models.BooleanField(default=False)
 
