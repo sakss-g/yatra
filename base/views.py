@@ -195,3 +195,26 @@ def host_upload_documents(request):
         'form': host_documents_form
     }
     return render(request, 'host/host_upload_documents.html', context)
+
+
+def host_vehicles(request):
+    hosting_request_list = Vehicle.objects.all()
+
+    # context = {
+    #     'hosting_request_list' = hosting_request_list
+    # }
+    return render(request, 'vehicles/host_vehicles.html')
+
+def add_vehicles(request):
+
+    vehicle_form = VehicleForm()
+
+    if request.method == "POST":
+        vehicle_form = VehicleForm(request.POST, request.FILES)
+        if vehicle_form.is_valid():
+            vehicle_form.save()
+            return redirect('host_vehicles') 
+    context = {
+    'form': vehicle_form
+    }
+    return render(request, 'vehicles/add_vehicles.html', context)

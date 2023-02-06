@@ -39,3 +39,7 @@ tbody tr:nth-child(odd){
 .btn{
     @apply bg-blue text-white rounded-md
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}

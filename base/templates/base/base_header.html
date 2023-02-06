@@ -62,7 +62,7 @@
                             {% endif %}
 
                             {% if user|has_group:'host' %}
-                                <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span><a href="#"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                                <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span><a href="{% url 'host_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
                             {% endif %}
 
                         {% endif %}

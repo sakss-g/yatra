@@ -1,5 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+
+status = (
+        ('Approved', 'Approved'),
+        ('Rejected','Rejected'),
+        ('Pending','Pending'),
+    )
+
 # Create your models here.
 class Host(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="host")
@@ -11,7 +18,8 @@ class Host(models.Model):
     citizenship_id = models.CharField(max_length=20, null= True, blank=True)
     citizenship = models.ImageField(upload_to='host/profile', default='default_photo.jpg')
     pic = models.ImageField(upload_to='host/profile', default='default_profile.jpg')
-    is_approved = models.BooleanField(default=False)
+    is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+
 
 class EndUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="enduser")
@@ -24,10 +32,14 @@ class EndUser(models.Model):
     license_no = models.CharField(max_length=20, null= True, blank=True)
     license = models.ImageField(upload_to='enduser/profile',  default='default_photo.jpg')
     pic = models.ImageField(upload_to='enduser/profile', default='default_profile.jpg')
-    is_approved = models.BooleanField(default=False)
+    is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+
 
 class Location(models.Model):
-    name=models.CharField(max_length=25)
+    name=models.CharField(max_length=25, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Vehicle(models.Model):
     types = (
@@ -37,6 +49,7 @@ class Vehicle(models.Model):
         ('Mini-Van', 'Mini-Van'),
         ('Other', 'Other'),
     )
+
     number_plate = models.CharField(max_length=20, unique=True)
     host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name="owner")
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="place")
@@ -45,10 +58,11 @@ class Vehicle(models.Model):
     image1 = models.ImageField(upload_to="host/vehicle")
     image2 = models.ImageField(upload_to="host/vehicle")
     image3 = models.ImageField(upload_to="host/vehicle", null=True, blank=True)
-    description = models.CharField(max_length=2000)
-    feature = models.CharField(max_length=1000)
-    price = models.PositiveIntegerField()
+    description = models.TextField(max_length=2000)
+    feature = models.TextField(max_length=1000)
+    price = models.PositiveIntegerField() 
     type = models.CharField(max_length=10, choices=types)
+    is_approved = models.CharField(max_length=10, choices=status, default="Pending")
 
 
 class Travelogue(models.Model):
@@ -56,3 +70,4 @@ class Travelogue(models.Model):
     description = models.CharField(max_length=10000)
     image1 = models.ImageField(upload_to="enduser/travelogue")
     image2 = models.ImageField(upload_to="enduser/travelogue", null=True, blank=True)
+    is_approved = models.CharField(max_length=10, choices=status, default="Pending")

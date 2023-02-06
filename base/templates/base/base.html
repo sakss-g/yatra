@@ -152,7 +152,7 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="{% url 'host_vehicles' %}" class="nav-bar-items {% if url_name == 'host_vehicles' or url_name == 'add_vehicles' %} active {% endif %}">
                             <img src="{% static 'images/Vehicle.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                Host Vehicle

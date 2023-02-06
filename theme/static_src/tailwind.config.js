@@ -51,6 +51,7 @@ module.exports = {
                 "red": "#ff0000",
                 "blue": "#2E5EAA",
                 "danger": "#E24646",
+                "custom-green": "#59A945",
             },
             fontFamily:{
                 "poppins": "Poppins",
