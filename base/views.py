@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, logout, authenticate 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-
+from django.contrib import messages
 # Create your views here.
 
 def home(request):
@@ -54,9 +54,11 @@ def register_enduser(request):
 
     return render(request, 'enduser/register_enduser.html', {'form':enduser_form})
 
+
 def delete_user(request, pk):
     user = User.objects.filter(id=pk).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def login_user(request):
 
@@ -112,7 +114,6 @@ def enduser_dashboard(request):
     return render(request, 'enduser/enduser_dashboard.html')
 
 
-
 def end_users_admin(request):
     endUsers = EndUser.objects.all()
     context={
@@ -127,6 +128,43 @@ def hosts_admin(request):
     }
     return render(request, 'host/hosts_admin.html', context)
 
+def verify_user(request):
+    unverified_hosts = Host.objects.filter(is_approved="Pending")
+    unverified_endusers = EndUser.objects.filter(is_approved="Pending")
+    context = {
+        'unverified_endusers':unverified_endusers,
+        'unverified_hosts':unverified_hosts
+    }
+    return render(request,'admin/verify_user.html', context)
+
+def approve_host(request, pk):
+    if request.method == "POST":
+        host = Host.objects.get(id=pk)
+        host.is_approved = "Approved"
+        host.save()
+        return redirect('verify_user')
+
+def reject_host(request,pk):
+    if request.method == "POST":
+        host = Host.objects.get(id=pk)
+        host.is_approved = "Rejected"
+        host.save()
+        return redirect('verify_user')
+
+def approve_enduser(request, pk):
+    if request.method == "POST":
+        enduser = EndUser.objects.get(id=pk)
+        enduser.is_approved = "Approved"
+        enduser.save()
+        return redirect('verify_user')
+
+def reject_enduser(request,pk):
+    if request.method == "POST":
+        enduser = EndUser.objects.get(id=pk)
+        enduser.is_approved = "Rejected"
+        enduser.save()
+        return redirect('verify_user')
+    
 
 
 def enduser_profile(request):
@@ -198,12 +236,13 @@ def host_upload_documents(request):
 
 
 def host_vehicles(request):
-    hosting_request_list = Vehicle.objects.all()
+    hosting_request_list = Vehicle.objects.filter(host=request.user.host)
 
-    # context = {
-    #     'hosting_request_list' = hosting_request_list
-    # }
-    return render(request, 'vehicles/host_vehicles.html')
+    context = {
+         'hosting_request_list' : hosting_request_list
+    }
+    return render(request, 'vehicles/host_vehicles.html', context)
+
 
 def add_vehicles(request):
 
@@ -212,8 +251,12 @@ def add_vehicles(request):
     if request.method == "POST":
         vehicle_form = VehicleForm(request.POST, request.FILES)
         if vehicle_form.is_valid():
-            vehicle_form.save()
+            vehicle = vehicle_form.save(commit=False)
+            vehicle.host = request.user.host
+            vehicle.save()
             return redirect('host_vehicles') 
+        else:
+            messages.error(request, vehicle_form.errors)
     context = {
     'form': vehicle_form
     }

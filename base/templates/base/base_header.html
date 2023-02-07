@@ -54,7 +54,13 @@
                     <div class="flex my-auto mx-4">
                         {% if user.is_authenticated %}
                             {% if user.is_superuser %}
-                                <a href="{% url 'admin_dashboard' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            
+                                <a href="{% url 'admin_dashboard' %}"> 
+                                    <div class="flex flex-row">
+                                        <span class="pr-4 pt-1">Admin</span> <img src="{% static 'images/profile.svg' %}" alt=""> 
+                                    </div>
+                                </a>
+
                             {% endif %}
 
                             {% if user|has_group:'enduser' %}

@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title%} Verify Users {% endblock title%}
+
+{% block content %}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col shadow-xl">
+        <div class="p-3">
+            <p class="text-center text-3xl font-semibold pt-2 pb-4">Verify Users</p>
+            <table class="w-full">
+                <thead class="h-16 text-center">
+                    <tr class="bg-black text-white text-xl">
+                        <th class="font-medium"></th>
+                        <th class="font-medium"></th>
+                        <th class="font-medium"></th>
+                        <th class="font-medium"></th>
+                        <th class="font-medium"></th>
+                        <th class="font-medium"></th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    {% for u in unverified_endusers %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <p>{{ u }} <a href="{% url 'approve_enduser' u.id %}">Approve</a>||<a href="{% url 'reject_enduser' u.id %}">Reject</a></p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if unverified_endusers %}
+                {% for u in unverified_endusers %}
+                    <p>{{ u }} </p>
+                    <form action="{% url 'approve_enduser' u.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="{% url 'reject_enduser' u.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Reject</button>
+                    </form>
+                {% endfor %}
+            {% else %}
+                <p>All End User are verified.</p>
+            {% endif %}
+
+            {% if unverified_hosts %}
+                {% for u in unverified_hosts %}
+                    <p>{{ u }} </p>
+                    <form action="{% url 'approve_host' u.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Approve</button>
+                    </form>
+                    <form action="{% url 'reject_host' u.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Reject</button>
+                    </form>
+                {% endfor %}
+            {% else %}
+                <p>All Host are verified.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -40,4 +40,4 @@ class HostDocumentsForm(forms.ModelForm):
 class VehicleForm(forms.ModelForm):
     class Meta:
         model = Vehicle
-        exclude = ['host', "isapproved"]
+        exclude = ['host', "is_approved"]

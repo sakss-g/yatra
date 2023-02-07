@@ -9,10 +9,17 @@ urlpatterns = [
     path('login/',views.login_user, name="login"),
     path('logout/', views.logout_user, name='logout'),
 
+
     #admin related urls
     path('admindashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('end_users_admin/', views.end_users_admin, name='end_users_admin'),        
-    path('hosts_admin/', views.hosts_admin, name='hosts_admin'),        
+    path('hosts_admin/', views.hosts_admin, name='hosts_admin'),
+    path('verify_user/', views.verify_user, name='verify_user'),
+    path('approve_host/<str:pk>', views.approve_host, name='approve_host'),
+    path('reject_host/<str:pk>', views.reject_host, name='reject_host'),
+    path('approve_enduser/<str:pk>', views.approve_enduser, name='approve_enduser'),
+    path('reject_enduser/<str:pk>', views.reject_enduser, name='reject_enduser'),
+
 
     #host related urls
     path('registerhost/', views.register_host, name='register_host'),
@@ -28,9 +35,11 @@ urlpatterns = [
     path('enduserprofile/', views.enduser_profile, name='enduser_profile'),
     path('enduser_update_profile/', views.enduser_update_profile, name='enduser_update_profile'),
     path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
-         
+
+
     #delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user'),
+
 
      # Forgot password and reset
     path('password_reset', auth_views.PasswordResetView.as_view(

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>{% block title %}{%endblock title%}</title>
-    
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     {% tailwind_css %}
 </head>
 <body class="font-poppins min-h-screen">
@@ -36,12 +36,19 @@
                             <li class="nav-bar-li">
                                 End Users
                             </li>
-                        </a>
+                        </a>                        
 
                         <a href="{% url 'hosts_admin' %}" class="nav-bar-items {% if url_name == 'hosts_admin' %}active{% endif %}">
                             <img src="{% static 'images/hosts.svg' %}"  alt=""> 
                             <li class="nav-bar-li">
                                 Hosts
+                            </li>
+                        </a>
+
+                        <a href="{% url 'verify_user' %}" class="nav-bar-items {% if url_name == 'verify_user' %}active{% endif %}">
+                            <img src="{% static 'images/user.svg' %}"  alt="">
+                            <li class="nav-bar-li">
+                                Verify Users
                             </li>
                         </a>
 
@@ -197,13 +204,28 @@
 
             
         </div>
-        <div class="flex w-4/5 h-screen">
+        <div class="flex w-4/5 h-screen relative overflow-y-auto">
+            {% if messages %}
+                <div class= " absolute animate-right-to-left top-0 right-0 " style="display: flex; width: 100%; justify-content: flex-end;">
+                    {% for message in messages %}
+                        <div class=" p-3 {{ message.tags }} mt-2 mr-6 " id="msg" role="alert" >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             {% block content %}
             {% endblock content%}  
         </div>
         
     </div>
         
-    
+    <script>
+        setTimeout(function(){
+            if ($('#msg').length > 0) {
+                $('#msg').remove();
+            }
+        },4000);
+    </script>
 </body>
 </html>
