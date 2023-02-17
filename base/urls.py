@@ -19,6 +19,7 @@ urlpatterns = [
     path('reject_host/<str:pk>', views.reject_host, name='reject_host'),
     path('approve_enduser/<str:pk>', views.approve_enduser, name='approve_enduser'),
     path('reject_enduser/<str:pk>', views.reject_enduser, name='reject_enduser'),
+    path('hosting_request', views.hosting_request, name='hosting_request'),
 
 
     #host related urls
@@ -60,4 +61,9 @@ urlpatterns = [
     path('hostvehicles', views.host_vehicles, name='host_vehicles'),
     path('addvehicles', views.add_vehicles, name='add_vehicles'),
         
+
+    # multi user urls
+    path('openbluebook', views.open_bluebook, name='open_bluebook'),
+    
+      
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

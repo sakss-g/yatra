@@ -14,10 +14,57 @@
             </div>
             {% if vehicle_list %}
                 {% for vehicle in vehicle_list %}
-                    <p>{{ vehicle.feature }}||{{ vehicle.description }}||{{ vehicle.is_approved }}</p>
+                <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg">
+                    <div class="flex flex-col mb-4">
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Number Plate: </span>{{ vehicle.number_plate }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Location: </span>{{ vehicle.location }}
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <span class="font-medium">Bluebook Id: </span>{{ vehicle.bluebook_id }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Type: </span>{{ vehicle.type }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="font-medium">Bluebook: </span>
+                        <a href="{% url 'open_bluebook' %}" style="color: blue;" class="underline">
+                            {{ vehicle.bluebook_name }}
+                        </a>
+                        <!-- <img src="{{ vehicle.bluebook.url }}" alt="" class="h-48 my-4">    -->
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Description: </span>
+                        </div>
+                        <div>
+                            <span>{{ vehicle.description }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Features: </span>
+                        </div>
+                        <div>
+                            <span>{{ vehicle.feature }}</span>
+                        </div>
+                    </div>
+                    {{ vehicle.feature }}||{{ vehicle.description }}||{{ vehicle.is_approved }}
+                </div>
+                    <!-- <p>{{ vehicle.feature }}||{{ vehicle.description }}||{{ vehicle.is_approved }}</p> -->
                 {% endfor %}
             {% else %}
-                <p>No Vehicles to display</p>
+                <p class="text-center pt-20 text-2xl text-dark-gray">No Vehicles to display</p>
             {% endif %}
         </div>
     </div>

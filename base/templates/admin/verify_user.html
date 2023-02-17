@@ -7,66 +7,120 @@
 <div class="h-screen w-full px-6 py-10 bg-theme">
     <div class="bg-white h-full flex flex-col shadow-xl">
         <div class="p-3">
-            <p class="text-center text-3xl font-semibold pt-2 pb-4">Verify Users</p>
-            <table class="w-full">
-                <thead class="h-16 text-center">
-                    <tr class="bg-black text-white text-xl">
-                        <th class="font-medium"></th>
-                        <th class="font-medium"></th>
-                        <th class="font-medium"></th>
-                        <th class="font-medium"></th>
-                        <th class="font-medium"></th>
-                        <th class="font-medium"></th>
-                    </tr>
-                </thead>
-                <tbody class="text-center">
-                    {% for u in unverified_endusers %}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <p>{{ u }} <a href="{% url 'approve_enduser' u.id %}">Approve</a>||<a href="{% url 'reject_enduser' u.id %}">Reject</a></p>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Users</p>
 
-            {% if unverified_endusers %}
-                {% for u in unverified_endusers %}
-                    <p>{{ u }} </p>
-                    <form action="{% url 'approve_enduser' u.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Approve</button>
-                    </form>
-                    <form action="{% url 'reject_enduser' u.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Reject</button>
-                    </form>
-                {% endfor %}
-            {% else %}
-                <p>All End User are verified.</p>
-            {% endif %}
+            <div class="w-full flex flex-row">
+                <div class="flex">
+                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl" id="toggle_endusers">End Users</button>
+                </div>
 
-            {% if unverified_hosts %}
-                {% for u in unverified_hosts %}
-                    <p>{{ u }} </p>
-                    <form action="{% url 'approve_host' u.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Approve</button>
-                    </form>
-                    <form action="{% url 'reject_host' u.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Reject</button>
-                    </form>
-                {% endfor %}
-            {% else %}
-                <p>All Host are verified.</p>
-            {% endif %}
+                <div class="flex">
+                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl" id="toggle_hosts">Hosts</button>
+                </div>
+            </div>
+
+            <div id="endusers">
+                {% if unverified_endusers %}
+                <table class="w-full">
+                    <thead class="h-16 text-center">
+                        <tr class="bg-black text-white text-xl">
+                            <th class="font-medium">Citizenship Id</th>
+                            <th class="font-medium">Citizenship</th>
+                            <th class="font-medium">License ID</th>
+                            <th class="font-medium">License</th>
+                            <th class="font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for u in unverified_endusers %}
+                        <tr>
+                            <td>{{ u.citizenship_id }}</td>
+                            <td><a href="{{ u.citizenship.url }}"><img src="{{ u.citizenship.url }}" class="w-28 h-auto mx-auto"></a></td>
+                            <td>{{ u.license_no }}</td>
+                            <td><a href="{{ u.license.url }}"><img src="{{ u.license.url }}" class="w-28 h-auto mx-auto"></a></td>
+                            <td>
+                                <div class="flex flex-row">
+                                    <div>
+                                        <form action="{% url 'approve_enduser' u.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="py-2">Approve</button>
+                                        </form>
+                                    </div>
+                                    <div>
+                                        <form action="{% url 'reject_enduser' u.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit">Reject</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p>All End User are verified.</p>
+                {% endif %}
+            </div>
+
+            <div id="hosts" style="display: none;">
+                {% if unverified_hosts %}
+                <table class="w-full">
+                    <thead class="h-16 text-center">
+                        <tr class="bg-black text-white text-xl">
+                            <th class="font-medium">Citizenship Id</th>
+                            <th class="font-medium">Citizenship</th>
+                            <th class="font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        {% for u in unverified_hosts %}
+                        <tr>
+                            <td>{{ u.citizenship_id }}</td>
+                            <td><a href="{{ u.citizenship.url }}"><img src="{{ u.citizenship.url }}" class="w-28 h-auto mx-auto"></a></td>
+                            <td>
+                                <div class="flex flex-row justify-center">
+                                    <form action="{% url 'approve_host' u.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit">Approve</button>
+                                    </form>
+                                    <form action="{% url 'reject_host' u.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit">Reject</button>
+                                    </form>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p>All End User are verified.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+<script>
+    const targetDiv1 = document.getElementById("endusers");
+    const btn1 = document.getElementById("toggle_endusers");
+    const targetDiv2 = document.getElementById("hosts");
+    const btn2 = document.getElementById("toggle_hosts");
+    btn1.onclick = function () {
+        targetDiv1.style.display = "block";
+        targetDiv2.style.display = "none";
+    //   if (targetDiv1.style.display !== "none") {
+    //     targetDiv1.style.display = "none";
+    //   } else {
+    //     targetDiv1.style.display = "block";
+    //   }
+    };
+    btn2.onclick = function () {
+        targetDiv2.style.display = "block";
+        
+        targetDiv1.style.display = "none";
+    };
+</script>
 {% endblock %}

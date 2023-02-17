@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pathlib import Path
 
 status = (
         ('Approved', 'Approved'),
@@ -63,6 +64,10 @@ class Vehicle(models.Model):
     price = models.PositiveIntegerField() 
     type = models.CharField(max_length=10, choices=types)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+
+    @property
+    def bluebook_name(self):
+        return Path(self.bluebook.path).stem
 
 
 class Travelogue(models.Model):

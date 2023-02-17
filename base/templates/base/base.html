@@ -52,7 +52,7 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="{% url 'hosting_request' %}" class="nav-bar-items {% if url_name == 'hosting_request' %}active{% endif %}">
                             <img src="{% static 'images/request.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                 Hosting Request
