@@ -859,6 +859,10 @@ select{
   margin-bottom: 1.5rem;
 }
 
+.ml-2{
+  margin-left: 0.5rem;
+}
+
 .block{
   display: block;
 }
@@ -1146,6 +1150,11 @@ select{
 .bg-custom-green{
   --tw-bg-opacity: 1;
   background-color: rgb(89 169 69 / var(--tw-bg-opacity));
+}
+
+.bg-custom-orange{
+  --tw-bg-opacity: 1;
+  background-color: rgb(246 173 87 / var(--tw-bg-opacity));
 }
 
 .bg-clip-padding{

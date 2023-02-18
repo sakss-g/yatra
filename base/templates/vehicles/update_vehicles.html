@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title%} Update Vehicles {% endblock title%}
+
+{% block content %}
+{% if error %}
+<p>{{error}}</p>
+{% endif %}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col shadow-xl ">
+        <div class="p-3 overflow-y-auto scrollbar-hide">
+            <p class="text-center text-3xl font-semibold pt-2 pb-4">Update Vehicles</p>
+
+            <div class="w-3/6 mx-auto items-center overflow-y-auto">
+                <form action="{% url 'add_vehicles' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="flex justify-between mt-4">
+                        <div class="flex flex-col mt-4 w-80">
+                            <label class="mb-2">Number Plate</label>
+                            {% render_field form.number_plate class="input-fields w-full"  %}
+                        </div>
+                        <div class="flex flex-col mt-4 w-80">
+                            <label class="mb-2">Location </label>
+                            {% render_field form.location class="input-fields w-full required"  %}
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="flex flex-col mt-4 w-80">
+                            <label class="mb-2">Bluebook ID</label>
+                            {% render_field form.bluebook_id class="input-fields w-full" %}
+                        </div>
+                        <div class="flex flex-col mt-4 w-80">
+                            <label class="mb-2">Type</label>
+                            {% render_field form.type class="input-fields w-full" %}
+                        </div>
+                        
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="mb-2 mt-4">Bluebook </label>
+                        {% render_field form.bluebook class="mb-4 required" %}
+
+                        <label class="mb-2 mt-4">Description </label>
+                        {% render_field form.description class="input-fields resize-none w-full" rows="4"  %}
+
+                        <label class="mb-2 mt-4">Features </label>
+                        {% render_field form.feature class="input-fields resize-none w-full" rows="4" %}
+
+                        <lable class="mb-2 mt-4">Hosting Price Per day</lable>
+                        {% render_field form.price class="required input-fields" %}
+
+                        <label  class="mb-2 mt-4">Vehicle Images</label>
+                        <div class="flex flex-row w-full mb-4 justify-between">
+                            {% render_field form.image1 class="required" %}
+                            {% render_field form.image2 class="required" %}
+                        </div>
+                        {% render_field form.image3 class="mb-4 required" %}
+                    </div>
+
+
+                    <div class="flex justify-end mt-6">
+                        <button class="btn py-1.5 px-6" type="submit">Request Hosting</button>
+                        <a href="{{request.META.HTTP_REFERER}}" class="bg-danger px-6 py-1.5 text-white rounded-md mx-1 border no-underline"> Cancel</a>
+                    </div>
+
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

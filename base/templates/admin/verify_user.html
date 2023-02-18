@@ -39,21 +39,16 @@
                             <td>{{ u.license_no }}</td>
                             <td><a href="{{ u.license.url }}"><img src="{{ u.license.url }}" class="w-28 h-auto mx-auto"></a></td>
                             <td>
-                                <div class="flex flex-row">
-                                    <div>
-                                        <form action="{% url 'approve_enduser' u.id %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="py-2">Approve</button>
-                                        </form>
-                                    </div>
-                                    <div>
-                                        <form action="{% url 'reject_enduser' u.id %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit">Reject</button>
-                                        </form>
-                                    </div>
+                                <div class="flex flex-row justify-center">
+                                    <form action="{% url 'approve_enduser' u.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
+                                    </form>
+                                    <form action="{% url 'reject_enduser' u.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                                    </form>
                                 </div>
-                                
                             </td>
                         </tr>
                         {% endfor %}
@@ -83,11 +78,11 @@
                                 <div class="flex flex-row justify-center">
                                     <form action="{% url 'approve_host' u.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">Approve</button>
+                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Approve</button>
                                     </form>
                                     <form action="{% url 'reject_host' u.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">Reject</button>
+                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
                                     </form>
                                 </div>
                                 
@@ -97,7 +92,7 @@
                     </tbody>
                 </table>
                 {% else %}
-                    <p>All End User are verified.</p>
+                    <p>All Hosts are verified.</p>
                 {% endif %}
             </div>
         </div>

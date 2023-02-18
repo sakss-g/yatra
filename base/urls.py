@@ -60,10 +60,16 @@ urlpatterns = [
     # vehicles related urls
     path('hostvehicles', views.host_vehicles, name='host_vehicles'),
     path('addvehicles', views.add_vehicles, name='add_vehicles'),
+    path('updatevehicles', views.update_vehicles, name='update_vehicles'),
         
 
     # multi user urls
     path('openbluebook', views.open_bluebook, name='open_bluebook'),
+    path('openvehicle1', views.open_vehicle1, name='open_vehicle1'),
+    path('openvehicle2', views.open_vehicle2, name='open_vehicle2'),
+    path('openvehicle3', views.open_vehicle3, name='open_vehicle3'),
+
+
     
       
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

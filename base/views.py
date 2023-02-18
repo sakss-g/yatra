@@ -137,9 +137,39 @@ def add_vehicles(request):
     }
     return render(request, 'vehicles/add_vehicles.html', context)
 
+def update_vehicles(request):
+    # vehicle = Vehicle.objects.get(id=pk)
+    # vehicle_update_form = VehicleUpdateForm(instance=vehicle)
+
+    # if request.method == "POST":
+    #     vehicle_update_form = VehicleUpdateForm(request.POST, request.FILES, instance=vehicle)
+    #     if vehicle_update_form.is_valid():
+    #         vehicle_update_form.save()
+    #         messages.success(request, 'Vehicle Updated.')
+    #         return redirect('host_vehicles')
+    # context = {
+    #     'vehicle_update_form': vehicle_update_form,
+    #     'vehicle_form': vehicle
+    # }
+    return render(request, 'vehicles/update_vehicles.html')
+
 def open_bluebook(request):
     bluebook = Vehicle.objects.get().bluebook.path
     return FileResponse(open(bluebook, 'rb'))
+
+def open_vehicle1(request):
+    image1 = Vehicle.objects.get().image1.path
+    return FileResponse(open(image1, 'rb'))
+
+def open_vehicle2(request):
+    image2 = Vehicle.objects.get().image2.path
+    return FileResponse(open(image2, 'rb'))
+
+def open_vehicle3(request):
+    image3 = Vehicle.objects.get().image3.path
+    return FileResponse(open(image3, 'rb'))
+
+
 
 # end users related views
 def register_enduser(request):
@@ -280,14 +310,27 @@ def reject_enduser(request,pk):
         enduser.is_approved = "Rejected"
         enduser.save()
         return redirect('verify_user')
-    
+
+# def verify_user(request):
+#     unverified_hosts = Host.objects.filter(is_approved="Pending")
+#     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
+#     context = {
+#         'unverified_endusers':unverified_endusers,
+#         'unverified_hosts':unverified_hosts
+#     }
+#     return render(request,'admin/verify_user.html', context)
+
 def hosting_request(request):
-    vehicle_list = Vehicle.objects.filter(host=request.user.host)
+    unverified_vehicles = Vehicle.objects.filter(is_approved="Pending")
+    # vehicle_list = Vehicle.objects.filter(host=request.user.host)
 
     context = {
-         'vehicle_list' : vehicle_list
+        'unverified_vehicles': unverified_vehicles
     }
-    return render(request, 'admin/hosting_request.html', context)
+    # context = {
+    #      'vehicle_list' : vehicle_list
+    # }
+    return render(request, 'admin/hosting_request.html',context)
 
 
 

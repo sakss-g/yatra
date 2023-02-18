@@ -68,6 +68,18 @@ class Vehicle(models.Model):
     @property
     def bluebook_name(self):
         return Path(self.bluebook.path).stem
+    
+    @property
+    def image1_name(self):
+        return Path(self.image1.path).stem
+    
+    @property
+    def image2_name(self):
+        return Path(self.image2.path).stem
+    
+    @property
+    def image3_name(self):
+        return Path(self.image3.path).stem
 
 
 class Travelogue(models.Model):

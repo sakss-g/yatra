@@ -41,3 +41,9 @@ class VehicleForm(forms.ModelForm):
     class Meta:
         model = Vehicle
         exclude = ['host', "is_approved"]
+
+class VehicleUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Vehicle
+        exclude = ['is_approved', 'host']
+        # fields = ['first_name', 'last_name', 'address', 'phone_number', 'pic']
