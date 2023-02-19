@@ -53,6 +53,7 @@ module.exports = {
                 "danger": "#E24646",
                 "custom-green": "#59A945",
                 "custom-orange": "#F6AD57",
+                
             },
             fontFamily:{
                 "poppins": "Poppins",

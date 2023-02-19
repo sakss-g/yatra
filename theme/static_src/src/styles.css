@@ -43,3 +43,19 @@ tbody tr:nth-child(odd){
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+.sticky{
+    @apply fixed top-0 w-full
+}
+
+.featured-card{
+    @apply w-56 h-60 rounded-tr-2xl rounded-bl-2xl items-center shadow-lg shadow-medium-gray hover:cursor-pointer
+}
+
+.featured-inner-div{
+    @apply w-56 h-48 rounded-tr-2xl 
+}
+
+.featured-inner-text{
+    @apply text-center mt-3 font-medium
+}

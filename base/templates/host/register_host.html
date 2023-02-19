@@ -1,44 +1,62 @@
-{% extends 'base/base_header.html' %}
+<!DOCTYPE html>
+{% load static tailwind_tags%}
+{% load user_group %}
 {% load widget_tweaks %}
-{% block title%} Register Host {% endblock title%}
-{% block body%}
-<div class="flex justify-center items-center my-auto mx-auto h-full">
-    <div class="w-full bg-white  px-20 py-12 mx-auto my-auto rounded-xl shadow-2xl shadow-black">
-        <div class="flex flex-col text-xl">
-            <p class="text-center font-bold text-4xl pb-12">Become a host</p>
-            <form action="" method="post">
-                {% csrf_token %}
-                <div class="text-xl text-dark-gray w-full">
-                    <div class="flex flex-row">
-                        <div class="flex flex-col">
-                            <label class="mb-3">First Name</label>
-                            {% render_field form.first_name class="mr-5 input-fields" %} 
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Register Host</title>
+
+    {% tailwind_css %}
+</head>
+<body class="bg-theme max-h-screen font-poppins">
+    <div class="flex flex-col h-screen relative">
+        <div class="flex flex-row justify between text-white bg-black h-24 w-full"  id="land-header">
+            <div class="flex my-auto mx-5 w-3/4">
+                <a href="{% url 'home' %}" class="text-4xl font-semibold">YATRA</a>
+            </div>
+        </div>
+        <div class="flex justify-center items-center my-auto mx-auto h-full">
+            <div class="w-full bg-white  px-20 py-12 mx-auto my-auto rounded-xl shadow-2xl shadow-black">
+                <div class="flex flex-col text-xl">
+                    <p class="text-center font-bold text-4xl pb-12">Become a host</p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="text-xl text-dark-gray w-full">
+                            <div class="flex flex-row">
+                                <div class="flex flex-col">
+                                    <label class="mb-3">First Name</label>
+                                    {% render_field form.first_name class="mr-5 input-fields" %} 
+                                </div>
+                                
+                                <div class="flex flex-col">
+                                    <label class="mb-3">Last Name</label>
+                                    {% render_field form.last_name  class="input-fields"%}
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="mb-3">Email</label>
+                                {% render_field form.email class="input-fields" %}  
+
+                                <label class="mb-3">Password</label>
+                                <input type="password" name="password" class="input-fields"/>
+
+                                <input type="submit" value="Sign Up" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray "/>
+                            </div>
+                            
+                        </div>
+                        <div class="flex justify-center pt-16 text-dark-gray">
+                            <span>Already have an account? <a href="{% url 'login' %}" class="font-medium text-black text-justify">Log In</a></span>
                         </div>
                         
-                        <div class="flex flex-col">
-                            <label class="mb-3">Last Name</label>
-                            {% render_field form.last_name  class="input-fields"%}
-                        </div>
-                    </div>
-                    <div class="flex flex-col">
-                        <label class="mb-3">Email</label>
-                        {% render_field form.email class="input-fields" %}  
-
-                        <label class="mb-3">Password</label>
-                        <input type="password" name="password" class="input-fields"/>
-
-                        <input type="submit" value="Sign Up" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray "/>
-                    </div>
-                    
+                    </form>
                 </div>
-                <div class="flex justify-center pt-16 text-dark-gray">
-                    <span>Already have an account? <a href="{% url 'login' %}" class="font-medium text-black text-justify">Log In</a></span>
-                </div>
-                
-            </form>
+            </div>
         </div>
     </div>
-</div>
-    
-{% endblock body%}
-
+</body>
+</html>
