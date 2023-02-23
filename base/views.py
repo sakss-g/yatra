@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib.auth.models import User, Group
@@ -7,7 +8,6 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, FileResponse
 from django.contrib import messages
-
 # Create your views here.
 
 # all related views
@@ -48,6 +48,68 @@ def logout_user(request):
     return redirect('home')
 
 
+def view_vehicles(request):
+    vehicles = Vehicle.objects.filter(is_approved="Approved")
+    context = {
+        'vehicle_list':vehicles,
+    }
+    return render(request, 'vehicles/view_vehicles.html', context)
+
+def vehicle_details(request, pk):
+    vehicle = Vehicle.objects.get(id=pk)
+    history = Rents.objects.filter(vehicle=vehicle)
+    if request.method == "POST":
+        start_time = request.POST.get('start')
+        end_time = request.POST.get('end')
+        current_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+        can_rent = True
+        if request.user.is_anonymous:
+            messages.error(request, "You need to be a verified user to rent")
+        elif start_time <= current_time:
+            messages.error(request, "Start Time cannot be before now")
+        elif end_time <= start_time:
+            messages.error(request, "End Time cannot be before Start Time")
+        elif vehicle.is_rented:
+
+            for hist in history:
+                if (hist.start_time.strftime("%Y-%m-%dT%H:%M") <= start_time <= hist.end_time.strftime("%Y-%m-%dT%H:%M")) \
+                        or (hist.start_time.strftime("%Y-%m-%dT%H:%M") <= end_time <= hist.end_time.strftime("%Y-%m-%dT%H:%M")):
+                    messages.error(request, "Vehicle has already been booked for this period")
+                    can_rent = False
+                    break
+            if can_rent:
+                try:
+                    rent = Rents()
+                    rent.renter = request.user.enduser
+                    rent.vehicle = vehicle
+                    rent.start_time = start_time
+                    rent.end_time = end_time
+                    rent.save()
+                    vehicle.is_rented = True
+                    vehicle.save()
+                    messages.success(request, "Vehicle Rented")
+                    return redirect('view_vehicles')
+                except:
+                    messages.error(request, "Error!!!! Could not rent")
+        else:
+            try:
+                rent = Rents()
+                rent.renter = request.user.enduser
+                rent.vehicle = vehicle
+                rent.start_time = start_time
+                rent.end_time = end_time
+                rent.save()
+                vehicle.is_rented = True
+                vehicle.save()
+                messages.success(request,"Vehicle Rented")
+                return redirect('view_vehicles')
+            except:
+                messages.error(request, "Error!!!! Could not rent")
+    context = {
+        'vehicle': vehicle,
+        'history':history,
+    }
+    return render(request, 'vehicles/vehicle_detail.html', context)
 
 # host related views
 def register_host(request):
@@ -137,32 +199,59 @@ def add_vehicles(request):
     }
     return render(request, 'vehicles/add_vehicles.html', context)
 
-def update_vehicles(request):
-    # vehicle = Vehicle.objects.get(id=pk)
-    # vehicle_update_form = VehicleUpdateForm(instance=vehicle)
+def update_vehicles(request, pk):
+    vehicle = Vehicle.objects.get(id=pk)
+    vehicle_update_form = VehicleForm(instance=vehicle)
 
-    # if request.method == "POST":
-    #     vehicle_update_form = VehicleUpdateForm(request.POST, request.FILES, instance=vehicle)
-    #     if vehicle_update_form.is_valid():
-    #         vehicle_update_form.save()
-    #         messages.success(request, 'Vehicle Updated.')
-    #         return redirect('host_vehicles')
-    # context = {
-    #     'vehicle_update_form': vehicle_update_form,
-    #     'vehicle_form': vehicle
-    # }
-    return render(request, 'vehicles/update_vehicles.html')
+    if request.method == "POST":
+        vehicle_update_form = VehicleForm(request.POST, request.FILES, instance=vehicle)
+        if vehicle_update_form.is_valid():
+            vehicle_update_form.save()
+            messages.success(request, 'Vehicle Updated.')
+            return redirect('host_vehicles')
 
-def open_bluebook(request):
-    bluebook = Vehicle.objects.get().bluebook.path
+    context = {
+        'form': vehicle_update_form,
+        'vehicle_form': vehicle
+    }
+    return render(request, 'vehicles/update_vehicles.html', context)
+
+def delete_vehicles(request, pk):
+    vehicle = Vehicle.objects.get(id=pk)
+    vehicle.delete()
+    return redirect('host_vehicles')
+
+
+def approve_vehicle(request, pk):
+    if request.method == "POST":
+        vehicle = Vehicle.objects.get(id=pk)
+        vehicle.is_approved = "Approved"
+        vehicle.save()
+    return redirect('hosting_request')
+
+def reject_vehicle(request, pk):
+    if request.method == "POST":
+        vehicle = Vehicle.objects.get(id=pk)
+        vehicle.is_approved = "Rejected"
+        vehicle.save()
+    return redirect('hosting_request')
+
+def open_bluebook(request, pk):
+    bluebook = Vehicle.objects.get(id=pk).bluebook.path
     return FileResponse(open(bluebook, 'rb'))
 
-def open_vehicle1(request):
-    image1 = Vehicle.objects.get().image1.path
-    return FileResponse(open(image1, 'rb'))
+def open_vehicle(request, pk, no):
+    vehicle = Vehicle.objects.get(id=pk)
+    if no == 1:
+        vehicle = vehicle.image1.path
+    elif no == 2:
+        vehicle = vehicle.image2.path
+    elif no == 3:
+        vehicle = vehicle.image3.path
+    return FileResponse(open(vehicle, 'rb'))
 
 def open_vehicle2(request):
-    image2 = Vehicle.objects.get().image2.path
+    image2 = Vehicle.objects.get().image2.url
     return FileResponse(open(image2, 'rb'))
 
 def open_vehicle3(request):
@@ -322,14 +411,11 @@ def reject_enduser(request,pk):
 
 def hosting_request(request):
     unverified_vehicles = Vehicle.objects.filter(is_approved="Pending")
-    # vehicle_list = Vehicle.objects.filter(host=request.user.host)
 
     context = {
         'unverified_vehicles': unverified_vehicles
     }
-    # context = {
-    #      'vehicle_list' : vehicle_list
-    # }
+
     return render(request, 'admin/hosting_request.html',context)
 
 

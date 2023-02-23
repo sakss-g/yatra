@@ -64,23 +64,13 @@ class Vehicle(models.Model):
     price = models.PositiveIntegerField() 
     type = models.CharField(max_length=10, choices=types)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+    is_rented = models.BooleanField(default=False)
 
-    @property
-    def bluebook_name(self):
-        return Path(self.bluebook.path).stem
-    
-    @property
-    def image1_name(self):
-        return Path(self.image1.path).stem
-    
-    @property
-    def image2_name(self):
-        return Path(self.image2.path).stem
-    
-    @property
-    def image3_name(self):
-        return Path(self.image3.path).stem
-
+class Rents(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
+    renter = models.ForeignKey(EndUser, on_delete=models.SET_NULL, null=True)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
 class Travelogue(models.Model):
     enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name="blogger")
@@ -88,3 +78,4 @@ class Travelogue(models.Model):
     image1 = models.ImageField(upload_to="enduser/travelogue")
     image2 = models.ImageField(upload_to="enduser/travelogue", null=True, blank=True)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+

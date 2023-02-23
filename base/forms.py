@@ -1,6 +1,6 @@
 from django import forms
-from .models import Host, EndUser, Vehicle
-
+from .models import Host, EndUser, Vehicle, Rents
+from django.forms import DateTimeInput
 class HostForm(forms.ModelForm):
     class Meta:
         model = Host
@@ -42,8 +42,11 @@ class VehicleForm(forms.ModelForm):
         model = Vehicle
         exclude = ['host', "is_approved"]
 
-class VehicleUpdateForm(forms.ModelForm):
+
+class RentVehicle(forms.ModelForm):
     class Meta:
-        model = Vehicle
-        exclude = ['is_approved', 'host']
-        # fields = ['first_name', 'last_name', 'address', 'phone_number', 'pic']
+        model = Rents
+        exclude = ['vehicle', 'renter']
+        widgets = {
+            'date': DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

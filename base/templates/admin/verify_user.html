@@ -11,7 +11,7 @@
 
             <div class="w-full flex flex-row">
                 <div class="flex">
-                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl" id="toggle_endusers">End Users</button>
+                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl font-semibold" id="toggle_endusers">End Users</button>
                 </div>
 
                 <div class="flex">
@@ -40,11 +40,11 @@
                             <td><a href="{{ u.license.url }}"><img src="{{ u.license.url }}" class="w-28 h-auto mx-auto"></a></td>
                             <td>
                                 <div class="flex flex-row justify-center">
-                                    <form action="{% url 'approve_enduser' u.id %}" method="post">
+                                    <form action="{% url 'approve_enduser' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
                                         <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
                                     </form>
-                                    <form action="{% url 'reject_enduser' u.id %}" method="post">
+                                    <form action="{% url 'reject_enduser' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
                                         <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
                                     </form>
@@ -75,12 +75,12 @@
                             <td>{{ u.citizenship_id }}</td>
                             <td><a href="{{ u.citizenship.url }}"><img src="{{ u.citizenship.url }}" class="w-28 h-auto mx-auto"></a></td>
                             <td>
-                                <div class="flex flex-row justify-center">
-                                    <form action="{% url 'approve_host' u.id %}" method="post">
+                                <div class="flex flex-row justify-center items-center">
+                                    <form action="{% url 'approve_host' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
-                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Approve</button>
+                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Approve</button>
                                     </form>
-                                    <form action="{% url 'reject_host' u.id %}" method="post">
+                                    <form action="{% url 'reject_host' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
                                         <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
                                     </form>
@@ -106,16 +106,14 @@
     btn1.onclick = function () {
         targetDiv1.style.display = "block";
         targetDiv2.style.display = "none";
-    //   if (targetDiv1.style.display !== "none") {
-    //     targetDiv1.style.display = "none";
-    //   } else {
-    //     targetDiv1.style.display = "block";
-    //   }
+        btn1.style.fontWeight = "600";
+        btn2.style.fontWeight = "400";
     };
     btn2.onclick = function () {
         targetDiv2.style.display = "block";
-        
         targetDiv1.style.display = "none";
+        btn2.style.fontWeight = "600";
+        btn1.style.fontWeight = "400";
     };
 </script>
 {% endblock %}

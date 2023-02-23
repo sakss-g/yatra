@@ -60,16 +60,15 @@ urlpatterns = [
     # vehicles related urls
     path('hostvehicles', views.host_vehicles, name='host_vehicles'),
     path('addvehicles', views.add_vehicles, name='add_vehicles'),
-    path('updatevehicles', views.update_vehicles, name='update_vehicles'),
-        
+    path('updatevehicles/<str:pk>', views.update_vehicles, name='update_vehicles'),
+    path('deletevehicles/<str:pk>', views.delete_vehicles, name='delete_vehicles'),
+    path('approvevehicle/<str:pk>', views.approve_vehicle, name="approve_vehicle"),
+    path('rejectvehicle/<str:pk>', views.reject_vehicle, name="reject_vehicle"),
 
     # multi user urls
-    path('openbluebook', views.open_bluebook, name='open_bluebook'),
-    path('openvehicle1', views.open_vehicle1, name='open_vehicle1'),
-    path('openvehicle2', views.open_vehicle2, name='open_vehicle2'),
-    path('openvehicle3', views.open_vehicle3, name='open_vehicle3'),
+    path('openbluebook/<str:pk>', views.open_bluebook, name='open_bluebook'),
+    path('openvehicle1/<str:pk>/<int:no>', views.open_vehicle, name='open_vehicle'),
+    path('viewvehicles/',views.view_vehicles, name="view_vehicles"),
+    path('vehiclesdetails/<str:pk>',views.vehicle_details, name="vehicle_details"),
 
-
-    
-      
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
