@@ -59,3 +59,7 @@ tbody tr:nth-child(odd){
 .featured-inner-text{
     @apply text-center mt-3 font-medium
 }
+
+.text{
+    @apply text-center pt-20 text-2xl text-dark-gray
+}

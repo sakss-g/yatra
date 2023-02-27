@@ -5,21 +5,90 @@
 
 {% block content %}
 <div class="h-screen w-full px-6 py-10 bg-theme">
-    <div class="bg-white h-full flex flex-col shadow-xl">
+    <div class="bg-white h-full flex flex-col shadow-xl overflow-y-auto scrollbar-hide">
         <div class="p-3">
-            <p class="text-center text-2xl font-semibold pt-2 pb-4">Hosting Request</p>
+            <p class="text-center text-2xl font-semibold pt-2 pb-10">Hosting Request</p>
+            {% if unverified_vehicles %}
                 {% for v in unverified_vehicles %}
-                    <p>{{ v.description }} || <a href="{{ v.bluebook.url }}">Bluebook</a>
-                    <form action="{% url 'approve_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Accept</button>
-                    </form>
-                    <form action="{% url 'reject_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
-                    </form>
-                    </p>
+                <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+                    <div class="flex flex-col mb-4">
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Number Plate: </span>{{ v.number_plate }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Location: </span>{{ v.location }}
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <span class="font-medium">Bluebook Id: </span>{{ v.bluebook_id }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Type: </span>{{ v.type }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="mb-4">
+                        <span class="font-medium">Bluebook: </span>
+                        <a href="{{ v.bluebook.url }}" style="color: blue;" class="underline">
+                            Bluebook
+                        </a>
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Description: </span>
+                        </div>
+                        <div>
+                            <span>{{ v.description }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Features: </span>
+                        </div>
+                        <div>
+                            <span>{{ v.feature }}</span>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="mb-4">
+                        <span class="font-medium">Hossting Price (Per Day): </span><span>Rs. {{ v.price }}</span>
+                    </div>
+
+                    <div>
+                        <div>
+                            <span class="font-medium">Vehicle Imgaes: </span>
+                        </div>
+                        <div class="flex flex-col mb-6">
+                            <a href="{{ v.image1.url }}" style="color: blue;" class="underline">
+                                Image 1
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="w-full flex flex-row justify-end">
+                        <form action="{% url 'approve_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Accept</button>
+                        </form>
+                        <form action="{% url 'reject_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                        </form>
+                    </div>
+                </div>  
                 {% endfor %}
+            {% else %}
+                <p class="text">All Vehicles are Verified</p>
+            {% endif %}        
         </div>
     </div>
 </div>

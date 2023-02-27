@@ -36,7 +36,7 @@ urlpatterns = [
     path('enduserprofile/', views.enduser_profile, name='enduser_profile'),
     path('enduser_update_profile/', views.enduser_update_profile, name='enduser_update_profile'),
     path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
-
+    path('renting_history/',views.renting_history, name="renting_history"),
 
     #delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user'),

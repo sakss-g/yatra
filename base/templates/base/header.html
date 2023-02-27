@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+{% load static tailwind_tags %}
+{% load user_group %}
+{% load user_group %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    {% tailwind_css %}
+</head>
+<body class="max-h-screen bg-white font-poppins">
+    <div class="flex flex-col">
+        <header class="flex flex-row justify between text-white bg-black h-24 w-full z-20"  id="land-header">
+            <div class="flex my-auto mx-5 w-3/4">
+                <a href="{% url 'home' %}" class="text-4xl font-semibold">YATRA</a>
+            </div>
+            <div class="flex flex-row my-auto w-1/4 text-xl justify-between">
+                {% with request.resolver_match.url_name as url_name %}
+                    <div class="flex mx-4">
+                        {% if url_name == 'login' or url_name == 'register_enduser' or url_name == 'register_host' %}
+                        {% else %}
+                            {% if request.user.is_authenticated %}
+                            {% else %}
+                                <a href = "{% url 'register_host' %}" class="border border-white py-2 px-5">Become a host</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="flex my-auto mx-4">
+                        {% if url_name == 'login' or url_name == 'register_host' or url_name == 'register_enduser' %}
+                        {% else %}
+                            {% if request.user.is_authenticated %}
+                            {% else %}
+                                <a href="{% url 'register_enduser' %}">Sign Up</a>
+                            {% endif %}
+                        {% endif %}
+                        
+                    </div>
+                    <div class="flex my-auto mx-4">
+                        {% if url_name == 'register_enduser' or url_name == 'register_host' or url_name == 'login' %}
+                        {% else %}
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'logout' %}">Logout</a>   
+                            {% else %}
+                                <a href="{% url 'login' %}">Log In</a>   
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="flex my-auto mx-4">
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                            
+                                <a href="{% url 'admin_dashboard' %}"> 
+                                    <div class="flex flex-row">
+                                        <span class="pr-4 pt-1">Admin</span> <img src="{% static 'images/profile.svg' %}" alt=""> 
+                                    </div>
+                                </a>
+
+                            {% endif %}
+
+                            {% if user|has_group:'enduser' %}
+                                <span class="pr-4 pt-1">{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}</span><a href="{% url 'enduser_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            {% endif %}
+
+                            {% if user|has_group:'host' %}
+                                <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span><a href="{% url 'host_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                            {% endif %}
+
+                        {% endif %}
+                    </div>
+                {% endwith %} 
+            </div>
+        </header>
+        {% block headercontent %}
+        {% endblock headercontent %}
+    </div>
+    {% block content %}
+    {% endblock content %}    
+    
+</body>
+<script>
+    window.onscroll = function() {myFunction()};
+
+    var header = document.getElementById("land-header");
+    var sticky = header.offsetTop;
+
+    function myFunction() {
+        if (window.pageYOffset > sticky) {
+          header.classList.add("sticky");
+        } else {
+          header.classList.remove("sticky");
+        }
+      }
+
+</script>
+</html>

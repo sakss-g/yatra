@@ -105,16 +105,16 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="{% url 'renting_history' %}" class="nav-bar-items {% if url_name == 'renting_history' %}active{% endif %}">
                             <img src="{% static 'images/Vehicle.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                Renting History
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="#" class="nav-bar-items {% if url_name == 'enduser_profile' %}active{% endif %}">
                             <img src="{% static 'images/blog.svg' %}" alt=""> 
-                            <li class="nav-bar-li">
+                            <li class="nav-bar-li ">
                                Travelogues Uploaded
                             </li>
                         </a>

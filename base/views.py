@@ -320,7 +320,14 @@ def enduser_upload_documents(request):
     }
     return render(request, 'enduser/enduser_upload_documents.html', context)
 
+def renting_history(request):
+    history = Rents.objects.filter(renter=request.user.enduser)
 
+    context = {
+        'history':history,
+    }
+
+    return render(request, 'enduser/renting_history.html', context)
 
 # admin related views
 

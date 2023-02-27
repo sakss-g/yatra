@@ -2,13 +2,21 @@ from django.db import models
 from django.contrib.auth.models import User
 from pathlib import Path
 
-status = (
+status = [
         ('Approved', 'Approved'),
         ('Rejected','Rejected'),
         ('Pending','Pending'),
-    )
+]
 
-# Create your models here.
+rating = [
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5),
+]
+
+
 class Host(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="host")
     first_name = models.CharField(max_length=25)
@@ -42,6 +50,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
 class Vehicle(models.Model):
     types = (
         ('Sedan', 'Sedan'),
@@ -66,11 +75,16 @@ class Vehicle(models.Model):
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
     is_rented = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.type+" "+self.description
+
+
 class Rents(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
     renter = models.ForeignKey(EndUser, on_delete=models.SET_NULL, null=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
 
 class Travelogue(models.Model):
     enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name="blogger")
@@ -78,4 +92,16 @@ class Travelogue(models.Model):
     image1 = models.ImageField(upload_to="enduser/travelogue")
     image2 = models.ImageField(upload_to="enduser/travelogue", null=True, blank=True)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+
+
+class RateRent(models.Model):
+    rent = models.ForeignKey(Rents, on_delete=models.CASCADE, related_name="rate")
+    rating = models.IntegerField(choices=rating, default=3)
+
+
+class ReportUser(models.Model):
+    by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_by')
+    to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_to')
+    reason = models.TextField(max_length=500)
+    image1 = models.ImageField(upload_to="report", blank=True, null=True)
 
