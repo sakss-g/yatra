@@ -28,6 +28,10 @@
     @apply rounded-md py-3 mb-4 bg-theme border-theme shadow-sm shadow-dark-gray
 }
 
+.input-fields-travelogue{
+    @apply rounded-md py-3 mb-4 bg-white border-white shadow-sm shadow-dark-gray
+}
+
 tbody tr:nth-child(even){
     @apply bg-theme
 }

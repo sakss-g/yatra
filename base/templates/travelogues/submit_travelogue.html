@@ -1,0 +1,42 @@
+{% extends 'base/header.html' %}
+{% load static %}
+{% load user_group %}
+{% load widget_tweaks %}
+
+{% block title%} Submit Travelogues {% endblock title%}
+
+{% block headercontent %}
+<div class="h-[1vh] bg-theme">
+</div>
+{% endblock headercontent %}
+
+{% block content %}
+{% if error %}
+<p class="text-white">{{error}}</p>
+{% endif %}
+<div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto hide-scrollbar">
+    <div class="w-3/6 mx-auto  items-center overflow-y-auto hide-scrollbar">
+        <p class="text-center text-3xl font-semibold pb-4">Share Your Experience</p>
+        <form action="{% url 'submit_travelogue' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="flex flex-col mt-4">
+                <label class="mb-2">Title </label>
+                {% render_field form.title class="input-fields-travelogue w-full"  %}
+
+                <label class="mb-2">Experience </label>
+                {% render_field form.description  rows="10" class="input-fields-travelogue resize-none w-full required" %}
+            </div>  
+            
+            <div class="flex flex-col w-full mt-4">
+                {% render_field form.image1 class="required" %}
+                {% render_field form.image2 class="required mt-6" %}
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button class="btn py-1.5 px-6" type="submit">Submit Travelogue</button>
+                <a href="{{request.META.HTTP_REFERER}}" class="bg-danger px-6 py-1.5 text-white rounded-md mx-1 border no-underline"> Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

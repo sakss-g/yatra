@@ -2,7 +2,6 @@
 
 {% load static tailwind_tags %}
 {% load user_group %}
-{% load user_group %}
 
 <html lang="en">
 <head>
@@ -77,6 +76,15 @@
         {% block headercontent %}
         {% endblock headercontent %}
     </div>
+    {% if messages %}
+        <div class= " absolute animate-right-to-left top-0 right-0 " style="display: flex; width: 100%; justify-content: flex-end;">
+            {% for message in messages %}
+                <div class=" p-3 {{ message.tags }} mt-2 mr-6 " id="msg" role="alert" >
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     {% block content %}
     {% endblock content %}    
     

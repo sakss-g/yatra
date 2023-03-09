@@ -88,7 +88,8 @@ class Rents(models.Model):
 
 class Travelogue(models.Model):
     enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name="blogger")
-    description = models.CharField(max_length=10000)
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=4000)
     image1 = models.ImageField(upload_to="enduser/travelogue")
     image2 = models.ImageField(upload_to="enduser/travelogue", null=True, blank=True)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")

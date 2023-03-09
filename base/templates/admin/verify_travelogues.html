@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title%} Verify Travelogues {% endblock title%}
+
+{% block content %}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col shadow-xl overflow-y-auto hide-scrollbar">
+        <div class="p-3">
+            <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Travelogues</p>
+            {% if unverified_travelogue %}
+                {% for u in unverified_travelogue %}
+                    {{ u.title }}
+                    {{ u.description }}
+
+                    <div class="flex flex-row justify-center">
+                        <form action="{% url 'approve_travelogue' u.id %}" method="post" style="margin-bottom: 0px;">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
+                        </form>
+                        <form action="{% url 'reject_travelogue' u.id %}" method="post" style="margin-bottom: 0px;">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

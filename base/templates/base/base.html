@@ -66,7 +66,7 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="{% url 'verify_travelogue' %}" class="nav-bar-items {% if url_name == 'verify_travelogue' %}active{% endif %}">
                             <img src="{% static 'images/blog.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                Travelogues
@@ -112,7 +112,7 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items {% if url_name == 'enduser_profile' %}active{% endif %}">
+                        <a href="{% url 'travelogues_uploaded' %}" class="nav-bar-items {% if url_name == 'travelogues_uploaded' %}active{% endif %}">
                             <img src="{% static 'images/blog.svg' %}" alt=""> 
                             <li class="nav-bar-li ">
                                Travelogues Uploaded

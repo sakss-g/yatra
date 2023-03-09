@@ -58,6 +58,15 @@ module.exports = {
             fontFamily:{
                 "poppins": "Poppins",
             },
+            keyframes: {
+                "right-to-left": {
+                    '0%': { right: "-100%" },
+                    '100%': { right: "0" },
+                }
+            },
+            animation: {
+                "right-to-left": 'right-to-left 0.4s ease-in',
+            },
         },
     },
     plugins: [

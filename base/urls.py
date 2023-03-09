@@ -6,11 +6,12 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('handlepayment', views.handle_payment, name="handle_payment"),
     path('login/',views.login_user, name="login"),
     path('logout/', views.logout_user, name='logout'),
 
 
-    #admin related urls
+    # admin related urls
     path('admindashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('end_users_admin/', views.end_users_admin, name='end_users_admin'),        
     path('hosts_admin/', views.hosts_admin, name='hosts_admin'),
@@ -22,7 +23,7 @@ urlpatterns = [
     path('hosting_request', views.hosting_request, name='hosting_request'),
 
 
-    #host related urls
+    # host related urls
     path('registerhost/', views.register_host, name='register_host'),
     path('hostdashboard/', views.host_dashboard, name='host_dashboard'),
     path('hostprofile/', views.host_profile, name='host_profile'),
@@ -30,15 +31,16 @@ urlpatterns = [
     path('host_upload_documents/', views.host_upload_documents, name='host_upload_documents'),
 
 
-    #enduser related urls
+    # enduser related urls
     path('registerenduser/', views.register_enduser, name='register_enduser'),
     path('enduserdashboard/', views.enduser_dashboard, name='enduser_dashboard'),
     path('enduserprofile/', views.enduser_profile, name='enduser_profile'),
     path('enduser_update_profile/', views.enduser_update_profile, name='enduser_update_profile'),
     path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
     path('renting_history/',views.renting_history, name="renting_history"),
+    path('travelogues_uploaded/', views.travelogues_uploaded, name='travelogues_uploaded'),
 
-    #delete user
+    # delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user'),
 
 
@@ -58,17 +60,24 @@ urlpatterns = [
 
     
     # vehicles related urls
-    path('hostvehicles', views.host_vehicles, name='host_vehicles'),
-    path('addvehicles', views.add_vehicles, name='add_vehicles'),
-    path('updatevehicles/<str:pk>', views.update_vehicles, name='update_vehicles'),
-    path('deletevehicles/<str:pk>', views.delete_vehicles, name='delete_vehicles'),
-    path('approvevehicle/<str:pk>', views.approve_vehicle, name="approve_vehicle"),
-    path('rejectvehicle/<str:pk>', views.reject_vehicle, name="reject_vehicle"),
+    path('host_vehicles', views.host_vehicles, name='host_vehicles'),
+    path('add_vehicles', views.add_vehicles, name='add_vehicles'),
+    path('update_vehicles/<str:pk>', views.update_vehicles, name='update_vehicles'),
+    path('delete_vehicles/<str:pk>', views.delete_vehicles, name='delete_vehicles'),
+    path('approve_vehicle/<str:pk>', views.approve_vehicle, name="approve_vehicle"),
+    path('reject_vehicle/<str:pk>', views.reject_vehicle, name="reject_vehicle"),
 
     # multi user urls
     path('openbluebook/<str:pk>', views.open_bluebook, name='open_bluebook'),
     path('openvehicle1/<str:pk>/<int:no>', views.open_vehicle, name='open_vehicle'),
     path('viewvehicles/',views.view_vehicles, name="view_vehicles"),
     path('vehiclesdetails/<str:pk>',views.vehicle_details, name="vehicle_details"),
+
+    # travelogues related urls
+    path('all_travelogues/', views.all_travelogues, name='all_travelogues'),
+    path('submit_travelogue/', views.submit_travelogue, name='submit_travelogue'),
+    path('verify_travelogue/', views.verify_travelogues, name='verify_travelogue'),
+    path('approve_travelogue/<str:pk>', views.approve_travelogue, name="approve_travelogue"),
+    path('reject_travelogue/<str:pk>', views.reject_travelogue, name="reject_travelogue"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

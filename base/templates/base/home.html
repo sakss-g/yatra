@@ -5,6 +5,47 @@
 {% block title%} Home Page {% endblock title%}
 
 {% block headercontent %}
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <form action="{% url 'handle_payment' %}" id="paymentform">
+        <button type="submit">Pay with Khalti</button>
+    </form>
+{#    <script>#}
+{#        $(document).ready(function(){#}
+{#        $('#paymentform').on('submit', function(e){#}
+{#            e.preventDefault();#}
+{#        $.ajax({#}
+{#            method:'POST',#}
+{#            url:"https://khalti.com/api/v2/epayment/initiate/",#}
+{#            headers:{#}
+{#            'Authorization': 'test_secret_key_53019ffabccd4e15b276f535402ec908',#}
+{#            'Content-Type': 'application/json',#}
+{##}
+{#        },#}
+{#            crossDomain: true,#}
+{#            dataType: 'jsonp',#}
+{#            data:{#}
+{#            return_url: "{% url 'home' %}",#}
+{#            website_url: "127.0.0.1:8000",#}
+{#            amount: 1300,#}
+{#            purchase_order_id: "test12",#}
+{#            purchase_order_name: "test",#}
+{#                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()#}
+{#        },#}
+{#        success: function() {#}
+{#            alert('Data Successfully Posted');#}
+{#            },#}
+{#            error:function(a, b, c){#}
+{#                console.log(a);#}
+{#                console.log(b);#}
+{#                console.log(c);#}
+{#                alert(a);#}
+{#            }#}
+{#        });#}
+{##}
+{#        });#}
+{#        });#}
+{#    </script>#}
+
     <div class="flex flex-col h-screen bg-white">
         <div class="flex flex-row h-24 bg-theme mx-60 mt-16 shadow-lg rounded-full border-medium-gray border-2 text-lg">
             <div class="flex flex-col border-r-2 border-r-dark-gray" style="width:33%;">
@@ -72,7 +113,7 @@
                 Explore your local car sharing marketplace.
             </span>
         </div>
-        
+
     </div>
     <div class="h-[55vh] flex  flex-col justify-evenly text-xl">
         <div class="mx-60">
@@ -154,7 +195,26 @@
         </div>
     </div>
 
-    <div class="h-screen">
+    <div class="h-screen flex flex-col justify-evenly">
+        <div class="flex flex-col items-center  ">
+            <p class="text-5xl font-medium">Fuel your daydreams</p>
+            <p class="text-dark-gray text-xl mt-8">Some lucid photo diaries of road trip adventures that stoke your wanderlust.</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <a href="{% url 'all_travelogues' %}" class="text-white text-xl py-4 px-12  bg-black">Explore Travelogues</a>
+        </div>
+        <div class="flex flex-col w-2/3 mx-auto justify-center">
+            <div class="flex justify-center mx-auto relative w-1/2">
+                <img src="{% static 'images/travelogue.jpg' %}" alt="" class="relative">
+            </div>
+            <div class="flex flex-col ml-32 w-80 h-60 bg-black absolute  px-4 justify-evenly">
+                <p class="text-white font-medium text-sm">FEATURED TRAVELOGUE</p>
 
+                <p class="text-white font-medium">Topic dnc nfakdfkafkjdjdafn  fdnun fidsnja dnfk dbsHb  dnk</p>
+
+                <a href="#" class="text-white font-medium underline text-sm">Read More</a>
+            </div>
+            
+        </div>
     </div>
 {% endblock content %}

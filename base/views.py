@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .forms import *
 from django.contrib.auth.models import User, Group
 from .models import Host, EndUser
@@ -8,10 +8,39 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, FileResponse
 from django.contrib import messages
+from django.urls import reverse
+from yatra.settings import KHALTI_API_KEY
+
+import requests
+import json
 # Create your views here.
+def handle_payment(request):
+    url = "https://a.khalti.com/api/v2/epayment/initiate/"
+    u = request.build_absolute_uri(reverse('home'))
+    payload = json.dumps({
+        "return_url": u,
+        "website_url": u,
+        "amount": 1300,
+        "purchase_order_id": "test12",
+        "purchase_order_name": "rajesh",
+    })
+    headers = {
+        'Authorization': KHALTI_API_KEY,
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return redirect(response.json()["payment_url"])
 
 # all related views
 def home(request):
+    #payment related work
+    if request.GET.get('pidx') is not None:
+        print(request.GET.get('pidx'))
+        print(request.GET.get('amount'))
+        print(request.user)
+    elif request.GET.get('message') is not None:
+        print(request.GET.get('message'))
+
     return render(request, 'base/home.html')
 
 
@@ -329,6 +358,12 @@ def renting_history(request):
 
     return render(request, 'enduser/renting_history.html', context)
 
+def travelogues_uploaded(request):
+    return render(request, 'enduser/travelogues_uploaded.html')
+
+
+
+
 # admin related views
 
 def delete_user(request, pk):
@@ -426,6 +461,53 @@ def hosting_request(request):
     return render(request, 'admin/hosting_request.html',context)
 
 
+def approve_travelogue(request, pk):
+    if request.method == "POST":
+        travelogue = Travelogue.objects.get(id=pk)
+        travelogue.is_approved = "Approved"
+        travelogue.save()
+    return redirect('verify_travelogue')
+
+def reject_travelogue(request, pk):
+    if request.method == "POST":
+        travelogue = Travelogue.objects.get(id=pk)
+        travelogue.is_approved = "Rejected"
+        travelogue.save()
+    return redirect('verify_travelogue')
 
 
+def verify_travelogues(request):
+    unverified_travelogue = Travelogue.objects.filter(is_approved="Pending")
 
+    context = {
+        'unverified_travelogue': unverified_travelogue
+    }
+
+    return render(request, 'admin/verify_travelogues.html',context)
+
+
+# travelogues related views
+
+def all_travelogues(request):
+    travelogues = Travelogue.objects.filter(is_approved="Approved")
+    context = {
+        'travelogues_list':travelogues,
+    }
+    return render(request, 'travelogues/travelogues.html', context)
+
+def submit_travelogue(request):
+    submit_travelogue_form = SubmitTravelogueForm()
+
+    if request.method == "POST":
+        submit_travelogue_form = SubmitTravelogueForm(request.POST, request.FILES)
+        if submit_travelogue_form.is_valid():
+            submit_travelogue = submit_travelogue_form.save(commit=False)
+            submit_travelogue.enduser = request.user.enduser
+            submit_travelogue.save()
+            return redirect('travelogues_uploaded') 
+        else:
+            messages.error(request, submit_travelogue_form.errors)
+    context = {
+    'form': submit_travelogue_form
+    }
+    return render(request, 'travelogues/submit_travelogue.html', context)
