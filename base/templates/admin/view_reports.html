@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load user_group %}
+
+{% block title%} View Reports {% endblock title%}
+
+{% block content %}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col justify-between shadow-xl">
+        <div class="p-3">
+            <h1 class="text-center text-3xl font-semibold pt-2 pb-6">Reports</h1>
+
+            <div class="flex flex-col bg-theme mx-8 p-8 text-lg rounded-xl">
+                <!-- <label for="status">Filter By:</label>
+                <select name="status" id="status" >
+                <option value="Pending">Pending</option>
+                <option value="Accepted">Completed</option>
+                </select> -->
+                {% for report in reports %}
+                    <div class="flex flex-col ">
+                        <!-- <div class="flex flex-row">
+                            <p>Report ID: </p>
+                            {{ report.id }}
+                        </div> -->
+                        <div class="flex flex-row">
+                            <p>Report: &nbsp;</p>
+                            {{ report.reason }}
+                        </div>
+                        <div>
+                            {% if report.image1 %}<a href="{{ report.image1.url }}"  style="color:blue;">{{ report.image1 }}</a>{% endif %}
+                        </div>
+                        <div class="flex flex-row mt-4 w-full justify-end">
+                            {% if report.status == "Pending" %}
+                                <form action="{% url 'handle_report' pk=report.id fk=1 %}" method="post" style="margin-bottom: 0px;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-black px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">No Action</button>
+                                </form>
+                                <form action="{% url 'handle_report' pk=report.id fk=2 %}"  method="post" style="margin-bottom: 0px;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Delete</button>
+                                </form>
+                                <form action="{% url 'handle_report' pk=report.id fk=3 %}"  method="post" style="margin-bottom: 0px;">
+                                        {% csrf_token %}
+                                    <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Warning</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content%}

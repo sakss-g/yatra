@@ -59,17 +59,24 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
-                            <img src="{% static 'images/Vehicle.svg' %}" alt=""> 
-                            <li class="nav-bar-li">
-                               Vehicles
-                            </li>
-                        </a>
-
                         <a href="{% url 'verify_travelogue' %}" class="nav-bar-items {% if url_name == 'verify_travelogue' %}active{% endif %}">
                             <img src="{% static 'images/blog.svg' %}" alt=""> 
                             <li class="nav-bar-li">
                                Travelogues
+                            </li>
+                        </a>
+
+                         <a href="{% url 'view_reports' %}" class="nav-bar-items {% if url_name == 'view_reports' %}active{% endif %}">
+                            <img src="{% static 'images/Vehicle.svg' %}" alt="">
+                            <li class="nav-bar-li">
+                               Reports
+                            </li>
+                        </a>
+
+                        <a href="{% url 'view_transactions' %}" class="nav-bar-items {% if url_name == 'view_transactions' %}active{% endif %}">
+                            <img src="{% static 'images/Vehicle.svg' %}" alt="">
+                            <li class="nav-bar-li">
+                               Transactions
                             </li>
                         </a>
                     </ul>
@@ -166,10 +173,10 @@
                             </li>
                         </a>
 
-                        <a href="#" class="nav-bar-items">
+                        <a href="{% url 'rented_history' %}" class="nav-bar-items{% if url_name == 'rented_history' or url_name == 'report_user' %} active {% endif %}">
                             <img src="{% static 'images/request.svg' %}" alt=""> 
                             <li class="nav-bar-li">
-                                Renting Request
+                                Rented History
                             </li>
                         </a>
 

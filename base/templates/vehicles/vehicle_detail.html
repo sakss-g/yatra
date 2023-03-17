@@ -8,10 +8,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>View Vehicles</title>
 
     {% tailwind_css %}
@@ -31,7 +31,6 @@
     <div class="bg-white h-full flex flex-col shadow-xl">
         <div class="p-3 overflow-y-auto scrollbar-hide">
             <p class="text-center text-3xl font-semibold pt-2 pb-4">{{ vehicle.type}}</p>
-
                 <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
                     <div class="flex flex-col mb-4">
                         <div class="flex flex-row justify-between mb-4">
@@ -89,14 +88,14 @@
                     {% if history %}
                         <p>Booked For</p>
                         {% for hist in history %}
-                            <p>{{ hist.start_time }} to {{ hist.end_time}}</p>
+                            <p>{{ hist.start_date }} to {{ hist.end_date}}</p>
                         {% endfor %}
                     {% endif %}
                     <form action="" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ vehicle.id }}"/>
-                        <input type="datetime-local" name="start" id="date1" required/>
-                         <input type="datetime-local" name="end" id="date2" required/>
+                        <p>Date: <input type="text" id="datepicker1" name="start"  readonly></p>
+                        <p>Date: <input type="text" id="datepicker2" name="end" readonly></p>
                         <button type="submit">Rent</button>
                     </form>
                 </div>
@@ -104,9 +103,37 @@
     </div>
 </div>
 <script>
-    var date = new Date().toISOString().slice(0,16);
-    $('#date1').attr('min', date);
-    $('#date2').attr('min', date);
+    window.addEventListener("load", (event) => {
+        console.log('Got here')
+      console.log( [{% for d in dates %} '{{ d }}', {% endfor %}])
+        console.log('Printed dates')
+    });
+
+    $(function() {
+        $.datepicker.setDefaults({
+             dateFormat: 'yy-mm-dd'
+        });
+
+      $("#datepicker1").datepicker({
+        minDate: new Date(),
+          format:'yy-mm-dd',
+        beforeShowDay: function(date) {
+          var disabledDates = [{% for d in dates %} '{{ d }}', {% endfor %}];
+          var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+          return [disabledDates.indexOf(string) == -1];
+        }
+      });
+
+       $("#datepicker2").datepicker({
+        minDate: new Date(),
+           format:'yy-mm-dd',
+        beforeShowDay: function(date) {
+          var disabledDates = [{% for d in dates %} '{{ d }}', {% endfor %}];
+          var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+          return [disabledDates.indexOf(string) == -1];
+        }
+      });
+    });
 </script>
 
 

@@ -7,7 +7,7 @@
     <div class="flex flex-col">
     {% for hist in history %}
             <div>
-                <a href="{% url 'view_profile_host' pk=hist.vehicle.host_id %}"><p>{{ hist.vehicle.host.first_name }}</p></a>
+                <a href="{% url 'view_profile_enduser' pk=hist.renter.id %}"><p>{{ hist.vehicle.host.first_name }}</p></a>
                 <p>{{ hist.vehicle }}</p></div>
     {% endfor %}
      </div>

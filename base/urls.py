@@ -21,7 +21,9 @@ urlpatterns = [
     path('approve_enduser/<str:pk>', views.approve_enduser, name='approve_enduser'),
     path('reject_enduser/<str:pk>', views.reject_enduser, name='reject_enduser'),
     path('hosting_request', views.hosting_request, name='hosting_request'),
-
+    path('view_reports', views.view_reports, name='view_reports'),
+    path('handle_report/<str:pk>/<int:fk>', views.handle_report, name='handle_report'),
+    path('view_transactions/', views.view_transaction, name='view_transactions'),
 
     # host related urls
     path('registerhost/', views.register_host, name='register_host'),
@@ -29,6 +31,8 @@ urlpatterns = [
     path('hostprofile/', views.host_profile, name='host_profile'),
     path('host_update_profile/', views.host_update_profile, name='host_update_profile'),
     path('host_upload_documents/', views.host_upload_documents, name='host_upload_documents'),
+    path('rented_history', views.rented_history, name='rented_history'),
+    path('viewprofileenduser/<str:pk>', views.view_profile_enduser, name='view_profile_enduser'),
 
 
     # enduser related urls
@@ -39,9 +43,11 @@ urlpatterns = [
     path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
     path('renting_history/',views.renting_history, name="renting_history"),
     path('travelogues_uploaded/', views.travelogues_uploaded, name='travelogues_uploaded'),
+    path('viewprofilehost/<str:pk>',views.view_profile_host, name='view_profile_host'),
 
     # delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user'),
+    path('reportuser/<str:to>', views.report_user, name='report_user'),
 
 
      # Forgot password and reset
@@ -72,6 +78,7 @@ urlpatterns = [
     path('openvehicle1/<str:pk>/<int:no>', views.open_vehicle, name='open_vehicle'),
     path('viewvehicles/',views.view_vehicles, name="view_vehicles"),
     path('vehiclesdetails/<str:pk>',views.vehicle_details, name="vehicle_details"),
+
 
     # travelogues related urls
     path('all_travelogues/', views.all_travelogues, name='all_travelogues'),

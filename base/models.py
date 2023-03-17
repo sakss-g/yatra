@@ -29,6 +29,9 @@ class Host(models.Model):
     pic = models.ImageField(upload_to='host/profile', default='default_profile.jpg')
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
 
 class EndUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="enduser")
@@ -43,6 +46,8 @@ class EndUser(models.Model):
     pic = models.ImageField(upload_to='enduser/profile', default='default_profile.jpg')
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name
 
 class Location(models.Model):
     name=models.CharField(max_length=25, unique=True)
@@ -79,11 +84,18 @@ class Vehicle(models.Model):
         return self.type+" "+self.description
 
 
+class Transaction(models.Model):
+    t_id = models.CharField(primary_key=True, max_length=50)
+    amount = models.CharField(max_length=25)
+    host = models.ForeignKey(Host, on_delete=models.SET_NULL, related_name="transactionHost", null=True)
+
+
 class Rents(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
     renter = models.ForeignKey(EndUser, on_delete=models.SET_NULL, null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    t_id = models.ForeignKey(Transaction, on_delete=models.SET_NULL, null=True)
 
 
 class Travelogue(models.Model):
@@ -99,10 +111,15 @@ class RateRent(models.Model):
     rent = models.ForeignKey(Rents, on_delete=models.CASCADE, related_name="rate")
     rating = models.IntegerField(choices=rating, default=3)
 
+report_status = (
+    ('Pending', 'Pending'),
+    ('Accepted', 'Accepted')
+)
 
 class ReportUser(models.Model):
     by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_by')
     to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_to')
     reason = models.TextField(max_length=500)
     image1 = models.ImageField(upload_to="report", blank=True, null=True)
+    status = models.CharField(max_length=10, choices=status, default="Pending")
 

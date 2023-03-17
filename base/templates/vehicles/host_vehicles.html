@@ -9,9 +9,19 @@
         <div class="p-3 overflow-y-auto scrollbar-hide">
             <p class="text-center text-3xl font-semibold pt-2 pb-4">Host Vehicles</p>
             {% if request.user.host.is_approved == "Approved" %}
-            <div class="flex w-full justify-end px-10 py-6">
-                <a href="{% url 'add_vehicles' %}"><button class="bg-custom-green text-white rounded-md py-1.5 px-6" type="submit">Add Vehicle</button></a>
-            </div>
+                {% if add_payment == 'yes' %}
+                    <div class="flex w-full justify-end px-10 py-6">
+                        <a href="{% url 'handle_payment' %}"><button class="bg-custom-green text-white rounded-md py-1.5 px-6" type="submit">Make Payment</button></a>
+                    </div>
+                    {% if not error == ''  %}
+                        <p>{{ error }}</p>
+                    {% endif %}
+                    <p>You need to make payment before adding vehicles</p>
+                {% else %}
+                    <div class="flex w-full justify-end px-10 py-6">
+                        <a href="{% url 'add_vehicles' %}"><button class="bg-custom-green text-white rounded-md py-1.5 px-6" type="submit">Add Vehicle</button></a>
+                    </div>
+                {% endif %}
             {% else %}
                 <a>You can only add vehicles after being approved</a>
             {% endif %}
@@ -92,8 +102,8 @@
                         <span class="font-medium">Vehicle Status:  </span><span class="py-1 px-6 ml-2 text-white rounded-md {% if vehicle.is_approved == 'Approved' %} bg-custom-green {% elif vehicle.is_approved == 'Pending' %} bg-custom-orange {% else %} bg-danger {% endif %} ">{{ vehicle.is_approved }}</span>
                     </div>
                     {%  if vehicle.is_approved != "Approved" %}
-                    <div class="flex mt-6 mr-6 justify-between w-full">
-                        <a  href="{% url 'delete_vehicles' vehicle.id %}"><button class="py-1 px-6 btn text-lg">Delete</button></a>
+                    <div class="flex mt-6 mr-6 justify-end w-full">
+                        <a  href="{% url 'delete_vehicles' vehicle.id %}"><button class="py-1 px-6 bg-danger text-white rounded-md text-lg mr-4">Delete</button></a>
                         <a  href="{% url 'update_vehicles' vehicle.id %}"><button class="py-1 px-6 btn text-lg">Update</button></a>
                     </div>
                     {% endif %}

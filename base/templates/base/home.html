@@ -6,46 +6,6 @@
 
 {% block headercontent %}
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <form action="{% url 'handle_payment' %}" id="paymentform">
-        <button type="submit">Pay with Khalti</button>
-    </form>
-{#    <script>#}
-{#        $(document).ready(function(){#}
-{#        $('#paymentform').on('submit', function(e){#}
-{#            e.preventDefault();#}
-{#        $.ajax({#}
-{#            method:'POST',#}
-{#            url:"https://khalti.com/api/v2/epayment/initiate/",#}
-{#            headers:{#}
-{#            'Authorization': 'test_secret_key_53019ffabccd4e15b276f535402ec908',#}
-{#            'Content-Type': 'application/json',#}
-{##}
-{#        },#}
-{#            crossDomain: true,#}
-{#            dataType: 'jsonp',#}
-{#            data:{#}
-{#            return_url: "{% url 'home' %}",#}
-{#            website_url: "127.0.0.1:8000",#}
-{#            amount: 1300,#}
-{#            purchase_order_id: "test12",#}
-{#            purchase_order_name: "test",#}
-{#                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()#}
-{#        },#}
-{#        success: function() {#}
-{#            alert('Data Successfully Posted');#}
-{#            },#}
-{#            error:function(a, b, c){#}
-{#                console.log(a);#}
-{#                console.log(b);#}
-{#                console.log(c);#}
-{#                alert(a);#}
-{#            }#}
-{#        });#}
-{##}
-{#        });#}
-{#        });#}
-{#    </script>#}
-
     <div class="flex flex-col h-screen bg-white">
         <div class="flex flex-row h-24 bg-theme mx-60 mt-16 shadow-lg rounded-full border-medium-gray border-2 text-lg">
             <div class="flex flex-col border-r-2 border-r-dark-gray" style="width:33%;">

@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load user_group %}
+
+{% block title%} End User Profile {% endblock title%}
+
+{% block content %}
+<div class="flex flex-col h-screen px-6 py-10 w-full bg-theme">
+    <p class="text-center text-3xl font-semibold pt pb-4">Profile</p>
+    <div class="flex flex-row h-full gap-6">
+        <div class="bg-white h-full flex flex-col w-1/3 py-12 rounded-xl justify-between shadow-xl">
+            <img src="{{ enduser.pic.url }}" style="object-fit: contain" alt="" class="mx-auto mb-5 w-40 h-40 object-cover rounded-full ">
+            {% if report_button %}
+                <form action="{% url 'report_user' to=enduser.user_id %}" method="get" style="margin-bottom: 0px;">
+                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
+                </form>
+            {% endif %}
+            <div class="flex flex-col bg-theme  mx-8 p-8 text-lg rounded-xl">
+                <div class="flex mb-5">
+                    <p class="font-medium">Name:</p>
+                    <p class="ml-3">{{ enduser.first_name }} {{ enduser.last_name }}</p>
+                </div>
+
+                <div class="flex mb-5">
+                    <p class="font-medium">Email:</p>
+                    <p class="ml-3">{{ enduser.email }}</p>
+                </div>
+
+                <div class="flex">
+                    <p class="font-medium">Contact Number:</p>
+                    <p class="ml-3">{{user.enduser.phone_number}}</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="bg-white h-full flex flex-col w-2/3 justify-between rounded-xl shadow-xl">
+            <div class="flex flex-col bg-theme m-10 p-8 text-lg rounded-xl h-full relative">
+               {% for history in renthistory %}
+                <div class="flex mb-3">
+                    <p class="font-medium">{{ history.vehicle.description}}</p>
+                    <p class="font-medium">{{ history.start_time|timesince}}</p>
+                    <p class="font-medium">{{ history.end_time|timesince}}</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock content%}

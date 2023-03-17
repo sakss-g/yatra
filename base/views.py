@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import *
 from django.contrib.auth.models import User, Group
-from .models import Host, EndUser
+from .models import *
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, logout, authenticate 
 from django.contrib.auth.decorators import login_required
@@ -16,11 +16,11 @@ import json
 # Create your views here.
 def handle_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
-    u = request.build_absolute_uri(reverse('home'))
+    u = request.build_absolute_uri(reverse('host_vehicles'))
     payload = json.dumps({
         "return_url": u,
         "website_url": u,
-        "amount": 1300,
+        "amount": 13000,
         "purchase_order_id": "test12",
         "purchase_order_name": "rajesh",
     })
@@ -29,18 +29,13 @@ def handle_payment(request):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    return redirect(response.json()["payment_url"])
+    if response.json()["payment_url"] is None:
+        return redirect(response.json()["detail"])
+    else:
+        return redirect(response.json()["payment_url"])
 
 # all related views
 def home(request):
-    #payment related work
-    if request.GET.get('pidx') is not None:
-        print(request.GET.get('pidx'))
-        print(request.GET.get('amount'))
-        print(request.user)
-    elif request.GET.get('message') is not None:
-        print(request.GET.get('message'))
-
     return render(request, 'base/home.html')
 
 
@@ -87,58 +82,86 @@ def view_vehicles(request):
 def vehicle_details(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
     history = Rents.objects.filter(vehicle=vehicle)
+    dates = list()
+    for h in history:
+        dates.append(h.start_date.strftime("%Y-%m-%d"))
+        dates.append(h.end_date.strftime("%Y-%m-%d"))
+        date_range = h.end_date - h.start_date
+        for days in range(1, date_range.days):
+            dates.append((h.start_date + datetime.timedelta(days)).strftime("%Y-%m-%d"))
     if request.method == "POST":
-        start_time = request.POST.get('start')
-        end_time = request.POST.get('end')
-        current_time = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+        start_date = request.POST.get('start')
+        print(type(start_date))
+        print(start_date)
+        end_date = request.POST.get('end')
+        print(end_date)
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        print(current_date)
         can_rent = True
         if request.user.is_anonymous:
             messages.error(request, "You need to be a verified user to rent")
-        elif start_time <= current_time:
-            messages.error(request, "Start Time cannot be before now")
-        elif end_time <= start_time:
-            messages.error(request, "End Time cannot be before Start Time")
+        elif start_date <= current_date:
+            messages.error(request, "Start Date cannot be today or before now")
+        elif end_date <= start_date:
+            messages.error(request, "End Date cannot be before Start Date")
         elif vehicle.is_rented:
-
             for hist in history:
-                if (hist.start_time.strftime("%Y-%m-%dT%H:%M") <= start_time <= hist.end_time.strftime("%Y-%m-%dT%H:%M")) \
-                        or (hist.start_time.strftime("%Y-%m-%dT%H:%M") <= end_time <= hist.end_time.strftime("%Y-%m-%dT%H:%M")):
-                    messages.error(request, "Vehicle has already been booked for this period")
-                    can_rent = False
+                sd = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+                ed = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+                date_range1 = hist.end_date - hist.start_date
+                date_range2 = ed -sd
+
+                if date_range1.days > date_range2.days:
+                    for days in range(0, date_range1.days+1):
+                        if ed == hist.start_date + datetime.timedelta(days) or sd == hist.start_date + datetime.timedelta(days):
+                            messages.error(request, "Vehicle already booked for this date range!!!")
+                            can_rent = False
+                            break
+                else:
+                    for days in range(0, date_range2.days+1):
+                        if hist.start_date == sd+datetime.timedelta(days) or hist.end_date == sd+datetime.timedelta(days):
+                            messages.error(request, "Vehicle already booked for this date range!!!")
+                            can_rent = False
+                            break
+                if not can_rent:
                     break
+
             if can_rent:
                 try:
                     rent = Rents()
                     rent.renter = request.user.enduser
                     rent.vehicle = vehicle
-                    rent.start_time = start_time
-                    rent.end_time = end_time
+                    rent.start_date = start_date
+                    rent.end_date = end_date
                     rent.save()
-                    vehicle.is_rented = True
                     vehicle.save()
                     messages.success(request, "Vehicle Rented")
                     return redirect('view_vehicles')
-                except:
+                except Exception as e:
+                    print(e)
                     messages.error(request, "Error!!!! Could not rent")
         else:
             try:
                 rent = Rents()
                 rent.renter = request.user.enduser
                 rent.vehicle = vehicle
-                rent.start_time = start_time
-                rent.end_time = end_time
+                rent.start_date = start_date
+                rent.end_date = end_date
                 rent.save()
                 vehicle.is_rented = True
                 vehicle.save()
                 messages.success(request,"Vehicle Rented")
                 return redirect('view_vehicles')
-            except:
+            except Exception as e:
+                print(e)
                 messages.error(request, "Error!!!! Could not rent")
     context = {
         'vehicle': vehicle,
         'history':history,
+        'dates':dates
     }
     return render(request, 'vehicles/vehicle_detail.html', context)
+
 
 # host related views
 def register_host(request):
@@ -149,7 +172,6 @@ def register_host(request):
         password = request.POST.get('password')
         user = User.objects.create(username=email, password=make_password(password))
         group = Group.objects.get(name="host")
-        print(group.name)
         user.groups.add(group)
         user.save()
         host = Host()
@@ -203,10 +225,27 @@ def host_upload_documents(request):
 
 
 def host_vehicles(request):
+    error = ''
+    if request.GET.get('pidx') is not None:
+        transaction = Transaction()
+        transaction.host = request.user.host
+        transaction.amount = request.GET.get('amount')
+        transaction.t_id = request.GET.get('transaction_id')
+        transaction.save()
+    elif request.GET.get('message') is not None:
+        error = request.GET.get('message')
+
     vehicle_list = Vehicle.objects.filter(host=request.user.host)
+    transactions = Transaction.objects.filter(host__user=request.user)
+    if transactions.count() == 0:
+        add_payment = 'yes'
+    else :
+        add_payment = 'no'
 
     context = {
-         'vehicle_list' : vehicle_list
+         'vehicle_list' : vehicle_list,
+         'add_payment': add_payment,
+         'error':error
     }
     return render(request, 'vehicles/host_vehicles.html', context)
 
@@ -244,6 +283,16 @@ def update_vehicles(request, pk):
         'vehicle_form': vehicle
     }
     return render(request, 'vehicles/update_vehicles.html', context)
+
+
+def rented_history(request):
+    history = Rents.objects.filter(vehicle__host=request.user.host)
+    context = {
+        'history': history,
+    }
+
+    return render(request, 'host/rented_history.html', context)
+
 
 def delete_vehicles(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
@@ -366,6 +415,15 @@ def travelogues_uploaded(request):
 
 # admin related views
 
+def view_transaction(request):
+    transaction = Transaction.objects.all()
+
+    context = {
+        'transactions':transaction,
+    }
+
+    return render(request, 'admin/all_transactions.html',  context)
+
 def delete_user(request, pk):
     user = User.objects.filter(id=pk).delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -485,6 +543,34 @@ def verify_travelogues(request):
 
     return render(request, 'admin/verify_travelogues.html',context)
 
+def view_reports(request):
+    filterby = request.GET.get('status')
+    print(filterby)
+    if filterby:
+        reports = ReportUser.objects.filter(status=filterby)
+    else:
+        reports = ReportUser.objects.filter(status='Pending')
+
+    context = {
+        'reports':reports
+    }
+
+    return render(request, 'admin/view_reports.html', context)
+
+def handle_report(request, pk, fk):
+    if request.method == "POST":
+        report = ReportUser.objects.get(id=pk)
+        print(report)
+        if fk == 1:
+            report.status = 'Accepted'
+            report.save()
+        elif fk == 2:
+            print('Delete User')
+            report.to.delete()
+        elif fk == 3:
+            print('Email Logic')
+        return redirect('view_reports')
+
 
 # travelogues related views
 
@@ -511,3 +597,61 @@ def submit_travelogue(request):
     'form': submit_travelogue_form
     }
     return render(request, 'travelogues/submit_travelogue.html', context)
+
+
+#userprofile
+def view_profile_enduser(request, pk):
+    enduser = EndUser.objects.get(id=pk)
+    renthistory = Rents.objects.filter(renter=enduser, vehicle__host=request.user.host)
+    report = ReportUser.objects.filter(by=request.user, to=enduser.user)
+    if report.count() > 0:
+        report_button = False
+    else:
+        report_button = True
+    context = {
+        'enduser': enduser,
+        'renthistory': renthistory,
+        'report_button': report_button
+    }
+    return render(request, 'host/enduser_profile.html', context)
+
+def view_profile_host(request, pk):
+    host = Host.objects.get(id=pk)
+    vehicles = Vehicle.objects.filter(host=host)
+    report = ReportUser.objects.filter(by=request.user, to=host.user)
+    if report.count() > 0:
+        report_button = False
+    else:
+        report_button = True
+
+    context={
+        'host':host,
+        'vehicles':vehicles,
+        'report_button':report_button
+    }
+    return render(request, 'enduser/host_profile.html', context)
+
+
+# report and rating related views
+def report_user(request, to):
+    reportform = ReportUserForm()
+
+    if request.method == "POST":
+        # print(request.user.groups.filter(name='host').exists()) use this to redirect later
+        # print(request.user.groups.filter(name='enduser').exists())
+        reportform = ReportUserForm(request.POST, request.FILES)
+        if reportform.is_valid():
+            report = reportform.save(commit=False)
+            report.by = request.user
+            report.to = User.objects.get(id=to)
+            report.save()
+            if request.user.groups.filter(name='host').exists():
+                return redirect('rented_history')
+            elif request.user.groups.filter(name='enduser').exists():
+                return redirect('renting_history')
+
+    context = {
+        'form':reportform
+    }
+    return render(request, 'reprat/report.html', context)
+

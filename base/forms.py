@@ -1,5 +1,5 @@
 from django import forms
-from .models import Host, EndUser, Vehicle, Rents, Travelogue
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser
 from django.forms import DateTimeInput
 class HostForm(forms.ModelForm):
     class Meta:
@@ -55,3 +55,9 @@ class SubmitTravelogueForm(forms.ModelForm):
     class Meta:
         model = Travelogue 
         exclude = ['enduser', 'is_approved']
+
+
+class ReportUserForm(forms.ModelForm):
+    class Meta:
+        model = ReportUser
+        exclude = ['by', 'to']
