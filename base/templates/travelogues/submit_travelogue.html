@@ -5,17 +5,12 @@
 
 {% block title%} Submit Travelogues {% endblock title%}
 
-{% block headercontent %}
-<div class="h-[1vh] bg-theme">
-</div>
-{% endblock headercontent %}
-
 {% block content %}
 {% if error %}
 <p class="text-white">{{error}}</p>
 {% endif %}
-<div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto hide-scrollbar">
-    <div class="w-3/6 mx-auto  items-center overflow-y-auto hide-scrollbar">
+<div class="h-screen w-full px-6 py-10  bg-theme ">
+    <div class="w-3/6 mx-auto mt-24 p-3 items-center overflow-y-auto hide-scrollbar">
         <p class="text-center text-3xl font-semibold pb-4">Share Your Experience</p>
         <form action="{% url 'submit_travelogue' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -24,7 +19,7 @@
                 {% render_field form.title class="input-fields-travelogue w-full"  %}
 
                 <label class="mb-2">Experience </label>
-                {% render_field form.description  rows="10" class="input-fields-travelogue resize-none w-full required" %}
+                {% render_field form.description class="input-fields-travelogue resize-none w-full required"  rows="10" %}
             </div>  
             
             <div class="flex flex-col w-full mt-4">

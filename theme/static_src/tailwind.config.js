@@ -58,6 +58,9 @@ module.exports = {
             fontFamily:{
                 "poppins": "Poppins",
             },
+            height:{
+                '128':'30rem',
+            },
             keyframes: {
                 "right-to-left": {
                     '0%': { right: "-100%" },

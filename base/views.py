@@ -328,14 +328,6 @@ def open_vehicle(request, pk, no):
         vehicle = vehicle.image3.path
     return FileResponse(open(vehicle, 'rb'))
 
-def open_vehicle2(request):
-    image2 = Vehicle.objects.get().image2.url
-    return FileResponse(open(image2, 'rb'))
-
-def open_vehicle3(request):
-    image3 = Vehicle.objects.get().image3.path
-    return FileResponse(open(image3, 'rb'))
-
 
 
 # end users related views
@@ -407,8 +399,7 @@ def renting_history(request):
 
     return render(request, 'enduser/renting_history.html', context)
 
-def travelogues_uploaded(request):
-    return render(request, 'enduser/travelogues_uploaded.html')
+
 
 
 
@@ -462,12 +453,16 @@ def hosts_admin(request):
 def verify_user(request):
     unverified_hosts = Host.objects.filter(is_approved="Pending")
     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
+
     context = {
         'unverified_endusers':unverified_endusers,
         'unverified_hosts':unverified_hosts
     }
     return render(request,'admin/verify_user.html', context)
 
+def open_citizenship(request, pk):
+    citizenship = Host.objects.get(id=pk).citizenship.path
+    return FileResponse(open(citizenship, 'rb'))    
 
 def approve_host(request, pk):
     if request.method == "POST":
@@ -598,6 +593,17 @@ def submit_travelogue(request):
     }
     return render(request, 'travelogues/submit_travelogue.html', context)
 
+def travelogues_uploaded(request):
+    travelogues = Travelogue.objects.filter(enduser=request.user.enduser)
+    context = {
+        'uploaded_travelogues': travelogues 
+    }
+    return render(request, 'enduser/travelogues_uploaded.html', context)
+
+
+def open_travelogue(request, pk):
+    travelogue = Travelogue.objects.get(id=pk).image1.path
+    return FileResponse(open(travelogue, 'rb'))
 
 #userprofile
 def view_profile_enduser(request, pk):

@@ -1,104 +1,82 @@
-<!DOCTYPE html>
-{% load static tailwind_tags%}
+{% extends 'base/header.html' %}
 {% load static %}
 {% load widget_tweaks %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <title>View Vehicles</title>
+{% block title%} Update Vehicles {% endblock title%}
 
-    {% tailwind_css %}
-</head>
+{% block content %}
 
-<body>
-{% if messages %}
-                <div class= " absolute animate-right-to-left top-0 right-0 " style="display: flex; width: 100%; justify-content: flex-end;">
-                    {% for message in messages %}
-                        <div class=" p-3 {{ message.tags }} mt-2 mr-6 " id="msg" role="alert" >
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-<div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto">
-    <div class="bg-white h-full flex flex-col shadow-xl">
-        <div class="p-3 overflow-y-auto scrollbar-hide">
-            <p class="text-center text-3xl font-semibold pt-2 pb-4">{{ vehicle.type}}</p>
-                <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
-                    <div class="flex flex-col mb-4">
-                        <div class="flex flex-row justify-between mb-4">
-                            <div>
-                                <span class="font-medium">Number Plate: </span>{{ vehicle.number_plate }}
-                            </div>
-                            <div>
-                                <span class="font-medium">Location: </span>{{ vehicle.location }}
-                            </div>
-                        </div>
-                    </div>
 
-                    <hr class="mb-4">
-
-                    <div class="mb-4 flex flex-col">
-                        <div>
-                            <span class="font-medium">Description: </span>
-                        </div>
-                        <div>
-                            <span>{{ vehicle.description }}</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4 flex flex-col">
-                        <div>
-                            <span class="font-medium">Features: </span>
-                        </div>
-                        <div>
-                            <span>{{ vehicle.feature }}</span>
-                        </div>
-                    </div>
-
-                    <hr class="mb-4">
-
-                    <div class="mb-4">
-                        <span class="font-medium">Hosting Price (Per Day): </span><span>Rs. {{ vehicle.price }}</span>
-                    </div>
-
+<div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto hide-scrolllbar">
+    <div class="p-3 overflow-y-auto mt-24 scrollbar-hide">
+        <p class="text-center text-3xl font-semibold pt-2 pb-4">{{ vehicle.type}}</p>
+        <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+            <div class="flex flex-col mb-4">
+                <div class="flex flex-row justify-between mb-4">
                     <div>
-                        <div>
-                            <span class="font-medium">Vehicle Imgaes: </span>
-                        </div>
-                        <div class="flex flex-col mb-6">
-                            <a href="{% url 'open_vehicle' vehicle.id 1 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image1.name }}
-                            </a>
-                            <a href="{% url 'open_vehicle' vehicle.id 2 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image2.name }}
-                            </a>
-                            <a href="{% url 'open_vehicle' vehicle.id 3 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image3.name }}
-                            </a>
-                        </div>
+                        <span class="font-medium">Number Plate: </span>{{ vehicle.number_plate }}
                     </div>
-                    {% if history %}
-                        <p>Booked For</p>
-                        {% for hist in history %}
-                            <p>{{ hist.start_date }} to {{ hist.end_date}}</p>
-                        {% endfor %}
-                    {% endif %}
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="id" value="{{ vehicle.id }}"/>
-                        <p>Date: <input type="text" id="datepicker1" name="start"  readonly></p>
-                        <p>Date: <input type="text" id="datepicker2" name="end" readonly></p>
-                        <button type="submit">Rent</button>
-                    </form>
+                    <div>
+                        <span class="font-medium">Location: </span>{{ vehicle.location }}
+                    </div>
                 </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="mb-4 flex flex-col">
+                <div>
+                    <span class="font-medium">Description: </span>
+                </div>
+                <div>
+                    <span>{{ vehicle.description }}</span>
+                </div>
+            </div>
+
+            <div class="mb-4 flex flex-col">
+                <div>
+                    <span class="font-medium">Features: </span>
+                </div>
+                <div>
+                    <span>{{ vehicle.feature }}</span>
+                </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="mb-4">
+                <span class="font-medium">Hosting Price (Per Day): </span><span>Rs. {{ vehicle.price }}</span>
+            </div>
+
+            <div>
+                <div>
+                    <span class="font-medium">Vehicle Imgaes: </span>
+                </div>
+                <div class="flex flex-col mb-6">
+                    <a href="{% url 'open_vehicle' vehicle.id 1 %}" style="color: blue;" class="underline">
+                        {{ vehicle.image1.name }}
+                    </a>
+                    <a href="{% url 'open_vehicle' vehicle.id 2 %}" style="color: blue;" class="underline">
+                        {{ vehicle.image2.name }}
+                    </a>
+                    <a href="{% url 'open_vehicle' vehicle.id 3 %}" style="color: blue;" class="underline">
+                        {{ vehicle.image3.name }}
+                    </a>
+                </div>
+            </div>
+            {% if history %}
+                <p>Booked For</p>
+                {% for hist in history %}
+                    <p>{{ hist.start_date }} to {{ hist.end_date}}</p>
+                {% endfor %}
+            {% endif %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ vehicle.id }}"/>
+                <p>Date: <input type="text" id="datepicker1" name="start"  readonly></p>
+                <p>Date: <input type="text" id="datepicker2" name="end" readonly></p>
+                <button type="submit">Rent</button>
+            </form>
         </div>
     </div>
 </div>
@@ -137,23 +115,7 @@
 </script>
 
 
-<script>
-        setTimeout(function(){
-            if ($('#msg').length > 0) {
-                $('#msg').remove();
-            }
-        },4000);
-    </script>
 
-{#<script>#}
-{#    var arr = ["2023-03-14","2023-03-15","2023-03-16"]#}
-{##}
-{#    $('#date1').datetimepicker({#}
-{#        disabledDates:arr,#}
-{#        format:'yyyy-mm-dd',#}
-{#        minDate:'-1970/01/02',//yesterday is minimum date(for today use 0 or -1970/01/01)#}
-{#        maxDate:'+1970/01/02'#}
-{##}
-{#    });#}
-{#</script>#}
-</body>
+
+
+{% endblock content %}

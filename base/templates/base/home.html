@@ -4,10 +4,9 @@
 
 {% block title%} Home Page {% endblock title%}
 
-{% block headercontent %}
-        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+{% block content %}
     <div class="flex flex-col h-screen bg-white">
-        <div class="flex flex-row h-24 bg-theme mx-60 mt-16 shadow-lg rounded-full border-medium-gray border-2 text-lg">
+        <div class="flex flex-row h-24 bg-theme mx-60 mt-40 shadow-lg rounded-full border-medium-gray border-2 text-lg">
             <div class="flex flex-col border-r-2 border-r-dark-gray" style="width:33%;">
                 <div class="mx-8 my-auto font-medium">
                     Where  
@@ -23,13 +22,6 @@
                         <input placeholder="Date" class="bg-theme py-1 w-full">
                     </form>                      
                 </div>   
-
-                <div class=" flex flex-col ml-5 mr-5 my-auto font-medium float-right">
-                    &nbsp;
-                    <form>
-                        <input placeholder="time" class="bg-theme py-1 w-full">
-                    </form>                      
-                </div>   
             </div>
             <div class="flex  border-l-2 border-l-dark-gray" style="width:30%;">
                 <div class="flex flex-col w-1/2 ml-5 mr-5 my-auto font-medium">
@@ -38,16 +30,8 @@
                         <input placeholder="Date" class="bg-theme py-1 w-full">
                     </form>                      
                 </div>   
-
-                <div class=" flex flex-col ml-5 mr-5 my-auto font-medium float-right">
-                    &nbsp;
-                    <form>
-                        <input placeholder="time" class="bg-theme py-1 w-full">
-                    </form>                      
-                </div>   
             </div>
-            <div class="flex" style="width:3%;">
-                
+            <div class="flex cursor-pointer" style="width:3%;">
                 <img src="{% static 'images/search.svg' %}" alt="" class="w-10 ">
             </div>
         </div>
@@ -64,9 +48,6 @@
         </div>
     </div>
     
-{% endblock headercontent %}        
-
-{% block content %}
     <div class="h-[50vh] bg-theme">
         <div class="justify-center h-full flex items-center">
             <span class="text-7xl">

@@ -1,8 +1,35 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load only_name %}
 
-{% block title%} Renting History {% endblock title%}
+{% block title%} Travelogues Uploaded {% endblock title%}
 
 {% block content %}
-   
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col shadow-xl ">
+        <div class="p-3 overflow-y-auto scrollbar-hide">
+            <p class="text-center text-2xl font-semibold pt-2 pb-6">Uploaded Travelogues</p>
+            {% if uploaded_travelogues %}
+                {% for travelogue in uploaded_travelogues %}
+                <div class="w-4/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+                    <div class="flex  mb-4">
+                        <span class="font-medium">Title: &nbsp;</span>{{ travelogue.title }}
+                    </div>
+                    <hr>
+                    <div class="flex flex-col mt-4 mb-4">
+                        <span class="font-medium">Article: </span>{{ travelogue.description }}
+                    </div>
+                    <div class="flex mb-4">
+                        <span class="font-medium">Image for travelogue: &nbsp; </span><a href="{% url 'open_travelogue' travelogue.id %}" target="_blank" style="color: blue;" class="underline"> {{ travelogue.image1.name|only_name }} </a>
+                    </div>
+                    <div class="flex">
+                        <span class="font-medium">Travelogue Status:  </span><span class="py-1 px-6 ml-2 text-white rounded-md {% if travelogue.is_approved == 'Approved' %} bg-custom-green {% elif travelogue.is_approved == 'Pending' %} bg-custom-orange {% elif travelogue.is_approved == 'Rejected' %} bg-danger {% else %} {% endif %} ">{{ travelogue.is_approved }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock %}

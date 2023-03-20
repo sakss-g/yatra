@@ -43,6 +43,7 @@ urlpatterns = [
     path('enduser_upload_documents/', views.enduser_upload_documents, name='enduser_upload_documents'),
     path('renting_history/',views.renting_history, name="renting_history"),
     path('travelogues_uploaded/', views.travelogues_uploaded, name='travelogues_uploaded'),
+    path('open_travelogue/<int:pk>', views.open_travelogue, name='open_travelogue'),
     path('viewprofilehost/<str:pk>',views.view_profile_host, name='view_profile_host'),
 
     # delete user
@@ -78,6 +79,7 @@ urlpatterns = [
     path('openvehicle1/<str:pk>/<int:no>', views.open_vehicle, name='open_vehicle'),
     path('viewvehicles/',views.view_vehicles, name="view_vehicles"),
     path('vehiclesdetails/<str:pk>',views.vehicle_details, name="vehicle_details"),
+    path('open_citizenship/', views.open_citizenship, name='open_citizenship'),
 
 
     # travelogues related urls

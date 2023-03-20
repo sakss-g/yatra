@@ -9,3 +9,5 @@ def has_group(user, group_name):
 
 
 register.filter('has_group', has_group)
+
+

@@ -4,22 +4,20 @@
 
 {% block title%} View Vehicles {% endblock title%}
 
-{% block headercontent %}
-<div class="h-[1vh] bg-theme">
-</div>
-{% endblock headercontent %}
-
 {% block content %}
 <div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto hide-scrolllbar">
-    <!-- <div class="bg-white h-full flex flex-col shadow-xl"> -->
-        <div class="p-3 overflow-y-auto scrollbar-hide">
-            <p class="text-center text-3xl font-semibold pt-2 pb-4">All Vehicles</p>
+    <div class="p-3 overflow-y-auto mt-24 scrollbar-hide">
+        <p class="text-center text-3xl font-semibold pt-2 pb-4">All Vehicles</p>
 
-            {% if vehicle_list %}
-                {% for vehicle in vehicle_list %}
-                <a href="{% url 'vehicle_details' vehicle.id %}">
-                <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
-                    <div class="flex flex-col mb-4">
+        <div class="w-4/5 mx-auto flex flex-wrap">
+        {% if vehicle_list %}
+            {% for vehicle in vehicle_list %}
+            <a href="{% url 'vehicle_details' vehicle.id %}">
+                <div class="flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16 h-128" style="width:30%;">
+                    <div class="flex flex-col mb-6 w-full h-auto">
+                        <a href="{% url 'vehicle_details' vehicle.id %}"><img src="{{ vehicle.image1.url }}" class="w-96 h-60 mx-auto object-contain"/></a>
+                    </div>
+                    <div class="flex flex-col mb-4 text-xl">
                         <div class="flex flex-row justify-between mb-4">
                             <div>
                                 <span class="font-medium">Location: </span>{{ vehicle.location }}
@@ -31,23 +29,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <span class="font-medium">Hosting Price (Per Day): </span><span>Rs. {{ vehicle.price }}</span>
+                    <hr class="bottom-4 h-1 bg-black" style="margin-top: 26px;">
+                    <div class="mb-4 mt-4 w-full flex justify-end">
+                        <span class="font-bold text-xl">Rs. {{ vehicle.price }} /day</span>
                     </div>
 
-                    <div>
-                        <div class="flex flex-col mb-6 w-44 h-auto">
-                            <a href="{% url 'vehicle_details' vehicle.id %}"><img src="{{ vehicle.image1.url }}" /></a>
-                        </div>
-                    </div>
+                    
                 </div>
             </a>
-                {% endfor %}
-            {% else %}
-                <p class="text-center pt-20 text-2xl text-dark-gray">No Vehicles to display</p>
-            {% endif %}
-        </div>
-    <!-- </div> -->
+            {% endfor %}
+        {% else %}
+            <p class="text-center pt-20 text-2xl text-dark-gray">No Vehicles to display</p>
+        {% endif %}
+    </div>
+    </div>
 </div>
 {% endblock content %}
-<!-- </body> -->

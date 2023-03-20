@@ -49,7 +49,7 @@ tbody tr:nth-child(odd){
 }
 
 .sticky{
-    @apply fixed top-0 w-full
+    @apply fixed top-0 left-0 w-full
 }
 
 .featured-card{

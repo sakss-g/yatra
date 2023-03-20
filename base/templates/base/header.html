@@ -10,10 +10,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %}</title>
     {% tailwind_css %}
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
 <body class="max-h-screen bg-white font-poppins">
     <div class="flex flex-col">
-        <header class="flex flex-row justify between text-white bg-black h-24 w-full z-20"  id="land-header">
+        <header class="flex flex-row justify between text-white bg-black h-24 w-full z-20 sticky"  id="land-header">
             <div class="flex my-auto mx-5 w-3/4">
                 <a href="{% url 'home' %}" class="text-4xl font-semibold">YATRA</a>
             </div>
@@ -61,11 +66,19 @@
                             {% endif %}
 
                             {% if user|has_group:'enduser' %}
-                                <span class="pr-4 pt-1">{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}</span><a href="{% url 'enduser_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                                <a href="{% url 'enduser_profile' %}">
+                                    <div class="flex flex-row">
+                                        <span class="pr-4 pt-1"> {{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}</span><img src="{% static 'images/profile.svg' %}" alt="">
+                                    </div>
+                                </a>
                             {% endif %}
 
                             {% if user|has_group:'host' %}
-                                <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span><a href="{% url 'host_profile' %}"> <img src="{% static 'images/profile.svg' %}" alt=""> </a>
+                                <a href="{% url 'host_profile' %}">
+                                    <div class="flex flex-row">
+                                        <span class="pr-4 pt-1">{{ request.user.host.first_name }} {{ request.user.host.last_name }}</span> <img src="{% static 'images/profile.svg' %}" alt=""> 
+                                    </div>
+                                </a>
                             {% endif %}
 
                         {% endif %}
@@ -73,11 +86,9 @@
                 {% endwith %} 
             </div>
         </header>
-        {% block headercontent %}
-        {% endblock headercontent %}
     </div>
     {% if messages %}
-        <div class= " absolute animate-right-to-left top-0 right-0 " style="display: flex; width: 100%; justify-content: flex-end;">
+        <div class= " absolute animate-right-to-left right-0" style="display: flex; width: 100%; justify-content: flex-end; margin-top:96px;">
             {% for message in messages %}
                 <div class=" p-3 {{ message.tags }} mt-2 mr-6 " id="msg" role="alert" >
                     {{ message }}
@@ -87,21 +98,12 @@
     {% endif %}
     {% block content %}
     {% endblock content %}    
-    
+    <script>
+        setTimeout(function(){
+            if ($('#msg').length > 0) {
+                $('#msg').remove();
+            }
+        },4000);
+    </script>
 </body>
-<script>
-    window.onscroll = function() {myFunction()};
-
-    var header = document.getElementById("land-header");
-    var sticky = header.offsetTop;
-
-    function myFunction() {
-        if (window.pageYOffset > sticky) {
-          header.classList.add("sticky");
-        } else {
-          header.classList.remove("sticky");
-        }
-      }
-
-</script>
 </html>
