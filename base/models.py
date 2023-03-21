@@ -16,6 +16,13 @@ rating = [
     (5, 5),
 ]
 
+report_status = (
+    ('Pending', 'Pending'),
+    ('NoAction', 'NoAction'),
+    ('Warning', 'Warning'),
+    ('Blocked', 'Blocked'),
+)
+
 
 class Host(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="host")
@@ -28,6 +35,7 @@ class Host(models.Model):
     citizenship = models.ImageField(upload_to='host/profile', default='default_photo.jpg')
     pic = models.ImageField(upload_to='host/profile', default='default_profile.jpg')
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+    is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
@@ -45,9 +53,11 @@ class EndUser(models.Model):
     license = models.ImageField(upload_to='enduser/profile',  default='default_photo.jpg')
     pic = models.ImageField(upload_to='enduser/profile', default='default_profile.jpg')
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")
+    is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+
 
 class Location(models.Model):
     name=models.CharField(max_length=25, unique=True)
@@ -66,7 +76,7 @@ class Vehicle(models.Model):
     )
 
     number_plate = models.CharField(max_length=20, unique=True)
-    host = models.ForeignKey(Host, on_delete=models.CASCADE, related_name="owner")
+    host = models.ForeignKey(Host, on_delete=models.SET_NULL, null=True, related_name="owner")
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="place")
     bluebook = models.ImageField(upload_to="host/vehicle")
     bluebook_id = models.CharField(max_length=25)
@@ -111,15 +121,11 @@ class RateRent(models.Model):
     rent = models.ForeignKey(Rents, on_delete=models.CASCADE, related_name="rate")
     rating = models.IntegerField(choices=rating, default=3)
 
-report_status = (
-    ('Pending', 'Pending'),
-    ('Accepted', 'Accepted')
-)
 
 class ReportUser(models.Model):
     by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_by')
     to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_to')
     reason = models.TextField(max_length=500)
     image1 = models.ImageField(upload_to="report", blank=True, null=True)
-    status = models.CharField(max_length=10, choices=status, default="Pending")
+    status = models.CharField(max_length=10, choices=report_status, default="Pending")
 

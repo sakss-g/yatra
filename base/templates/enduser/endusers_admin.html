@@ -6,6 +6,16 @@
     <div class="bg-white h-full flex flex-col justify-between shadow-xl">
         <div class="p-3">
             <h1 class="text-center text-3xl font-semibold pt-2 pb-6">End Users</h1>
+            <form>
+                {{ nameform.name }}
+                <input type="submit" value="Filter" />
+            </form>
+
+        <form>
+             {{ statusform.status }}
+            <input type="submit" value="Filter" />
+        </form>
+            {% if data is not None %}
             <table class="w-full">
                 <thead class="h-16 text-center">
                     <tr class="bg-black text-white text-xl">
@@ -18,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    {% for user in users %}
+                    {% for user in data.object_list %}
                     <tr class="text-xl h-14">
                         <td>{{user.first_name}} {{user.last_name}}</td>
                         <td>{{user.email}}</td>
@@ -36,6 +46,30 @@
                     {% endfor %}
                 </tbody>
             </table>
+                <div class="pagination justify-content-center align-items-center">
+                {% if data.has_previous %}
+                    <a class="page-link" href="?page=1">&laquo; first</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+
+                <span style="margin: 0px 3px;">
+                    Page {{ data.number }} of {{ data.paginator.num_pages }}.
+                </span>
+
+
+                {% if data.paginator.num_pages > 1  %}
+                <div class="flex flex-row items-center relative">
+                    <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
+                    <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
+                </div>
+                {% endif %}
+                {% if data.has_next %}
+                    <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+                    <a class="page-link" href="?page={{ data.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+        </div>
+            {% endif %}
         </div>
     </div>
 </div>

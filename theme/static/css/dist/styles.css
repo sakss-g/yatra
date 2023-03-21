@@ -1017,6 +1017,10 @@ select{
   height: 18rem;
 }
 
+.h-200{
+  height: 40rem;
+}
+
 .h-128{
   height: 30rem;
 }
@@ -1324,6 +1328,10 @@ select{
   background-clip: padding-box;
 }
 
+.bg-center{
+  background-position: center;
+}
+
 .object-contain{
   -o-object-fit: contain;
      object-fit: contain;
@@ -1471,6 +1479,11 @@ select{
 .py-6{
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-16{
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
 
 .pb-3{

@@ -10,14 +10,6 @@
             <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Users</p>
             <div class="h-16 w-full flex justify-end ">
                 <form method="get">
-                    <label class="text-xl">User Status: &nbsp;</label>
-                    <select class="rounded-md w-44">
-                        <option value="">---------</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                    
-                    <!-- <button type="submit" class="bg-custom-green px-6 py-1.5 ml-8 text-white rounded-md border no-underline">Done</button> -->
                 </form>
             </div>
             <div class="w-full flex flex-row">
@@ -31,7 +23,7 @@
             </div>
 
             <div id="endusers">
-                {% if unverified_endusers %}
+                {% if datae is not None %}
                 <table class="w-full">
                     <thead class="h-16 text-center">
                         <tr class="bg-black text-white text-xl">
@@ -44,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        {% for u in unverified_endusers %}
+                        {% for u in datae.object_list %}
                         <tr class="text-xl h-14">
                             <td>{{ u.first_name }} {{ u.last_name }}</td>
                             <td>{{ u.citizenship_id }}</td>
@@ -67,13 +59,37 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                    <div class="pagination justify-content-center align-items-center">
+                {% if datae.has_previous %}
+                    <a class="page-link" href="?page=1">&laquo; first</a>
+                    <a class="page-link" href="?page={{ page_obje.previous_page_number }}">Previous</a>
+                {% endif %}
+
+
+                <span style="margin: 0px 3px;">
+                    Page {{ datae.number }} of {{ datae.paginator.num_pages }}.
+                </span>
+
+
+                {% if datae.paginator.num_pages > 1  %}
+                <div class="flex flex-row items-center relative">
+                    <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
+                    <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
+                </div>
+                {% endif %}
+                {% if datae.has_next %}
+                    <a class="page-link" href="?page={{ datae.next_page_number }}">Next</a>
+                    <a class="page-link" href="?page={{ datae.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+        </div>
                 {% else %}
                     <p class="text">All End User are verified.</p>
                 {% endif %}
             </div>
 
             <div id="hosts" style="display: none;">
-                {% if unverified_hosts %}
+                {% if datah is not None %}
                 <table class="w-full">
                     <thead class="h-16 text-center">
                         <tr class="bg-black text-white text-xl">
@@ -83,7 +99,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        {% for u in unverified_hosts %}
+                        {% for u in datah %}
                         <tr>
                             <td>{{ u.citizenship_id }}</td>
                             <td><a href="{{ u.citizenship.url }}"><img src="{{ u.citizenship.url }}" class="w-28 h-auto mx-auto"></a></td>
@@ -104,6 +120,27 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                    <div class="pagination justify-content-center align-items-center">
+                    {% if datah.has_previous %}
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                        <a class="page-link" href="?page={{ page_objh.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+                    <span style="margin: 0px 3px;">
+                        Page {{ datah.number }} of {{ datah.paginator.num_pages }}.
+                    </span>
+
+                    {% if datah.paginator.num_pages > 1  %}
+                    <div class="flex flex-row items-center relative">
+                        <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
+                        <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
+                    </div>
+                    {% endif %}
+                    {% if datah.has_next %}
+                        <a class="page-link" href="?page={{ datah.next_page_number }}">Next</a>
+                        <a class="page-link" href="?page={{ datah.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
                 {% else %}
                     <p class="text">All Hosts are verified.</p>
                 {% endif %}

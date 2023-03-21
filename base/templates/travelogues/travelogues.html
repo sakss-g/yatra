@@ -9,7 +9,7 @@
     <div class="w-4/5 mx-auto h-auto mt-24">
         <div class="p-3 overflow-y-auto scrollbar-hide">
             <p class="text-center text-3xl font-semibold pb-4">Travelogues</p>
-            {% if request.user.is_authenticated and user|has_group:'enduser' %}
+            {% if request.user|has_group:'enduser' and allow %}
                 <div class="w-full flex justify-end">
                     <a href="{% url 'submit_travelogue' %}" class="px-6 py-2 bg-custom-green text-white rounded-md ">Submit travelogue</a>
                 </div>

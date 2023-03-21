@@ -16,7 +16,7 @@
                     {% if not error == ''  %}
                         <p>{{ error }}</p>
                     {% endif %}
-                    <p>You need to make payment before adding vehicles</p>
+                    <p class="text">You need to make payment before adding vehicles</p>
                 {% else %}
                     <div class="flex w-full justify-end px-10 py-6">
                         <a href="{% url 'add_vehicles' %}"><button class="bg-custom-green text-white rounded-md py-1.5 px-6" type="submit">Add Vehicle</button></a>

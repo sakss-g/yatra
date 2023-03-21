@@ -44,7 +44,7 @@ urlpatterns = [
     path('renting_history/',views.renting_history, name="renting_history"),
     path('travelogues_uploaded/', views.travelogues_uploaded, name='travelogues_uploaded'),
     path('open_travelogue/<int:pk>', views.open_travelogue, name='open_travelogue'),
-    path('viewprofilehost/<str:pk>',views.view_profile_host, name='view_profile_host'),
+    path('viewprofilehost/<int:pk>',views.view_profile_host, name='view_profile_host'),
 
     # delete user
     path('deleteuser/<int:pk>', views.delete_user, name='delete_user'),

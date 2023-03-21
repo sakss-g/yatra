@@ -32,14 +32,11 @@
                     <p class="ml-3">{{ host.address }}</p>
                 </div>
             </div>
-            {% if report_button %}
             <div class="flex w-fll justify-end mt-20 mx-4">
                 <form action="{% url 'report_user' to=host.user_id %}" method="get" style="margin-bottom: 0px;">
                     <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
                 </form>
             </div>
-                
-            {% endif %}
         </div>
         
 

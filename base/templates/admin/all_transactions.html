@@ -8,7 +8,7 @@
     <div class="bg-white h-full flex flex-col shadow-xl">
         <div class="p-3">
             <p class="text-center text-2xl font-semibold pt-2 pb-4">All Transactions</p>
-    {% if transactions %}
+    {% if data is not None %}
         <table class="w-full">
             <thead class="h-16 text-center">
                 <tr class="bg-black text-white text-xl">
@@ -18,7 +18,7 @@
                 </tr>
             </thead>
         <tbody>
-        {% for transaction in transactions %}
+        {% for transaction in data.object_list %}
             <tr>
                 <td>{{ transaction.t_id }}</td>
                 <td>{{ transaction.amount }}</td>
@@ -27,6 +27,29 @@
         {% endfor %}
         </tbody>
         </table>
+        <div class="pagination justify-content-center align-items-center">
+                {% if data.has_previous %}
+                    <a class="page-link" href="?page=1">&laquo; first</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+
+                <span style="margin: 0px 3px;">
+                    Page {{ data.number }} of {{ data.paginator.num_pages }}.
+                </span>
+
+
+                {% if data.paginator.num_pages > 1  %}
+                <div class="flex flex-row items-center relative">
+                    <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
+                    <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
+                </div>
+                {% endif %}
+                {% if data.has_next %}
+                    <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+                    <a class="page-link" href="?page={{ data.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+        </div>
         </div>
         </div>
         </div>

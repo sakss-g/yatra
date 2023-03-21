@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, FileResponse
 from django.contrib import messages
 from django.urls import reverse
 from yatra.settings import KHALTI_API_KEY
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 import requests
 import json
@@ -55,8 +56,15 @@ def login_user(request):
                 return redirect('admin_dashboard')
             else:
                 if str(user.groups.first()) == 'host':
+                    if user.host.is_blocked == True:
+                        logout(request)
+                        messages.error(request, "You have been blocked")
+                        return redirect('home')
                     return redirect('host_profile')
                 elif str(user.groups.first()) == 'enduser':
+                    if user.enduser.is_blocked == True:
+                        logout(request)
+                        messages.error(request, "You have been blocked")
                     return redirect('home')
                 else:
                     message = "User group was not found"
@@ -216,7 +224,9 @@ def host_upload_documents(request):
     if request.method == "POST":
         host_documents_form = HostDocumentsForm(request.POST, request.FILES, instance=host)
         if host_documents_form.is_valid():
-            host_documents_form.save()
+            host = host_documents_form.save(commit=False)
+            host.is_approved = "Pending"
+            host.save()
             return redirect('host_profile')
     context = {
         'form': host_documents_form
@@ -383,7 +393,9 @@ def enduser_upload_documents(request):
     if request.method == "POST":
         enduser_documents_form = EndUserDocumentsForm(request.POST, request.FILES, instance=enduser)
         if enduser_documents_form.is_valid():
-            enduser_documents_form.save()
+            enduser = enduser_documents_form.save(commit=False)
+            enduser.is_approved = "Pending"
+            enduser.save()
             return redirect('enduser_profile')
     context = {
         'form': enduser_documents_form
@@ -400,20 +412,26 @@ def renting_history(request):
     return render(request, 'enduser/renting_history.html', context)
 
 
-
-
-
-
 # admin related views
-
 def view_transaction(request):
     transaction = Transaction.objects.all()
+    paginator = Paginator(transaction, 8)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
 
     context = {
+        'data': page_obj,
+        'nums': page_obj.paginator.num_pages * 'p',
         'transactions':transaction,
     }
 
     return render(request, 'admin/all_transactions.html',  context)
+
 
 def delete_user(request, pk):
     user = User.objects.filter(id=pk).delete()
@@ -423,21 +441,45 @@ def delete_user(request, pk):
 def admin_dashboard(request):
     host_count = Host.objects.all().count()
     enduser_count = EndUser.objects.all().count()
-    #vehicle_count = Vehicle.objects.all().count()
-    #blog_count = Travelogue.objects.all().count()
+    vehicle_count = Vehicle.objects.all().count()
+    blog_count = Travelogue.objects.all().count()
     context={
         'hostcount':host_count,
         'endusercount':enduser_count,
-        #'vehiclecount':vehicle_count,
-        #'blogcount':blog_count
+        'vehiclecount':vehicle_count,
+        'blogcount':blog_count
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
 
 def end_users_admin(request):
-    endUsers = EndUser.objects.all()
-    context={
-        'users':endUsers
+    nameform = UserFilterForm(request.GET or None)
+    if nameform.is_valid():
+        endUsers = nameform.filter_users(EndUser.objects.all())
+    else:
+        endUsers = EndUser.objects.filter(is_approved="Approved")
+
+    statusform = UserFilterStatusForm(request.GET or None)
+
+    if statusform.is_valid():
+        endUsers = statusform.filter_users(endUsers)
+    else:
+        endUsers = endUsers.filter(is_approved="Approved")
+
+    paginator = Paginator(endUsers, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    context = {
+        'data': page_obj,
+        'nums': page_obj.paginator.num_pages * 'p',
+        'nameform': nameform,
+        'statusform':statusform
     }
     return render(request, 'enduser/endusers_admin.html', context)
 
@@ -453,10 +495,29 @@ def hosts_admin(request):
 def verify_user(request):
     unverified_hosts = Host.objects.filter(is_approved="Pending")
     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
+    paginatorh = Paginator(unverified_hosts, 10)
+    paginatore = Paginator(unverified_endusers, 10)
+    page_number = request.GET.get('page')
+
+    try:
+        page_objh = paginatorh.get_page(page_number)
+    except PageNotAnInteger:
+        page_objh = paginatorh.get_page(1)
+    except EmptyPage:
+        page_objh = paginatorh.get_page(paginatorh.num_pages)
+
+    try:
+        page_obje = paginatore.get_page(page_number)
+    except PageNotAnInteger:
+        page_obje = paginatore.get_page(1)
+    except EmptyPage:
+        page_obje = paginatore.get_page(paginatore.num_pages)
 
     context = {
-        'unverified_endusers':unverified_endusers,
-        'unverified_hosts':unverified_hosts
+        'datah': page_objh,
+        'numsh': page_objh.paginator.num_pages * 'p',
+        'datae': page_obje,
+        'numse': page_obje.paginator.num_pages * 'p',
     }
     return render(request,'admin/verify_user.html', context)
 
@@ -495,14 +556,6 @@ def reject_enduser(request,pk):
         enduser.save()
         return redirect('verify_user')
 
-# def verify_user(request):
-#     unverified_hosts = Host.objects.filter(is_approved="Pending")
-#     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
-#     context = {
-#         'unverified_endusers':unverified_endusers,
-#         'unverified_hosts':unverified_hosts
-#     }
-#     return render(request,'admin/verify_user.html', context)
 
 def hosting_request(request):
     unverified_vehicles = Vehicle.objects.filter(is_approved="Pending")
@@ -521,6 +574,7 @@ def approve_travelogue(request, pk):
         travelogue.save()
     return redirect('verify_travelogue')
 
+
 def reject_travelogue(request, pk):
     if request.method == "POST":
         travelogue = Travelogue.objects.get(id=pk)
@@ -538,16 +592,18 @@ def verify_travelogues(request):
 
     return render(request, 'admin/verify_travelogues.html',context)
 
+
 def view_reports(request):
-    filterby = request.GET.get('status')
-    print(filterby)
-    if filterby:
-        reports = ReportUser.objects.filter(status=filterby)
+    form = ReportFilterForm(request.GET or None)
+    if form.is_valid():
+        reports = form.filter_report(ReportUser.objects.all())
     else:
         reports = ReportUser.objects.filter(status='Pending')
 
     context = {
-        'reports':reports
+        'reports':reports,
+        'form':form
+
     }
 
     return render(request, 'admin/view_reports.html', context)
@@ -557,24 +613,52 @@ def handle_report(request, pk, fk):
         report = ReportUser.objects.get(id=pk)
         print(report)
         if fk == 1:
-            report.status = 'Accepted'
+            report.status = 'NoAction'
             report.save()
         elif fk == 2:
-            print('Delete User')
-            report.to.delete()
+            if report.to.groups.filter(name='host').exists():
+                host = report.to.host
+                host.is_blocked = True
+                host.save()
+            else:
+                enduser = report.to.enduser
+                enduser.is_blocked = True
+                enduser.save()
+            report.status = 'Blocked'
+            report.save()
+        # print(request.user.groups.filter(name='enduser').exists())
         elif fk == 3:
-            print('Email Logic')
+            report.status = 'Warning'
+            report.save()
+        elif fk == 4:
+            if report.to.groups.filter(name='host').exists():
+                host = report.to.host
+                host.is_blocked = False
+                host.save()
+            else:
+                enduser = report.to.enduser
+                enduser.is_blocked = False
+                enduser.save()
+            report.status = 'NoAction'
+            report.save()
         return redirect('view_reports')
 
 
 # travelogues related views
-
 def all_travelogues(request):
     travelogues = Travelogue.objects.filter(is_approved="Approved")
+    allow = False
+    if request.user.groups.filter(name='enduser').exists():
+        enduser = request.user.enduser
+        rents = Rents.objects.filter(renter = enduser)
+        if rents.count() > 0:
+            allow = True
     context = {
         'travelogues_list':travelogues,
+        'allow':allow
     }
     return render(request, 'travelogues/travelogues.html', context)
+
 
 def submit_travelogue(request):
     submit_travelogue_form = SubmitTravelogueForm()
@@ -593,6 +677,7 @@ def submit_travelogue(request):
     }
     return render(request, 'travelogues/submit_travelogue.html', context)
 
+
 def travelogues_uploaded(request):
     travelogues = Travelogue.objects.filter(enduser=request.user.enduser)
     context = {
@@ -604,6 +689,7 @@ def travelogues_uploaded(request):
 def open_travelogue(request, pk):
     travelogue = Travelogue.objects.get(id=pk).image1.path
     return FileResponse(open(travelogue, 'rb'))
+
 
 #userprofile
 def view_profile_enduser(request, pk):
@@ -625,15 +711,10 @@ def view_profile_host(request, pk):
     host = Host.objects.get(id=pk)
     vehicles = Vehicle.objects.filter(host=host)
     report = ReportUser.objects.filter(by=request.user, to=host.user)
-    if report.count() > 0:
-        report_button = False
-    else:
-        report_button = True
 
     context={
         'host':host,
         'vehicles':vehicles,
-        'report_button':report_button
     }
     return render(request, 'enduser/host_profile.html', context)
 
@@ -643,8 +724,6 @@ def report_user(request, to):
     reportform = ReportUserForm()
 
     if request.method == "POST":
-        # print(request.user.groups.filter(name='host').exists()) use this to redirect later
-        # print(request.user.groups.filter(name='enduser').exists())
         reportform = ReportUserForm(request.POST, request.FILES)
         if reportform.is_valid():
             report = reportform.save(commit=False)

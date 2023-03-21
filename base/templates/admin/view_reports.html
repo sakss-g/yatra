@@ -11,11 +11,11 @@
             <h1 class="text-center text-3xl font-semibold pt-2 pb-6">Reports</h1>
 
             <div class="flex flex-col bg-theme mx-8 p-8 text-lg rounded-xl">
-                <!-- <label for="status">Filter By:</label>
-                <select name="status" id="status" >
-                <option value="Pending">Pending</option>
-                <option value="Accepted">Completed</option>
-                </select> -->
+            {% if reports is not None %}
+                <form>
+                    {{ form.status }}
+                    <input type="submit" value="Filter"/>
+                </form>
                 {% for report in reports %}
                     <div class="flex flex-col ">
                         <!-- <div class="flex flex-row">
@@ -37,16 +37,22 @@
                                 </form>
                                 <form action="{% url 'handle_report' pk=report.id fk=2 %}"  method="post" style="margin-bottom: 0px;">
                                     {% csrf_token %}
-                                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Delete</button>
+                                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Block</button>
                                 </form>
                                 <form action="{% url 'handle_report' pk=report.id fk=3 %}"  method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
                                     <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Warning</button>
                                 </form>
-                            {% endif %}
+                        {% elif report.status == 'Blocked' %}
+                            <form action="{% url 'handle_report' pk=report.id fk=4 %}"  method="post" style="margin-bottom: 0px;">
+                                        {% csrf_token %}
+                                    <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Un Block</button>
+                            </form>
+                        {% endif %}
                         </div>
                     </div>
                 {% endfor %}
+            {% endif %}
             </div>
         </div>
     </div>
