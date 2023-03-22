@@ -1,59 +1,74 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% load user_group %}
+{% load widget_tweaks %}
 
 {% block title%} View Reports {% endblock title%}
 
 {% block content %}
 <div class="h-screen w-full px-6 py-10 bg-theme">
     <div class="bg-white h-full flex flex-col justify-between shadow-xl">
-        <div class="p-3">
-            <h1 class="text-center text-3xl font-semibold pt-2 pb-6">Reports</h1>
-
-            <div class="flex flex-col bg-theme mx-8 p-8 text-lg rounded-xl">
+        <div class="p-3 overflow-y-auto scrollbar-hide">
+            <p class="text-center text-3xl font-semibold pt-2 pb-6">Reports</p>
             {% if reports is not None %}
-                <form>
-                    {{ form.status }}
-                    <input type="submit" value="Filter"/>
-                </form>
+                <div class="w-full flex justify-end p-8">
+                    <form>
+                        {% render_field form.status class="rounded-md" %}
+                        <input type="submit" class="bg-custom-green px-8 py-2 text-white rounded-md mx-1 border" value="Filter"/>
+                    </form>
+                </div>
                 {% for report in reports %}
-                    <div class="flex flex-col ">
-                        <!-- <div class="flex flex-row">
-                            <p>Report ID: </p>
-                            {{ report.id }}
-                        </div> -->
-                        <div class="flex flex-row">
-                            <p>Report: &nbsp;</p>
+                    <div class="flex flex-col bg-theme mx-8 mb-8 p-4 text-lg rounded-xl ">
+                        <div class="flex flex-row mb-2">
+                            {% if report.by|has_group:'host' %}
+                            <p class="font-medium">By (Host): &nbsp;</p>
+                                {{ report.by.host }}
+                            {% else %}
+                            <p class="font-medium">By (Renter): &nbsp;</p>
+                                {{ report.by.enduser }}
+                            {% endif %}
+                        </div>
+                        <div class="flex flex-row mb-2">
+                            {% if report.to|has_group:'host' %}
+                            <p class="font-medium">To (Host): &nbsp;</p>
+                                {{ report.to.host }}
+                            {% else %}
+                            <p class="font-medium">To (Renter): &nbsp;</p>
+                                {{ report.to.enduser }}
+                            {% endif %}
+                        </div>
+                        <div class="flex flex-row  mb-2">
+                            <p class="font-medium">Report: &nbsp; </p>
                             {{ report.reason }}
                         </div>
-                        <div>
-                            {% if report.image1 %}<a href="{{ report.image1.url }}"  style="color:blue;">{{ report.image1 }}</a>{% endif %}
+                        <div class="flex">
+                            {% if report.image1 %}<p class="font-medium">Evidence:  &nbsp;</p><a href="{{ report.image1.url }}" target="_blank" style="color:blue; text-decoration: underline;">Evidence</a>{% endif %}
                         </div>
+                        
                         <div class="flex flex-row mt-4 w-full justify-end">
                             {% if report.status == "Pending" %}
                                 <form action="{% url 'handle_report' pk=report.id fk=1 %}" method="post" style="margin-bottom: 0px;">
                                     {% csrf_token %}
                                     <button type="submit" class="bg-black px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">No Action</button>
                                 </form>
+                                <form action="{% url 'handle_report' pk=report.id fk=3 %}"  method="post" style="margin-bottom: 0px;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Warning</button>
+                                </form>
                                 <form action="{% url 'handle_report' pk=report.id fk=2 %}"  method="post" style="margin-bottom: 0px;">
                                     {% csrf_token %}
                                     <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Block</button>
                                 </form>
-                                <form action="{% url 'handle_report' pk=report.id fk=3 %}"  method="post" style="margin-bottom: 0px;">
-                                        {% csrf_token %}
-                                    <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Warning</button>
+                            {% elif report.status == 'Blocked' %}
+                                <form action="{% url 'handle_report' pk=report.id fk=4 %}"  method="post" style="margin-bottom: 0px;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Unblock</button>
                                 </form>
-                        {% elif report.status == 'Blocked' %}
-                            <form action="{% url 'handle_report' pk=report.id fk=4 %}"  method="post" style="margin-bottom: 0px;">
-                                        {% csrf_token %}
-                                    <button type="submit" class="bg-custom-orange px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Un Block</button>
-                            </form>
-                        {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
             {% endif %}
-            </div>
         </div>
     </div>
 </div>

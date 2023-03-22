@@ -32,6 +32,11 @@
                 </div>
 
             </div>
+            <div class="flex w-fll justify-end mt-20 mx-4">
+                <form action="{% url 'report_user' to=enduser.user_id %}" method="get" style="margin-bottom: 0px;">
+                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
+                </form>
+            </div>
         </div>
 
         <div class="bg-white h-full flex flex-col w-2/3 justify-between rounded-xl shadow-xl">

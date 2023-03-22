@@ -603,7 +603,6 @@ def view_reports(request):
     context = {
         'reports':reports,
         'form':form
-
     }
 
     return render(request, 'admin/view_reports.html', context)
