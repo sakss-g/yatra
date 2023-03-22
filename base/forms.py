@@ -1,5 +1,5 @@
 from django import forms
-from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser, report_status
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser, report_status, status
 from django.forms import DateTimeInput
 from django.db.models import Q
 
@@ -82,14 +82,14 @@ class ReportFilterForm(forms.Form):
 
 
 class UserFilterForm(forms.Form):
-    name = forms.CharField(required=False, label='Search', widget=forms.TextInput(attrs={'placeholder': 'Enter name'}))
+    name = forms.CharField(required=False, label='Search', widget=forms.TextInput(attrs={'placeholder': 'Enter first or last name'}))
 
     def filter_users(self, queryset):
         name = self.cleaned_data['name']
         if name:
             queryset = queryset.filter(
                 Q(first_name__icontains=name) |
-                Q(last_name__icontains=name)
+                Q(last_name__icontains=name) 
             )
         return queryset
 
@@ -106,3 +106,14 @@ class UserFilterStatusForm(forms.Form):
             )
             print(queryset)
         return queryset
+    
+class StatusFilterForm(forms.Form):
+    is_approved = forms.ChoiceField(choices=status)
+
+    def filter_report(self, queryset):
+        is_approved = self.cleaned_data['is_approved']
+        if is_approved:
+            queryset = queryset.filter(
+                is_approved=is_approved
+            )
+        return queryset    

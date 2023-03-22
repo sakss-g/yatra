@@ -865,6 +865,10 @@ select{
   margin-bottom: 0px;
 }
 
+.mb-8{
+  margin-bottom: 2rem;
+}
+
 .mt-4{
   margin-top: 1rem;
 }
@@ -925,10 +929,6 @@ select{
   margin-top: 1.5rem;
 }
 
-.mb-8{
-  margin-bottom: 2rem;
-}
-
 .mb-20{
   margin-bottom: 5rem;
 }
@@ -943,10 +943,6 @@ select{
 
 .mt-24{
   margin-top: 6rem;
-}
-
-.mr-2{
-  margin-right: 0.5rem;
 }
 
 .block{
@@ -1087,10 +1083,6 @@ select{
 
 .w-28{
   width: 7rem;
-}
-
-.w-24{
-  width: 6rem;
 }
 
 .w-1\/5{
@@ -1393,14 +1385,6 @@ select{
 
 .p-1{
   padding: 0.25rem;
-}
-
-.p-10{
-  padding: 2.5rem;
-}
-
-.p-16{
-  padding: 4rem;
 }
 
 .px-4{
@@ -1730,6 +1714,10 @@ select{
 .shadow-dark-gray{
   --tw-shadow-color: #676767;
   --tw-shadow: var(--tw-shadow-colored);
+}
+
+.filter{
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .nav-bar-items{

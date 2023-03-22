@@ -6,26 +6,51 @@
 
 {% block content %}
 <div class="h-screen w-full px-6 py-10 bg-theme">
-    <div class="bg-white h-full flex flex-col shadow-xl overflow-y-auto hide-scrollbar">
-        <div class="p-3">
-            <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Travelogues</p>
-            {% if unverified_travelogue %}
-                {% for u in unverified_travelogue %}
-                    {{ u.title }}
-                    {{ u.description }}
+    <div class="bg-white h-full flex flex-col shadow-xl">
+        <div class="p-3 overflow-y-auto scrollbar-hide">
+            <p class="text-center text-2xl font-semibold pt-2 pb-6">Verify Travelogues</p>
+            {% if unverified_travelogue is not None %}
+                <div class="w-full flex justify-end p-8">
+                    <form>
+                        {% render_field form.is_approved class="rounded-md" %}
+                        <input type="submit" class="bg-custom-green px-8 py-2 text-white rounded-md mx-1 border" value="Filter"/>
+                    </form>
+                </div>
+                
+                    {% for u in unverified_travelogue %}
+                        <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+                            <div class="mb-4">
+                                <span class="font-medium">Title: &nbsp;</span>{{ u.title }}
+                            </div>
+                            <hr class="mb-4">
+                            <div class="flex flex-col mb-4">
+                                <span class="font-medium">Article: </span>
+                                {{ u.description }}
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <span class="font-medium">Article Images: </span>
+                                <a href="{{ u.image1.url }}" target="_blank" style="color:blue; text-decoration: underline;">Article Image 1</a>
+                                {% if u.image2 %}<a href="{{ u.image2.url }}" target="_blank" style="color:blue; text-decoration: underline;">Article Image 2</a>{% endif %}
+                            </div>
 
-                    <div class="flex flex-row justify-center">
-                        <form action="{% url 'approve_travelogue' u.id %}" method="post" style="margin-bottom: 0px;">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
-                        </form>
-                        <form action="{% url 'reject_travelogue' u.id %}" method="post" style="margin-bottom: 0px;">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
-                        </form>
-                    </div>
-                {% endfor %}
+                            {% if u.is_approved == "Pending" %}
+                                <div class="flex flex-row justify-end">
+                                    <form action="{% url 'approve_travelogue' u.id %}" method="post" class="mb-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
+                                    </form>
+                                    <form action="{% url 'reject_travelogue' u.id %}" method="post" class="mb-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
             {% endif %}
+            {% if not unverified_travelogue %} 
+                <p class="text">No {{ filter }} Travelogue</p>
+            {% endif %}    
         </div>
     </div>
 </div>

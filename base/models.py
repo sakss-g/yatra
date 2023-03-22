@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from pathlib import Path
 
 status = [
+        ('Pending','Pending'),
         ('Approved', 'Approved'),
         ('Rejected','Rejected'),
-        ('Pending','Pending'),
 ]
 
 rating = [

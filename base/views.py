@@ -558,10 +558,18 @@ def reject_enduser(request,pk):
 
 
 def hosting_request(request):
-    unverified_vehicles = Vehicle.objects.filter(is_approved="Pending")
-
+    form = StatusFilterForm(request.GET or None)
+    if form.is_valid():
+        filter=request.GET.get('is_approved')
+        unverified_vehicles = form.filter_report(Vehicle.objects.all())
+    else:
+        filter='Pending'
+        unverified_vehicles = Vehicle.objects.filter(is_approved='Pending')
+    
     context = {
-        'unverified_vehicles': unverified_vehicles
+        'unverified_vehicles': unverified_vehicles ,
+        'filter': filter,
+        'form': form
     }
 
     return render(request, 'admin/hosting_request.html',context)
@@ -584,10 +592,17 @@ def reject_travelogue(request, pk):
 
 
 def verify_travelogues(request):
-    unverified_travelogue = Travelogue.objects.filter(is_approved="Pending")
-
+    form = StatusFilterForm(request.GET or None)
+    if form.is_valid():
+        filter=request.GET.get('is_approved')
+        unverified_travelogue = form.filter_report(Travelogue.objects.all())
+    else:
+        filter='Pending'
+        unverified_travelogue = Travelogue.objects.filter(is_approved='Pending')
     context = {
-        'unverified_travelogue': unverified_travelogue
+        'unverified_travelogue': unverified_travelogue,
+        'filter': filter,
+        'form': form
     }
 
     return render(request, 'admin/verify_travelogues.html',context)
@@ -596,12 +611,15 @@ def verify_travelogues(request):
 def view_reports(request):
     form = ReportFilterForm(request.GET or None)
     if form.is_valid():
+        filter=request.GET.get('status')
         reports = form.filter_report(ReportUser.objects.all())
     else:
+        filter='Pending'
         reports = ReportUser.objects.filter(status='Pending')
 
     context = {
         'reports':reports,
+        'filter': filter,
         'form':form
     }
 

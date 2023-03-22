@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title%} Hosting Request {% endblock title%}
 
@@ -8,7 +9,13 @@
     <div class="bg-white h-full flex flex-col shadow-xl overflow-y-auto scrollbar-hide">
         <div class="p-3">
             <p class="text-center text-2xl font-semibold pt-2 pb-10">Hosting Request</p>
-            {% if unverified_vehicles %}
+            {% if unverified_vehicles is not None %}
+                <div class="w-full flex justify-end p-8">
+                    <form>
+                        {% render_field form.is_approved class="rounded-md" %}
+                        <input type="submit" class="bg-custom-green px-8 py-2 text-white rounded-md mx-1 border" value="Filter"/>
+                    </form>
+                </div>
                 {% for v in unverified_vehicles %}
                 <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
                     <div class="flex flex-col mb-4">
@@ -92,20 +99,25 @@
                         {% endif %}
                     </div>
 
-                    <div class="w-full flex flex-row justify-end">
-                        <form action="{% url 'approve_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Approve</button>
-                        </form>
-                        <form action="{% url 'reject_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
-                        </form>
-                    </div>
+                    {% if v.is_approved == "Pending" %}
+                        <div class="w-full flex flex-row justify-end">
+                            <form action="{% url 'approve_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg">Approve</button>
+                            </form>
+                            <form action="{% url 'reject_vehicle' v.id %}" method="post" style="margin-bottom: 0px;">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>  
                 {% endfor %}
             {% else %}
-                <p class="text">All Vehicles are Verified</p>
+                <p class="text">No Vehicle Data</p>
+            {% endif %}
+            {% if not unverified_vehicles %} 
+                <p class="text">No {{ filter }} Vehicle</p>
             {% endif %}        
         </div>
     </div>

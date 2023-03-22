@@ -29,15 +29,13 @@
             </div>
             <div class="flex flex-col bg-theme mb-4 mx-8 p-8 text-lg justify-between rounded-xl">
                 <div class="flex mb-5">
-                    <span class="font-medium">License Status:  </span><span class="py-1 px-6 ml-2 text-white rounded-md {% if license.is_approved == 'Approved' %} bg-custom-green {% elif license.is_approved == 'Pending' %} bg-custom-orange {% elif license.is_approved == 'Rejected' %} bg-danger {% else %} {% endif %} ">{{ license.is_approved }}</span>
-
-                    <!-- <p class="font-medium">License Status:</p>
-                    <p class="ml-3"></p> -->
+                    <span class="font-medium py-1">License Status: &nbsp; &nbsp; &nbsp;&nbsp; </span>
+                    <span class="py-1 px-6 ml-2 text-white rounded-md {% if user.enduser.is_approved == 'Approved' %} bg-custom-green {% elif user.enduser.is_approved == 'Pending' %} bg-custom-orange {% elif user.enduser.is_approved == 'Rejected' %} bg-danger {% else %} {% endif %} ">{{ user.enduser.is_approved }}</span>
                 </div>
 
                 <div class="flex">
-                    <p class="font-medium">Citizenship Status:</p>
-                    <p class="ml-3"></p>
+                    <span class="font-medium py-1">Citizenship Status:</span>
+                    <span class="py-1 px-6 ml-2 text-white rounded-md {% if user.enduser.is_approved == 'Approved' %} bg-custom-green {% elif user.enduser.is_approved == 'Pending' %} bg-custom-orange {% elif user.enduser.is_approved == 'Rejected' %} bg-danger {% else %} {% endif %} ">{{ user.enduser.is_approved }}</span>
                 </div>
             </div> 
 
@@ -66,10 +64,11 @@
                     <p><img src="{{ user.enduser.license.url }}" alt="" class="h-60 w-auto border-black"></p>
                 </div>
 
+                {% if user.enduser.is_approved != 'Approved'  %}
                 <div class="flex mb-4 mr-4 right-0 bottom-0 absolute">
-                    
                     <a  href="{% url 'enduser_upload_documents' %}"><button class="py-1.5 px-6 btn">Upload Documents</button></a>
                 </div>
+                {% endif %}
             </div>
             
         </div>
