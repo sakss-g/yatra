@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.urls import reverse
 from yatra.settings import KHALTI_API_KEY
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Avg
 
 import requests
 import json
@@ -724,14 +725,25 @@ def view_profile_enduser(request, pk):
     }
     return render(request, 'host/enduser_profile.html', context)
 
-def view_profile_host(request, pk):
+def view_profile_host(request, pk, fk):
     host = Host.objects.get(id=pk)
     vehicles = Vehicle.objects.filter(host=host)
-    report = ReportUser.objects.filter(by=request.user, to=host.user)
+    rent = Rents.objects.get(id=fk)
+    ratings = RateRent.objects.filter(rent__vehicle__host=host).aggregate(avg=Avg('rating'))
+    try:
+        rate = RateRent.objects.get(rent__id=fk)
+        form = None
+    except:
+        rate = None
+        form = RateRentForm()
 
     context={
         'host':host,
         'vehicles':vehicles,
+        'rate':rate,
+        'rent':rent.id,
+        'form':form,
+        'ratings':ratings['avg']
     }
     return render(request, 'enduser/host_profile.html', context)
 
@@ -757,3 +769,13 @@ def report_user(request, to):
     }
     return render(request, 'reprat/report.html', context)
 
+def rate_rent(request, pk):
+    rent = Rents.objects.get(id=pk)
+    form = RateRentForm(request.GET)
+    if form.is_valid():
+        rate = form.save(commit=False)
+        rate.rent = rent
+        rate.save()
+    else:
+        print("Invalid form")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

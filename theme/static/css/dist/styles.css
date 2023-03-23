@@ -715,6 +715,10 @@ select{
   }
 }
 
+.visible{
+  visibility: visible;
+}
+
 .static{
   position: static;
 }
@@ -989,10 +993,6 @@ select{
   height: 2rem;
 }
 
-.h-auto{
-  height: auto;
-}
-
 .h-24{
   height: 6rem;
 }
@@ -1027,6 +1027,10 @@ select{
 
 .h-72{
   height: 18rem;
+}
+
+.h-auto{
+  height: auto;
 }
 
 .h-200{
@@ -1079,10 +1083,6 @@ select{
 
 .w-3\/5{
   width: 60%;
-}
-
-.w-28{
-  width: 7rem;
 }
 
 .w-1\/5{
@@ -1714,6 +1714,10 @@ select{
 .shadow-dark-gray{
   --tw-shadow-color: #676767;
   --tw-shadow: var(--tw-shadow-colored);
+}
+
+.outline{
+  outline-style: solid;
 }
 
 .filter{

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser, report_status, status
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser,RateRent, report_status, status
 from django.forms import DateTimeInput
 from django.db.models import Q
 
@@ -66,6 +66,12 @@ class ReportUserForm(forms.ModelForm):
         exclude = ['by', 'to', 'status']
 
 
+class RateRentForm(forms.ModelForm):
+    class Meta:
+        model = RateRent
+        exclude = ['rent']
+
+
 class ReportFilterForm(forms.Form):
     status = forms.ChoiceField(choices=report_status)
     # def init(self, *args, **kwargs):
@@ -116,4 +122,4 @@ class StatusFilterForm(forms.Form):
             queryset = queryset.filter(
                 is_approved=is_approved
             )
-        return queryset    
+        return queryset

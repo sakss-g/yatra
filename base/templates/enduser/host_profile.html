@@ -5,6 +5,65 @@
 {% block title%} Host Profile {% endblock title%}
 
 {% block content %}
+    <style>
+    /* this code is lifted from InHuOfficial */
+        .hide-visually,
+        .star-rating>input {
+          border: 0;
+          padding: 0;
+          margin: 0;
+          position: absolute !important;
+          height: 1px;
+          width: 1px;
+          overflow: hidden;
+          clip: rect(1px 1px 1px 1px); /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+          clip: rect(1px, 1px, 1px, 1px); /*maybe deprecated but we need to support legacy browsers */
+          clip-path: inset(50%); /*modern browsers, clip-path works inwards from each corner*/
+          white-space: nowrap; /* added line to stop words getting smushed together (as they go onto seperate lines and some screen readers do not understand line feeds as a space */
+        }
+
+        .star-rating {
+          font-size: 40px;
+          display: inline-flex;
+          padding: 0;
+        }
+
+        .star-rating:focus-within {
+          outline: 3px solid #add8e6;
+        }
+
+        .star-rating label {
+          cursor: pointer;
+          line-height: 1em;
+          text-align: center;
+        }
+
+        .star-rating label .star {
+          height: 1em;
+          width: 1em;
+          display: inline-block;
+        }
+
+        .star-rating>label {
+          -webkit-text-stroke: 2px black;
+        }
+
+        .star-rating input:checked~label>span.star,
+        .star-rating>label:hover~input~label>span.star {
+          color: #fff;
+        }
+
+        .star-rating span.star,
+        .star-rating:hover>input+label>span.star,
+        .star-rating>input:checked+label>span.star,
+        .star-rating>input~label:hover>span.star {
+          color: gold;
+        }
+
+        .star-rating>input~label:hover>span.star {
+          color: orange;
+        }
+    </style>
 <div class="flex flex-col h-screen px-6 py-10 w-full bg-theme">
     <p class="text-center text-3xl font-semibold pt pb-4">Profile</p>
     <div class="flex flex-row h-full gap-6">
@@ -32,11 +91,85 @@
                     <p class="ml-3">{{ host.address }}</p>
                 </div>
             </div>
+        {% if ratings %}
+            <p>Average Rating: {{ ratings }}</p>
+        {% endif %}
             <div class="flex w-fll justify-end mt-20 mx-4">
                 <form action="{% url 'report_user' to=host.user_id %}" method="get" style="margin-bottom: 0px;">
                     <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
                 </form>
             </div>
+            {% if not rate %}
+            <div class="flex w-fll justify-end mt-20 mx-4">
+                <form action="{% url 'rate_rent' rent %}" method="get" style="margin-bottom: 0px;">
+                    <fieldset class="star-rating">
+                      <input name="rating" value="1" type="radio" id="rating1">
+                      <label for="rating1">
+                        <span class="hide-visually">1 Star</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="rating" value="2" type="radio" id="rating2">
+                      <label for="rating2">
+                        <span class="hide-visually">2 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="rating" value="3"  checked type="radio" id="rating3">
+                      <label for="rating3">
+                        <span class="hide-visually">3 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="rating" value="4" type="radio" id="rating4">
+                      <label for="rating4">
+                        <span class="hide-visually">4 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="rating" value="5" type="radio" id="rating5">
+                      <label for="rating5">
+                        <span class="hide-visually">5 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+                    </fieldset>
+                    <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Rate</button>
+                </form>
+            </div>
+            {% else %}
+                Rated:
+                <fieldset class="star-rating">
+                      <input name="average" disabled value="1" {% if rate.rating == 1 %} checked {% endif %}type="radio" id="rating1">
+                      <label for="rating1">
+                        <span class="hide-visually">1 Star</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="average" disabled value="2" {% if rate.rating == 2 %} checked {% endif %} type="radio" id="rating2">
+                      <label for="rating2">
+                        <span class="hide-visually">2 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="average" disabled value="3" {% if rate.rating == 3 %} checked {% endif %}  type="radio" id="rating3">
+                      <label for="rating3">
+                        <span class="hide-visually">3 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="average" disabled value="4" {% if rate.rating == 4 %} checked {% endif %} type="radio" id="rating4">
+                      <label for="rating4">
+                        <span class="hide-visually">4 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+
+                      <input name="average" disabled value="5" {% if rate.rating == 5 %} checked {% endif %} type="radio" id="rating5">
+                      <label for="rating5">
+                        <span class="hide-visually">5 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                      </label>
+                    </fieldset>
+            {% endif %}
         </div>
         
 

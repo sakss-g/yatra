@@ -118,7 +118,7 @@ class Travelogue(models.Model):
 
 
 class RateRent(models.Model):
-    rent = models.ForeignKey(Rents, on_delete=models.CASCADE, related_name="rate")
+    rent = models.OneToOneField(Rents, on_delete=models.CASCADE, related_name="rate")
     rating = models.IntegerField(choices=rating, default=3)
 
 
@@ -128,4 +128,5 @@ class ReportUser(models.Model):
     reason = models.TextField(max_length=500)
     image1 = models.ImageField(upload_to="report", blank=True, null=True)
     status = models.CharField(max_length=10, choices=report_status, default="Pending")
+
 

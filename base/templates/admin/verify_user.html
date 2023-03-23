@@ -5,25 +5,26 @@
 
 {% block content %}
 <div class="h-screen w-full px-6 py-10 bg-theme">
-    <div class="bg-white h-full flex flex-col shadow-xl">
-        <div class="p-3">
-            <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Users</p>
-            <div class="h-16 w-full flex justify-end ">
-                <form method="get">
-                </form>
-            </div>
-            <div class="w-full flex flex-row">
-                <div class="flex">
-                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl font-semibold" id="toggle_endusers">End Users</button>
-                </div>
-
-                <div class="flex">
-                    <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl" id="toggle_hosts">Hosts</button>
-                </div>
+    <div class="bg-white h-full flex flex-col shadow-xl relative">
+        <p class="text-center text-2xl font-semibold pt-2 pb-4">Verify Users</p>
+        <div class="h-16 w-full flex justify-end px-3">
+            <form method="get">
+            </form>
+        </div>
+        <div class="w-full flex flex-row px-3">
+            <div class="flex">
+                <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl font-semibold" id="toggle_endusers">End Users</button>
             </div>
 
-            <div id="endusers">
-                {% if datae is not None %}
+            <div class="flex">
+                <button class="py-2 px-6 bg-medium-gray border-t-2 border-x-2 border-dark-gray rounded-t-xl" id="toggle_hosts">Hosts</button>
+            </div>
+        </div>
+
+        <div id="endusers">
+            <div  class="px-3">
+            {% if datae is not None %}
+                {% if datae %}
                 <table class="w-full">
                     <thead class="h-16 text-center">
                         <tr class="bg-black text-white text-xl">
@@ -35,6 +36,7 @@
                             <th class="font-medium">Actions</th>
                         </tr>
                     </thead>
+                {% endif %}
                     <tbody class="text-center">
                         {% for u in datae.object_list %}
                         <tr class="text-xl h-14">
@@ -59,91 +61,122 @@
                         {% endfor %}
                     </tbody>
                 </table>
-
-                    <div class="pagination justify-content-center align-items-center">
-                {% if datae.has_previous %}
-                    <a class="page-link" href="?page=1">&laquo; first</a>
-                    <a class="page-link" href="?page={{ page_obje.previous_page_number }}">Previous</a>
-                {% endif %}
-
-
-                <span style="margin: 0px 3px;">
-                    Page {{ datae.number }} of {{ datae.paginator.num_pages }}.
-                </span>
-
-
-                {% if datae.paginator.num_pages > 1  %}
-                <div class="flex flex-row items-center relative">
-                    <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
-                    <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
-                </div>
-                {% endif %}
-                {% if datae.has_next %}
-                    <a class="page-link" href="?page={{ datae.next_page_number }}">Next</a>
-                    <a class="page-link" href="?page={{ datae.paginator.num_pages }}">Last &raquo;</a>
-                {% endif %}
-        </div>
-                {% else %}
-                    <p class="text">All End User are verified.</p>
-                {% endif %}
+            {% else %}
+                <p class="text">No end user data.</p>
+            {% endif %}
+            {% if not datae %}
+                <p class="text">All End User are verified.</p>
+            {% endif %}
+            
             </div>
-
-            <div id="hosts" style="display: none;">
-                {% if datah is not None %}
-                <table class="w-full">
-                    <thead class="h-16 text-center">
-                        <tr class="bg-black text-white text-xl">
-                            <th class="font-medium">Citizenship Id</th>
-                            <th class="font-medium">Citizenship</th>
-                            <th class="font-medium">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        {% for u in datah %}
-                        <tr>
-                            <td>{{ u.citizenship_id }}</td>
-                            <td><a href="{{ u.citizenship.url }}"><img src="{{ u.citizenship.url }}" class="w-28 h-auto mx-auto"></a></td>
-                            <td>
-                                <div class="flex flex-row justify-center items-center">
-                                    <form action="{% url 'approve_host' u.id %}" method="post" style="margin-bottom: 0px;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Approve</button>
-                                    </form>
-                                    <form action="{% url 'reject_host' u.id %}" method="post" style="margin-bottom: 0px;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
-                                    </form>
-                                </div>
-                                
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                    <div class="pagination justify-content-center align-items-center">
-                    {% if datah.has_previous %}
-                        <a class="page-link" href="?page=1">&laquo; first</a>
-                        <a class="page-link" href="?page={{ page_objh.previous_page_number }}">Previous</a>
+            <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute">
+                <div class="w-full flex flex-row justify-center">
+                    {% if datae.has_previous %}
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page=1">&laquo; first</a>
+                        </button>
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ page_obje.previous_page_number }}">Previous</a>
+                        </button>
                     {% endif %}
 
-                    <span style="margin: 0px 3px;">
-                        Page {{ datah.number }} of {{ datah.paginator.num_pages }}.
-                    </span>
 
-                    {% if datah.paginator.num_pages > 1  %}
-                    <div class="flex flex-row items-center relative">
-                        <input type="text" style="width:80px;" class="rounded-pill" onchange=window.location="?page="+this.value >
-                        <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="absolute right-0" onchange=window.location="?page="+this.value>
+                    <div class="m-2 py-2 px-6">
+                        Page {{ datae.number }} of {{ datae.paginator.num_pages }}.
                     </div>
+
+
+                    {% if datae.paginator.num_pages > 1  %}
+                        <div class="flex flex-row items-center relative">
+                            <input type="text" style="width:80px;" class="rounded-md m-2 py-2" onchange=window.location="?page="+this.value >
+                            <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="mt-1.5 mr-3 absolute right-0 w-8 h-8 cursor-pointer" onchange=window.location="?page="+this.value>
+                        </div>
                     {% endif %}
-                    {% if datah.has_next %}
-                        <a class="page-link" href="?page={{ datah.next_page_number }}">Next</a>
-                        <a class="page-link" href="?page={{ datah.paginator.num_pages }}">Last &raquo;</a>
+                    {% if datae.has_next %}
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ datae.next_page_number }}">Next</a>
+                        </button>
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ datae.paginator.num_pages }}">Last &raquo;</a>
+                        </button>
                     {% endif %}
                 </div>
+            </div>
+        </div>
+
+        <div id="hosts" style="display: none;">
+            <div class="px-3">
+                {% if datah is not None %}
+                    {% if datah %}
+                    <table class="w-full">
+                        <thead class="h-16 text-center">
+                            <tr class="bg-black text-white text-xl">
+                                <th class="font-medium">Name</th>
+                                <th class="font-medium">Citizenship Id</th>
+                                <th class="font-medium">Citizenship</th>
+                                <th class="font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                    {% endif %}
+                        <tbody class="text-center">
+                            {% for u in datah %}
+                            <tr class="text-xl h-14">
+                                <td>{{ u.first_name }} {{ u.last_name }}</td>
+                                <td>{{ u.citizenship_id }}</td>
+                                <td><a href="{{ u.citizenship.url }}" target="_blank" style="color: blue; text-decoration: underline;">Citizenship Image</a></td>
+                                <td>
+                                    <div class="flex flex-row justify-center items-center">
+                                        <form action="{% url 'approve_host' u.id %}" method="post" style="margin-bottom: 0px;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Approve</button>
+                                        </form>
+                                        <form action="{% url 'reject_host' u.id %}" method="post" style="margin-bottom: 0px;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 {% else %}
+                    <p class="text">No host data.</p>
+                {% endif %}
+                {% if not datah %}
                     <p class="text">All Hosts are verified.</p>
                 {% endif %}
+            </div>
+            <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute">
+                <div class="w-full flex flex-row justify-center">
+                    {% if datah.has_previous %}
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page=1">&laquo; first</a>
+                        </button>
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ page_objh.previous_page_number }}">Previous</a>
+                        </button>
+                    {% endif %}
+
+                    <div class="m-2 py-2 px-6">
+                        Page {{ datah.number }} of {{ datah.paginator.num_pages }}.
+                    </div>
+
+                    {% if datah.paginator.num_pages > 1  %}
+                        <div class="flex flex-row items-center relative">
+                            <input type="text" style="width:80px;" class="rounded-md m-2 py-2" onchange=window.location="?page="+this.value >
+                            <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="mt-1.5 mr-3 absolute right-0 w-8 h-8 cursor-pointer"  onchange=window.location="?page="+this.value>
+                        </div>
+                    {% endif %}
+                    {% if datah.has_next %}
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ datah.next_page_number }}">Next</a>
+                        </button>
+                        <button class="table-pagination">
+                            <a class="page-link" href="?page={{ datah.paginator.num_pages }}">Last &raquo;</a>
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
