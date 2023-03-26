@@ -821,6 +821,11 @@ select{
   margin-bottom: 1.25rem;
 }
 
+.mx-16{
+  margin-left: 4rem;
+  margin-right: 4rem;
+}
+
 .mt-16{
   margin-top: 4rem;
 }

@@ -4,11 +4,111 @@
 {% block title%} Renting History {% endblock title%}
 
 {% block content %}
-    <div class="flex flex-col">
+<div class="h-screen w-full px-6 py-10 bg-theme">
+    <div class="bg-white h-full flex flex-col shadow-xl ">
+        <div class="p-3 overflow-y-auto scrollbar-hide">
+            <p class="text-center text-2xl font-semibold pt-2 pb-6">Renting History</p>
+
+            {% for hist in history %}
+                <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+                    <div class="flex flex-col mb-4">
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Host: </span> <a href="{% url 'view_profile_host' hist.vehicle.host_id hist.id %}" style="color:blue; text-decoration: underline;">{{ hist.vehicle.host.first_name }} {{ hist.vehicle.host.last_name }}</a>
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Start Date: </span> {{ hist.start_date }} 
+                            </div>
+                            <div>
+                                <span class="font-medium">End Date: </span> {{ hist.end_date }} 
+                            </div>
+                        </div>
+
+                        <hr class="mb-4">
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Number Plate: </span>{{ hist.vehicle.number_plate }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Location: </span>{{ hist.vehicle.location }}
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <div>
+                                <span class="font-medium">Bluebook Id: </span>{{ hist.vehicle.bluebook_id }}
+                            </div>
+                            <div>
+                                <span class="font-medium">Type: </span>{{ hist.vehicle.type }}
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+
+                    <div class="mb-4">
+                        <span class="font-medium">Bluebook: </span>
+                        <a href="{{ hist.vehicle.bluebook.url }}" target="_blank" style="color: blue;" class="underline">
+                            Bluebook
+                        </a>
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Description: </span>
+                        </div>
+                        <div>
+                            <span>{{ hist.vehicle.description }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 flex flex-col">
+                        <div>
+                            <span class="font-medium">Features: </span>
+                        </div>
+                        <div>
+                            <span>{{ hist.vehicle.feature }}</span>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="mb-4">
+                        <span class="font-medium">Hossting Price (Per Day): </span><span>Rs. {{ hist.vehicle.price }}</span>
+                    </div>
+
+                    <div>
+                        <div class="flex mb-2">
+                            <span>Front Image: &nbsp;</span>
+                            <a href="{{ hist.vehicle.image1.url }}" target="_blank" style="color: blue;" class="underline">
+                                Image 1
+                            </a>
+                        </div>
+                        <div class="flex mb-2">
+                            <span>Back Image: &nbsp;</span>
+                            <a href="{{ hist.vehicle.image2.url }}" target="_blank" style="color: blue;" class="underline">
+                                Image 2
+                            </a>
+                        </div>
+                        {% if image3 %}
+                            <div class="flex mb-2">
+                                <span>Back Image: &nbsp;</span>
+                                <a href="{{ hist.vehicle.image3.url }}" target="_blank" style="color: blue;" class="underline">
+                                    Image 3
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    <!-- <div class="flex flex-col">
     {% for hist in history %}
             <div>
                 <a href="{% url 'view_profile_host' hist.vehicle.host_id hist.id %}"><p>{{ hist.vehicle.host.first_name }}</p></a>
                 <p>{{ hist.vehicle }}</p></div>
     {% endfor %}
-     </div>
+     </div> -->
 {% endblock %}

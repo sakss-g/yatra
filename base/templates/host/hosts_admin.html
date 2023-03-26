@@ -1,12 +1,27 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
+
 {% block title%} Host Dashboard {% endblock title%}
 
 {% block content%}
 <div class="h-screen w-full px-6 py-10 bg-theme">
-    <div class="bg-white h-full flex flex-col justify-between shadow-xl">
+    <div class="bg-white h-full flex flex-col justify-between shadow-xl relative">
         <div class="p-3">
             <h1 class="text-center text-3xl font-semibold pt-2 pb-6">Hosts</h1>
+            <div class="w-100 flex flex-row justify-between mb-6">
+                <form>
+                    {% render_field nameform.name class="rounded-md" %}
+                    <input type="submit" class="bg-custom-green px-8 py-2 text-white rounded-md mx-1 border" value="Filter" />
+                </form>
+    
+                <form>
+                    {% render_field statusform.status class="rounded-md" %}
+                    <input type="submit" class="bg-custom-green px-8 py-2 text-white rounded-md mx-1 border" value="Filter" />
+                </form>
+            </div>
+
+            {% if data is not None %}
             <table class="w-full">
                 <thead class="h-16 text-center">
                     <tr class="bg-black text-white text-xl">
@@ -19,7 +34,7 @@
                     </tr>
                 </thead>
                 <tbody class="text-center">
-                    {% for user in users %}
+                    {% for user in data.object_list  %}
                     <tr class="text-xl h-14">
                         <td>{{user.first_name}} {{user.last_name}}</td>
                         <td>{{user.email}}</td>
@@ -37,6 +52,34 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
+            <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute px-3">
+                <div class="w-full flex flex-row justify-center">
+                    {% if data.has_previous %}
+                    <button class="table-pagination">
+                        <a class="page-link" href="?page=1">&laquo; first</a>
+                    </button>
+                    <button class="table-pagination">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </button>
+                    {% endif %}
+    
+                    <div class="m-2 py-2 px-6">
+                        Page {{ data.number }} of {{ data.paginator.num_pages }}.
+                    </div>
+    
+                    {% if data.paginator.num_pages > 1  %}
+                    <div class="flex flex-row items-center relative">
+                        <input type="text" style="width:80px;" class="rounded-md m-2 py-2" onchange=window.location="?page="+this.value >
+                        <img src="{% static 'images/search.svg' %}" style="height:25px;" role="button" class="mt-1.5 mr-3 absolute right-0 w-8 h-8 cursor-pointer" onchange=window.location="?page="+this.value>
+                    </div>
+                    {% endif %}
+                    {% if data.has_next %}
+                        <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+                        <a class="page-link" href="?page={{ data.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

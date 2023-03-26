@@ -12,6 +12,7 @@ from django.urls import reverse
 from yatra.settings import KHALTI_API_KEY
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Avg
+from django.core.mail import EmailMessage
 
 import requests
 import json
@@ -486,10 +487,38 @@ def end_users_admin(request):
 
 
 def hosts_admin(request):
-    hosts = Host.objects.all()
-    context={
-        'users':hosts
+    nameform = UserFilterForm(request.GET or None)
+    if nameform.is_valid():
+        hosts = nameform.filter_users(Host.objects.all())
+    else:
+        hosts = Host.objects.filter(is_approved="Approved")
+
+    statusform = UserFilterStatusForm(request.GET or None)
+
+    if statusform.is_valid():
+        hosts = statusform.filter_users(hosts)
+    else:
+        hosts = hosts.filter(is_approved="Approved")
+
+    paginator = Paginator(hosts, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    context = {
+        'data': page_obj,
+        'nums': page_obj.paginator.num_pages * 'p',
+        'nameform': nameform,
+        'statusform':statusform
     }
+    # hosts = Host.objects.all()
+    # context={
+    #     'users':hosts
+    # }
     return render(request, 'host/hosts_admin.html', context)
 
 
@@ -648,6 +677,13 @@ def handle_report(request, pk, fk):
         elif fk == 3:
             report.status = 'Warning'
             report.save()
+            email = EmailMessage(
+                'Warning Notification',
+                'There has been complaints against you and you service. Continuing to get complaints will get you blocked',
+                'sakss.hi19@gmail.com',
+                [report.to.username],
+            )
+            email.send(fail_silently=False)
         elif fk == 4:
             if report.to.groups.filter(name='host').exists():
                 host = report.to.host
@@ -779,3 +815,6 @@ def rate_rent(request, pk):
     else:
         print("Invalid form")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
