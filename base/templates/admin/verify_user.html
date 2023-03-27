@@ -49,11 +49,11 @@
                                 <div class="flex flex-row justify-center">
                                     <form action="{% url 'approve_enduser' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
-                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg"> Approve</button>
+                                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 text-white rounded-lg" onclick="return ConfirmApprove()"> Approve</button>
                                     </form>
                                     <form action="{% url 'reject_enduser' u.id %}" method="post" style="margin-bottom: 0px;">
                                         {% csrf_token %}
-                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                                        <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg" onclick="return ConfirmReject()">Reject</button>
                                     </form>
                                 </div>
                             </td>
@@ -72,12 +72,16 @@
             <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute">
                 <div class="w-full flex flex-row justify-center">
                     {% if datae.has_previous %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page=1">&laquo; first</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ page_obje.previous_page_number }}">Previous</a>
-                        </button>
+                        <a class="page-link" href="?page=1">
+                            <button class="table-pagination">
+                                &laquo; first
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ page_obje.previous_page_number }}">
+                            <button class="table-pagination">
+                                Previous
+                            </button>
+                        </a>
                     {% endif %}
 
 
@@ -93,12 +97,16 @@
                         </div>
                     {% endif %}
                     {% if datae.has_next %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ datae.next_page_number }}">Next</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ datae.paginator.num_pages }}">Last &raquo;</a>
-                        </button>
+                        <a class="page-link" href="?page={{ datae.next_page_number }}">
+                            <button class="table-pagination">
+                                Next
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ datae.paginator.num_pages }}">
+                            <button class="table-pagination">
+                                Last &raquo;
+                            </button>
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -128,11 +136,11 @@
                                     <div class="flex flex-row justify-center items-center">
                                         <form action="{% url 'approve_host' u.id %}" method="post" style="margin-bottom: 0px;">
                                             {% csrf_token %}
-                                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Approve</button>
+                                            <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg" onclick="return ConfirmApprove()">Approve</button>
                                         </form>
                                         <form action="{% url 'reject_host' u.id %}" method="post" style="margin-bottom: 0px;">
                                             {% csrf_token %}
-                                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg">Reject</button>
+                                            <button type="submit" class="bg-danger px-4 py-1.5 mr-4 text-white rounded-lg" onclick="return ConfirmReject()">Reject</button>
                                         </form>
                                     </div>
                                 </td>
@@ -150,12 +158,16 @@
             <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute">
                 <div class="w-full flex flex-row justify-center">
                     {% if datah.has_previous %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page=1">&laquo; first</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ page_objh.previous_page_number }}">Previous</a>
-                        </button>
+                        <a class="page-link" href="?page=1">
+                            <button class="table-pagination">
+                                &laquo; first
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ page_objh.previous_page_number }}">
+                            <button class="table-pagination">
+                                Previous
+                            </button>
+                        </a>
                     {% endif %}
 
                     <div class="m-2 py-2 px-6">
@@ -169,12 +181,16 @@
                         </div>
                     {% endif %}
                     {% if datah.has_next %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ datah.next_page_number }}">Next</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ datah.paginator.num_pages }}">Last &raquo;</a>
-                        </button>
+                        <a class="page-link" href="?page={{ datah.next_page_number }}">
+                            <button class="table-pagination">
+                                Next
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ datah.paginator.num_pages }}">
+                            <button class="table-pagination">
+                                Last &raquo;
+                            </button>
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -198,5 +214,13 @@
         btn2.style.fontWeight = "600";
         btn1.style.fontWeight = "400";
     };
+
+    
+    function ConfirmApprove() {
+      return confirm("Are you sure you want to approve user?");
+    }
+    function ConfirmReject() {
+      return confirm("Are you sure you want to reject user?");
+    }
 </script>
 {% endblock %}

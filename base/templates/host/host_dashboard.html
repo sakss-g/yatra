@@ -1,5 +1,14 @@
 {% extends 'base/base.html' %}
+{% load static %}
+
 {% block title%} Host Dashboard {% endblock title%}
-{% block body%}
-<h1>This is host dashboard {{request.user.host.first_name}}</h1>
-{% endblock body %}
+
+{% block content%}
+<div class="h-screen flex flex-col w-full px-6 pt-4 pb-10 bg-theme gap-4">
+    <div class="flex w-full justify-center " style="height: 3%;">
+        <p class="text-center text-2xl font-semibold ">Dashboard</p>
+    </div>
+    <div class="flex flex-row w-full gap-6 " style="height: 97%;">
+    </div>
+</div>
+{% endblock content %}

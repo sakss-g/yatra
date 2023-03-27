@@ -65,12 +65,13 @@
         }
     </style>
 <div class="flex flex-col h-screen px-6 py-10 w-full bg-theme">
-    <p class="text-center text-3xl font-semibold pt pb-4">Profile</p>
-    <div class="flex flex-row h-full gap-6">
-        <div class="bg-white h-full flex flex-col w-1/3 py-12 rounded-xl shadow-xl">
-            <img src="{{ host.pic.url }}" style="object-fit: contain" alt="" class="mx-auto mb-20 w-40 h-40 object-cover rounded-full ">
-            
-            <div class="flex flex-col bg-theme  mx-8 p-8 text-lg rounded-xl">
+    <p class="text-center text-2xl font-semibold pt pb-8">Host Profile</p>
+    <div class="bg-white h-auto flex flex-col w-3/5 mx-auto py-12 rounded-xl shadow-xl">
+        <div class="flex flex-row h-auto bg-theme p-8 mx-8 rounded-xl">
+            <div class="w-1/4 flex items-center  h-full">
+                <img src="{{ host.pic.url }}" style="object-fit: contain" alt="" class="w-40 h-40 object-cover rounded-full ">
+            </div>
+            <div class="flex flex-col w-3/4 text-lg">
                 <div class="flex mb-5">
                     <p class="font-medium">Name:</p>
                     <p class="ml-3">{{ host.first_name }} {{ host.last_name }}</p>
@@ -97,103 +98,88 @@
                     {% endif %}
                 </div>
             </div>
+        </div>        
         
-            
-            <div class="flex  p-8 mx-8">
-                {% if not rate %}
-                <div class="flex w-fll justify-end mt-20 mx-8">
-                    <form action="{% url 'rate_rent' rent %}" method="get" style="margin-bottom: 0px;">
-                        <fieldset class="star-rating">
-                        <input name="rating" value="1" type="radio" id="rating1">
-                        <label for="rating1">
-                            <span class="hide-visually">1 Star</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
-
-                        <input name="rating" value="2" type="radio" id="rating2">
-                        <label for="rating2">
-                            <span class="hide-visually">2 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
-
-                        <input name="rating" value="3"  checked type="radio" id="rating3">
-                        <label for="rating3">
-                            <span class="hide-visually">3 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
-
-                        <input name="rating" value="4" type="radio" id="rating4">
-                        <label for="rating4">
-                            <span class="hide-visually">4 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
-
-                        <input name="rating" value="5" type="radio" id="rating5">
-                        <label for="rating5">
-                            <span class="hide-visually">5 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
-                        </fieldset>
-                        <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Rate</button>
-                    </form>
-                </div>
-                {% else %}
-                    <div class="py-3 font-medium text-lg mr-4">Rated:</div>
+        <div class="flex  p-8 mx-8">
+            {% if not rate %}
+            <div>
+                <form action="{% url 'rate_rent' rent %}" method="get" style="margin-bottom: 0px;">
                     <fieldset class="star-rating">
-                        <input name="average" disabled value="1" {% if rate.rating == 1 %} checked {% endif %}type="radio" id="rating1">
-                        <label for="rating1">
-                            <span class="hide-visually">1 Star</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
+                    <input name="rating" value="1" type="radio" id="rating1">
+                    <label for="rating1">
+                        <span class="hide-visually">1 Star</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
 
-                        <input name="average" disabled value="2" {% if rate.rating == 2 %} checked {% endif %} type="radio" id="rating2">
-                        <label for="rating2">
-                            <span class="hide-visually">2 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
+                    <input name="rating" value="2" type="radio" id="rating2">
+                    <label for="rating2">
+                        <span class="hide-visually">2 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
 
-                        <input name="average" disabled value="3" {% if rate.rating == 3 %} checked {% endif %}  type="radio" id="rating3">
-                        <label for="rating3">
-                            <span class="hide-visually">3 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
+                    <input name="rating" value="3"  checked type="radio" id="rating3">
+                    <label for="rating3">
+                        <span class="hide-visually">3 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
 
-                        <input name="average" disabled value="4" {% if rate.rating == 4 %} checked {% endif %} type="radio" id="rating4">
-                        <label for="rating4">
-                            <span class="hide-visually">4 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
+                    <input name="rating" value="4" type="radio" id="rating4">
+                    <label for="rating4">
+                        <span class="hide-visually">4 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
 
-                        <input name="average" disabled value="5" {% if rate.rating == 5 %} checked {% endif %} type="radio" id="rating5">
-                        <label for="rating5">
-                            <span class="hide-visually">5 Stars</span>
-                            <span aria-hidden="true" class="star">★</span>
-                        </label>
+                    <input name="rating" value="5" type="radio" id="rating5">
+                    <label for="rating5">
+                        <span class="hide-visually">5 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
                     </fieldset>
-                {% endif %}
-            </div>
-
-            <div class="flex w-full mx-16">
-                <form action="{% url 'report_user' to=host.user_id %}" method="get" style="margin-bottom: 0px;">
-                    <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
                 </form>
             </div>
-        </div>
-        
-
-        <div class="bg-white h-full flex flex-col w-2/3 rounded-xl shadow-xl">
-            {% for vehicle in vehicles %}
-            <div class="flex flex-col bg-theme mx-10 my-5 p-8 text-lg rounded-xl relative">
-                
-                <div class="flex mb-3">
-                    <p class="font-medium">{{ vehicle.description}}</p>
-                </div>
-                <div class="flex">
-                    <img src="{{ host.pic.url }}" class="h-28 w-auto"/>
-                </div>
+            <div class="ml-2 mt-1">
+                <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4  text-white rounded-lg">Rate</button>
             </div>
-            {% endfor %}
+            {% else %}
+                <div class="py-3 font-medium text-lg mr-4">Rated:</div>
+                <fieldset class="star-rating">
+                    <input name="average" disabled value="1" {% if rate.rating == 1 %} checked {% endif %}type="radio" id="rating1">
+                    <label for="rating1">
+                        <span class="hide-visually">1 Star</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
 
+                    <input name="average" disabled value="2" {% if rate.rating == 2 %} checked {% endif %} type="radio" id="rating2">
+                    <label for="rating2">
+                        <span class="hide-visually">2 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
+
+                    <input name="average" disabled value="3" {% if rate.rating == 3 %} checked {% endif %}  type="radio" id="rating3">
+                    <label for="rating3">
+                        <span class="hide-visually">3 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
+
+                    <input name="average" disabled value="4" {% if rate.rating == 4 %} checked {% endif %} type="radio" id="rating4">
+                    <label for="rating4">
+                        <span class="hide-visually">4 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
+
+                    <input name="average" disabled value="5" {% if rate.rating == 5 %} checked {% endif %} type="radio" id="rating5">
+                    <label for="rating5">
+                        <span class="hide-visually">5 Stars</span>
+                        <span aria-hidden="true" class="star">★</span>
+                    </label>
+                </fieldset>
+            {% endif %}
+        </div>
+
+        <div class="flex w-full mx-16">
+            <form action="{% url 'report_user' to=host.user_id %}" method="get" style="margin-bottom: 0px;">
+                <button type="submit" class="bg-danger px-4 py-1.5 mr-4 mb-0 text-white rounded-lg">Report</button>
+            </form>
         </div>
     </div>
 </div>

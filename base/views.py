@@ -13,6 +13,8 @@ from yatra.settings import KHALTI_API_KEY
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Avg
 from django.core.mail import EmailMessage
+from django.db.models import Count
+
 
 import requests
 import json
@@ -340,6 +342,8 @@ def open_vehicle(request, pk, no):
         vehicle = vehicle.image3.path
     return FileResponse(open(vehicle, 'rb'))
 
+def host_dashboard(request):
+    return render(request, 'host/host_dashboard.html')
 
 
 # end users related views
@@ -441,15 +445,76 @@ def delete_user(request, pk):
 
 
 def admin_dashboard(request):
-    host_count = Host.objects.all().count()
-    enduser_count = EndUser.objects.all().count()
-    vehicle_count = Vehicle.objects.all().count()
-    blog_count = Travelogue.objects.all().count()
+    hosts = Host.objects.all()
+    endusers = EndUser.objects.all()
+    
+    total_user_count = (hosts.filter(is_approved="Approved")).count()+(endusers.filter(is_approved="Approved")).count()
+    pending_user_count = (hosts.filter(is_approved="Pending")).count()+(endusers.filter(is_approved="Pending")).count()
+    rejected_user_count = (hosts.filter(is_approved="Rejected")).count()+(endusers.filter(is_approved="Rejected")).count()
+
+    hosts_count = hosts.filter(is_approved="Approved").count()
+    endusers_count = endusers.filter(is_approved="Approved").count()
+
+    vehicles = Vehicle.objects.all()
+
+    approved_vehicle_count = vehicles.filter(is_approved="Approved").count()
+    pending_vehicle_count = vehicles.filter(is_approved="Pending").count()
+    rejected_vehicle_count = vehicles.filter(is_approved="Rejected").count()
+
+    vehicle_type_count = Vehicle.objects.all().count()
+    if vehicle_type_count > 0:
+        vehicle_types = Vehicle.objects.values('type').annotate(total=Count('type'))
+        # print(vehicle_types)
+    else:
+        vehicle_types = None
+
+
+    # fyp_count = StudentTopic.objects.all().count()
+    # if fyp_count > 0:
+    #     fyp_titles = StudentTopic.objects.values('field').annotate(total=Count('field'))
+    #     print(fyp_titles)
+    # else:
+    #     fyp_titles = None
+
+
+
+    travelogues = Travelogue.objects.all()
+    
+    approved_travelogue_count = travelogues.filter(is_approved="Approved").count()
+    pending_travelogue_count = travelogues.filter(is_approved="Pending").count()
+    rejected_travelogue_count = travelogues.filter(is_approved="Rejected").count()
+
+
+    reports = ReportUser.objects.all()
+
+    pending_report_count = reports.filter(status='Pending').count()
+    noaction_report_count = reports.filter(status='NoAction').count()
+    warning_report_count = reports.filter(status='Warning').count()
+    blocked_report_count = reports.filter(status='Blocked').count()
+
+
     context={
-        'hostcount':host_count,
-        'endusercount':enduser_count,
-        'vehiclecount':vehicle_count,
-        'blogcount':blog_count
+        'total_user_count':total_user_count,
+        'pending_user_count': pending_user_count,
+        'rejected_user_count': rejected_user_count,
+
+        'approved_vehicle_count': approved_vehicle_count,
+        'pending_vehicle_count': pending_vehicle_count,
+        'rejected_vehicle_count': rejected_vehicle_count, 
+
+        'approved_travelogue_count': approved_travelogue_count,
+        'pending_travelogue_count': pending_travelogue_count,
+        'rejected_travelogue_count': rejected_travelogue_count,
+
+        'pending_report_count': pending_report_count,
+        'noaction_report_count': noaction_report_count,
+        'warning_report_count': warning_report_count,
+        'blocked_report_count': blocked_report_count,
+
+        'hosts_count': hosts_count,
+        'endusers_count': endusers_count,
+
+        'vehicle_types': vehicle_types,
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
@@ -468,7 +533,7 @@ def end_users_admin(request):
     else:
         endUsers = endUsers.filter(is_approved="Approved")
 
-    paginator = Paginator(endUsers, 10)
+    paginator = Paginator(endUsers, 6)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
@@ -525,8 +590,8 @@ def hosts_admin(request):
 def verify_user(request):
     unverified_hosts = Host.objects.filter(is_approved="Pending")
     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
-    paginatorh = Paginator(unverified_hosts, 10)
-    paginatore = Paginator(unverified_endusers, 10)
+    paginatorh = Paginator(unverified_hosts, 8)
+    paginatore = Paginator(unverified_endusers, 8)
     page_number = request.GET.get('page')
 
     try:

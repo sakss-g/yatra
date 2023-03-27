@@ -33,12 +33,16 @@
             <div class="flex flex-col h-20 w-full bg-pagination-gray bg-opacity-70 bottom-0 justify-center absolute">
                 <div class="w-full flex flex-row justify-center">
                     {% if data.has_previous %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page=1">&laquo; first</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </button>
+                        <a class="page-link" href="?page=1">
+                            <button class="table-pagination">
+                                &laquo; first
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <button class="table-pagination">
+                                Previous
+                            </button>
+                        </a>
                     {% endif %}
 
                     <div class="m-2 py-2 px-6">
@@ -52,12 +56,16 @@
                     </div>
                     {% endif %}
                     {% if data.has_next %}
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
-                        </button>
-                        <button class="table-pagination">
-                            <a class="page-link" href="?page={{ data.paginator.num_pages }}">Last &raquo;</a>
-                        </button>
+                        <a class="page-link" href="?page={{ data.next_page_number }}">
+                            <button class="table-pagination">
+                                Next
+                            </button>
+                        </a>
+                        <a class="page-link" href="?page={{ data.paginator.num_pages }}">
+                            <button class="table-pagination">
+                                Last &raquo;
+                            </button>
+                        </a>
                     {% endif %}
                 </div>
             </div>

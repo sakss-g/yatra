@@ -33,6 +33,7 @@ urlpatterns = [
     path('host_upload_documents/', views.host_upload_documents, name='host_upload_documents'),
     path('rented_history', views.rented_history, name='rented_history'),
     path('viewprofileenduser/<str:pk>', views.view_profile_enduser, name='view_profile_enduser'),
+    path('host_dashboard/', views.host_dashboard, name='host_dashboard'),
 
 
     # enduser related urls

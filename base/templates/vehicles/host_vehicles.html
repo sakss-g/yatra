@@ -7,7 +7,7 @@
 <div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto">
     <div class="bg-white h-full flex flex-col shadow-xl">
         <div class="p-3 overflow-y-auto scrollbar-hide">
-            <p class="text-center text-3xl font-semibold pt-2 pb-4">Host Vehicles</p>
+            <p class="text-center text-2xl font-semibold pt-2 pb-4">Host Vehicles</p>
             {% if request.user.host.is_approved == "Approved" %}
                 {% if add_payment == 'yes' %}
                     <div class="flex w-full justify-end px-10 py-6">
@@ -50,7 +50,7 @@
                     <div class="mb-4">
                         <span class="font-medium">Bluebook: </span>
                         <a href="{% url 'open_bluebook' vehicle.id %}" style="color: blue;" class="underline">
-                            {{ vehicle.bluebook.name }}
+                            Bluebook
                         </a>
                     </div>
 
@@ -86,14 +86,16 @@
                         </div>
                         <div class="flex flex-col mb-6">
                             <a href="{% url 'open_vehicle' vehicle.id 1 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image1.name }}
+                                Image 1
                             </a>
                             <a href="{% url 'open_vehicle' vehicle.id 2 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image2.name }}
+                                Image 2
                             </a>
-                            <a href="{% url 'open_vehicle' vehicle.id 3 %}" style="color: blue;" class="underline">
-                                {{ vehicle.image3.name }}
-                            </a>
+                            {% if vehicle.image3 %}
+                                <a href="{% url 'open_vehicle' vehicle.id 3 %}" style="color: blue;" class="underline">
+                                    Image 3
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
 

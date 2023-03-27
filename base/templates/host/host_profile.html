@@ -34,8 +34,8 @@
             </div>
             <div class="flex flex-col bg-theme mb-4 mx-8 p-8 text-lg justify-between rounded-xl">
                 <div class="flex">
-                    <p class="font-medium">Citizenship Status:</p>
-                    <p class="ml-3"></p>
+                    <p class="font-medium py-1">Citizenship Status:</p>
+                    <p class="py-1 px-6 ml-3 text-white rounded-md  {% if user.host.is_approved == 'Approved' %} bg-custom-green {% elif user.host.is_approved == 'Pending' %} bg-custom-orange {% elif user.host.is_approved == 'Rejected' %} bg-danger {% else %} {% endif %} ">{{ user.host.is_approved }}</p>
                 </div>
             </div> 
 
@@ -56,9 +56,11 @@
                     <p class="mb-12"><img src="{{ user.host.citizenship.url }}" alt="" class="h-72 w-auto border-black"></p>
                 </div>
 
+                {% if user.host.is_approved != 'Approved'  %}
                 <div class="flex mb-6 mr-6 right-0 bottom-0 absolute">
                     <a  href="{% url 'host_upload_documents' %}"><button class="py-1.5 px-6 btn">Upload Documents</button></a>
                 </div>
+                {% endif %}
             </div>
             
         </div>

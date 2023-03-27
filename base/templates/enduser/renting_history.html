@@ -10,6 +10,48 @@
             <p class="text-center text-2xl font-semibold pt-2 pb-6">Renting History</p>
 
             {% for hist in history %}
+                <div class="w-3/5 flex flex-row mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
+                    <div class="flex w-1/3 items-center justify-center h-auto">
+                        <img src="{{ hist.vehicle.image1.url }}" alt="" class="w-full">
+                    </div>
+                    <div class="flex flex-col w-2/3 px-8 h-auto justify-center">
+                        <div class="flex flex-col justify-between">
+                            <div class="flex flex-row mb-4">
+                                <span class="font-medium">Host: &nbsp;</span><span style="text-decoration: underline; color: blue;"> <a href="{% url 'view_profile_host' hist.vehicle.host_id hist.id %}">{{ hist.vehicle.host.first_name }} {{ hist.vehicle.host.last_name }}</a></span>
+                            </div>
+                            <div class="flex flex-row mb-4">
+                                <div>
+                                    <span class="font-medium">Contact Number: </span><span>{{ hist.vehicle.host.phone_number }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row justify-between mb-4">
+                                <div>
+                                    <span class="font-medium">Start Date: </span> {{ hist.start_date }} 
+                                </div>
+                                <div>
+                                    <span class="font-medium">End Date: </span> {{ hist.end_date }} 
+                                </div>
+                            </div>
+                            <div class="flex flex-row mb-4">
+                                <div>
+                                    <span class="font-medium">Number Plate: </span><span> {{ hist.vehicle.number_plate }} </span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row mb-4">
+                                <div>
+                                    <span class="font-medium">Price: </span><span>Rs. {{ hist.vehicle.price }} / day</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row">
+                                <div>
+                                    <span class="font-medium">Location: </span><span> {{ hist.vehicle.location }} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- {% for hist in history %}
                 <div class="w-3/5 flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16">
                     <div class="flex flex-col mb-4">
                         <div class="flex flex-row justify-between mb-4">
@@ -100,7 +142,7 @@
                         {% endif %}
                     </div>
                 </div>
-            {% endfor %}
+            {% endfor %} -->
         </div>
     </div>
 </div>
