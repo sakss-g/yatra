@@ -39,6 +39,9 @@
                                 </div>
                             </div>
                             <div class="flex flex-col">
+                                <label class="mb-3">Contact Number</label>
+                                {% render_field form.phone_number class="input-fields" %}  
+
                                 <label class="mb-3">Email</label>
                                 {% render_field form.email class="input-fields" %}  
 
@@ -49,7 +52,7 @@
                             </div>
                             
                         </div>
-                        <div class="flex justify-center pt-16 text-dark-gray">
+                        <div class="flex justify-center pt-10 text-dark-gray">
                             <span>Already have an account? <a href="{% url 'login' %}" class="font-medium text-black text-justify">Log In</a></span>
                         </div>
                         

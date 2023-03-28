@@ -24,6 +24,18 @@ urlpatterns = [
     path('view_reports', views.view_reports, name='view_reports'),
     path('handle_report/<str:pk>/<int:fk>', views.handle_report, name='handle_report'),
     path('view_transactions/', views.view_transaction, name='view_transactions'),
+    path('view_policies/', views.view_policies, name='view_policies'),
+    path('terms_and_conditions/', views.terms_and_conditions, name='terms_and_conditions'),
+    path('faqs/', views.faqs, name='faqs'),
+    path('add_faqs/', views.add_faqs, name='add_faqs'),
+    path('delete_faq/<str:pk>', views.delete_faq, name='delete_faq'),
+    path('terms_and_conditions/', views.terms_and_conditions, name='terms_and_conditions'),
+    path('add_terms_and_conditions/', views.add_terms_and_conditions, name='add_terms_and_conditions'),
+    path('delete_terms_and_conditions/<str:pk>', views.delete_terms_and_conditions, name='delete_terms_and_conditions'),
+    path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
+    path('add_privacy_policy/', views.add_privacy_policy, name='add_privacy_policy'),
+    path('delete_privacy_policy/<str:pk>', views.delete_privacy_policy, name='delete_privacy_policy'),
+
 
     # host related urls
     path('registerhost/', views.register_host, name='register_host'),

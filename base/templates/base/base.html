@@ -79,6 +79,12 @@
                                Transactions
                             </li>
                         </a>
+                        <a href="{% url 'view_policies' %}" class="nav-bar-items {% if url_name == 'view_policies' or url_name == 'terms_and_conditions' or url_name == 'privacy_policy' or url_name == 'faqs' %}active{% endif %}">
+                            <img src="{% static 'images/transaction.svg' %}" alt="">
+                            <li class="nav-bar-li">
+                               Policies
+                            </li>
+                        </a>
                     </ul>
                     {% endwith %}
                 </div>
@@ -176,16 +182,9 @@
                         <a href="{% url 'rented_history' %}" class="nav-bar-items{% if url_name == 'rented_history' or url_name == 'report_user' %} active {% endif %}">
                             <img src="{% static 'images/request.svg' %}" alt=""> 
                             <li class="nav-bar-li">
-                                Rented History
+                                Renter History
                             </li>
                         </a>
-
-                        <!-- <a href="#" class="nav-bar-items">
-                            <img src="{% static 'images/blog.svg' %}" alt=""> 
-                            <li class="nav-bar-li">
-                               Travelogues Uploaded
-                            </li>
-                        </a> -->
                     </ul>
                     {% endwith %}
                 </div>

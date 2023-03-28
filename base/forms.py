@@ -1,5 +1,5 @@
 from django import forms
-from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser,RateRent, report_status, status
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser,RateRent, report_status, status, FAQs, TermsAndConditions,PrivacyPolicy
 from django.forms import DateTimeInput
 from django.db.models import Q
 
@@ -7,13 +7,13 @@ from django.db.models import Q
 class HostForm(forms.ModelForm):
     class Meta:
         model = Host
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'phone_number']
 
 
 class EndUserForm(forms.ModelForm):
     class Meta:
         model = EndUser
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'phone_number']
 
 
 class EndUserUpdateForm(forms.ModelForm):
@@ -59,6 +59,20 @@ class SubmitTravelogueForm(forms.ModelForm):
         model = Travelogue 
         exclude = ['enduser', 'is_approved']
 
+class FAQsForm(forms.ModelForm):
+    class Meta:
+        model = FAQs 
+        fields = ['question', 'answer']
+
+class TermsAndConditionsForm(forms.ModelForm):
+    class Meta:
+        model = TermsAndConditions 
+        fields = ['term', 'explanation']
+
+class PrivacyPolicyForm(forms.ModelForm):
+    class Meta:
+        model = PrivacyPolicy 
+        fields = ['policy', 'explanation']    
 
 class ReportUserForm(forms.ModelForm):
     class Meta:
@@ -74,9 +88,6 @@ class RateRentForm(forms.ModelForm):
 
 class ReportFilterForm(forms.Form):
     status = forms.ChoiceField(choices=report_status)
-    # def init(self, *args, **kwargs):
-    #     super().init(*args, **kwargs)
-    #     self.fields['name'].widget.attrs.update({'class': 'first_name'})
 
     def filter_report(self, queryset):
         status = self.cleaned_data['status']

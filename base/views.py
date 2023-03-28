@@ -182,18 +182,21 @@ def register_host(request):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = User.objects.create(username=email, password=make_password(password))
-        group = Group.objects.get(name="host")
-        user.groups.add(group)
-        user.save()
-        host = Host()
-        host.user = user
-        host_form = HostForm(request.POST, instance=host)
+        try:
+            user = User.objects.create(username=email, password=make_password(password))
+            group = Group.objects.get(name="host")
+            user.groups.add(group)
+            user.save()
+            host = Host()
+            host.user = user
+            host_form = HostForm(request.POST, instance=host)
 
-        if host_form.is_valid:
-            host_form.save()
-            return redirect('login') 
-
+            if host_form.is_valid:
+                host_form.save()
+                return redirect('login') 
+        except:
+            messages.error(request, "Email already exists!!")
+              
     return render(request, 'host/register_host.html', {'form':host_form})
 
 
@@ -353,19 +356,20 @@ def register_enduser(request):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = User.objects.create(username=email, password=make_password(password))
-        group = Group.objects.get(name="enduser")
-        print(group.name)
-        user.groups.add(group)
-        user.save()
-        host = EndUser()
-        host.user = user
-        enduser_form = EndUserForm(request.POST, instance=host)
+        try:
+            user = User.objects.create(username=email, password=make_password(password))
+            group = Group.objects.get(name="enduser")
+            user.groups.add(group)
+            user.save()
+            host = EndUser()
+            host.user = user
+            enduser_form = EndUserForm(request.POST, instance=host)
 
-        if enduser_form.is_valid:
-            enduser_form.save()
-            return redirect('login') 
-
+            if enduser_form.is_valid:
+                enduser_form.save()
+                return redirect('login') 
+        except:
+            messages.error(request, "Email already exists!!")
     return render(request, 'enduser/register_enduser.html', {'form':enduser_form})
 
 
@@ -419,6 +423,112 @@ def renting_history(request):
 
 
 # admin related views
+def view_policies(request):
+    return render(request, 'admin/policies.html')
+    
+def privacy_policy(request):
+    privacy_policy = PrivacyPolicy.objects.all()
+    
+    context = {
+        'privacy_policy':privacy_policy,
+    }
+    if request.user.is_superuser:
+        return render(request, 'privacypolicy/privacypolicy.html', context)
+    else:
+        return render(request, 'base/privacypolicy.html', context)
+
+def add_privacy_policy(request):
+    form = PrivacyPolicyForm()
+
+    if request.method == "POST":
+        form = PrivacyPolicyForm(request.POST)
+        if form.is_valid():
+            add_privacy_policy = form.save(commit=False)
+            add_privacy_policy.save()
+            return redirect('privacy_policy') 
+        else:
+            messages.error(request, form.errors)
+    context = {
+    'form': form
+    }
+    return render(request, 'privacypolicy/add_privacypolicy.html', context)
+
+def delete_privacy_policy(request, pk):
+    privacy_policy = PrivacyPolicy.objects.filter(id=pk).delete()
+    return redirect('privacy_policy')
+
+
+def terms_and_conditions(request):
+    terms_and_conditions = TermsAndConditions.objects.all()
+    
+    context = {
+        'terms_and_conditions':terms_and_conditions,
+    }
+    if request.user.is_superuser:
+        return render(request, 'termsandconditions/termsandconditions.html', context)
+    else:
+        return render(request, 'base/termsandconditions.html', context)
+
+
+def add_terms_and_conditions(request):
+    form = TermsAndConditionsForm()
+
+    if request.method == "POST":
+        form = TermsAndConditionsForm(request.POST)
+        if form.is_valid():
+            add_terms_and_conditions = form.save(commit=False)
+            add_terms_and_conditions.save()
+            return redirect('terms_and_conditions') 
+        else:
+            messages.error(request, form.errors)
+    context = {
+    'form': form
+    }
+    return render(request, 'termsandconditions/add_termsandconditions.html', context)
+
+def delete_terms_and_conditions(request, pk):
+    terms_and_conditions = TermsAndConditions.objects.filter(id=pk).delete()
+    return redirect('terms_and_conditions')
+
+
+
+
+def faqs(request):
+    faqs = FAQs.objects.all()
+    
+    context = {
+        'faqs':faqs,
+    }
+    if request.user.is_superuser:
+        return render(request, 'faqs/faqs.html', context)
+    else:
+        return render(request,'base/faqs.html', context)        
+
+
+def add_faqs(request):
+    form = FAQsForm()
+
+    if request.method == "POST":
+        form = FAQsForm(request.POST)
+        if form.is_valid():
+            add_faq = form.save(commit=False)
+            add_faq.save()
+            return redirect('faqs') 
+        else:
+            messages.error(request, form.errors)
+    context = {
+    'form': form
+    }
+    return render(request, 'faqs/add_faqs.html', context)
+
+def delete_faq(request, pk):
+    faq = FAQs.objects.filter(id=pk).delete()
+    return redirect('faqs')
+
+
+
+
+
 def view_transaction(request):
     transaction = Transaction.objects.all()
     paginator = Paginator(transaction, 8)
@@ -813,16 +923,10 @@ def open_travelogue(request, pk):
 #userprofile
 def view_profile_enduser(request, pk):
     enduser = EndUser.objects.get(id=pk)
-    renthistory = Rents.objects.filter(renter=enduser, vehicle__host=request.user.host)
-    report = ReportUser.objects.filter(by=request.user, to=enduser.user)
-    if report.count() > 0:
-        report_button = False
-    else:
-        report_button = True
+    renthistory = Rents.objects.filter(renter=enduser, vehicle__host=request.user.host)    
     context = {
         'enduser': enduser,
         'renthistory': renthistory,
-        'report_button': report_button
     }
     return render(request, 'host/enduser_profile.html', context)
 

@@ -104,13 +104,12 @@
                     </div>
                     {%  if vehicle.is_approved != "Approved" %}
                     <div class="flex mt-6 mr-6 justify-end w-full">
-                        <a  href="{% url 'delete_vehicles' vehicle.id %}"><button class="py-1 px-6 bg-danger text-white rounded-md text-lg mr-4">Delete</button></a>
+                        <a  href="{% url 'delete_vehicles' vehicle.id %}"><button class="py-1 px-6 bg-danger text-white rounded-md text-lg mr-4"  onclick="return ConfirmDelete()">Delete</button></a>
                         <a  href="{% url 'update_vehicles' vehicle.id %}"><button class="py-1 px-6 btn text-lg">Update</button></a>
                     </div>
                     {% endif %}
                     
                 </div>
-                    <!-- <p>{{ vehicle.feature }}||{{ vehicle.description }}||{{ vehicle.is_approved }}</p> -->
                 {% endfor %}
             {% else %}
                 <p class="text-center pt-20 text-2xl text-dark-gray">No Vehicles to display</p>
@@ -118,4 +117,9 @@
         </div>
     </div>
 </div>
+<script>
+    function ConfirmDelete() {
+      return confirm("Are you sure you want to delete?");
+    }
+</script>
 {% endblock content %}
