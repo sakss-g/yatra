@@ -888,6 +888,13 @@ def all_travelogues(request):
     }
     return render(request, 'travelogues/travelogues.html', context)
 
+def read_travelogue(request, pk):
+    travelogue = Travelogue.objects.get(id=pk)
+    context = {
+            'travelogue':travelogue,
+        }
+    return render(request, 'travelogues/read_travelogues.html', context)
+
 
 def submit_travelogue(request):
     submit_travelogue_form = SubmitTravelogueForm()

@@ -1,0 +1,23 @@
+{% extends 'base/header.html' %}
+{% load static %}
+{% load user_group %}
+{% load widget_tweaks %}
+
+{% block title%} Travelogues {% endblock title%}
+
+{% block content %}
+    <div class="flex flex-col mx-auto rounded-lg mt-32 bg-theme p-5 shadow-md text-lg mb-16 h-auto w-4/5" >
+        <span class="font-semibold text-2xl text-center pt-4 pb-8">{{ travelogue.title }}</span>
+        <div class="flex flex-row w-full">
+            <div class="flex flex-col w-1/4">
+                <img src="{{ travelogue.image1.url }}" class="mb-8"/>
+                {% if travelogue.image2 %}
+                    <img src="{{ travelogue.image1.url }}" />
+                {% endif %}
+            </div>
+            <div class="w-3/4 px-8">
+                <span class="font-medium text-justify mb-4">{{ travelogue.description }}</span>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

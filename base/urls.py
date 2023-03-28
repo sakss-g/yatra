@@ -102,5 +102,7 @@ urlpatterns = [
     path('verify_travelogue/', views.verify_travelogues, name='verify_travelogue'),
     path('approve_travelogue/<str:pk>', views.approve_travelogue, name="approve_travelogue"),
     path('reject_travelogue/<str:pk>', views.reject_travelogue, name="reject_travelogue"),
+    path('read_travelogue/<str:pk>',views.read_travelogue, name="read_travelogue"),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

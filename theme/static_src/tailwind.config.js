@@ -61,7 +61,7 @@ module.exports = {
             },
             height:{
                 '128':'30rem',
-                '200':'40rem',
+                '200':'32rem',
             },
             keyframes: {
                 "right-to-left": {

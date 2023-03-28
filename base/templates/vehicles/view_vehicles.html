@@ -12,10 +12,11 @@
         <div class="w-4/5 mx-auto flex flex-wrap">
         {% if vehicle_list %}
             {% for vehicle in vehicle_list %}
-            <a href="{% url 'vehicle_details' vehicle.id %}">
+            
                 <div class="flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16 h-128" style="width:30%;">
+                    <a href="{% url 'vehicle_details' vehicle.id %}">
                     <div class="flex flex-col mb-6 w-full h-auto">
-                        <a href="{% url 'vehicle_details' vehicle.id %}"><img src="{{ vehicle.image1.url }}" class="w-96 h-60 mx-auto object-contain"/></a>
+                        <img src="{{ vehicle.image1.url }}" class="w-96 h-60 mx-auto object-contain"/>
                     </div>
                     <div class="flex flex-col mb-4 text-xl">
                         <div class="flex flex-row justify-between mb-4">
@@ -29,14 +30,13 @@
                             </div>
                         </div>
                     </div>
-                    <hr class="bottom-4 h-1 bg-black" style="margin-top: 26px;">
+                    <hr class="bottom-4 h-1 bg-black" style="margin-top: 35px;">
                     <div class="mb-4 mt-4 w-full flex justify-end">
                         <span class="font-bold text-xl">Rs. {{ vehicle.price }} /day</span>
                     </div>
 
-                    
+                </a>    
                 </div>
-            </a>
             {% endfor %}
         {% else %}
             <p class="text-center pt-20 text-2xl text-dark-gray">No Vehicles to display</p>

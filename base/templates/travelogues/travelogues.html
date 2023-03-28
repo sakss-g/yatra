@@ -1,6 +1,7 @@
 {% extends 'base/header.html' %}
 {% load static %}
 {% load user_group %}
+{% load widget_tweaks %}
 
 {% block title%} Travelogues {% endblock title%}
 
@@ -14,14 +15,22 @@
                     <a href="{% url 'submit_travelogue' %}" class="px-6 py-2 bg-custom-green text-white rounded-md ">Submit travelogue</a>
                 </div>
             {% endif %}
+            <div class="w-4/5 mx-auto mt-8 flex flex-wrap">
 
             {% if travelogues_list %}
                 {% for travelogue in travelogues_list %}
-                    {{ travelogue.title }}
-                    {{ travelogue.description }}
-                    <img src="{{ travelogue.image1.url }}" />
+                <div class="flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16 h-80" style="width:30%;">
+                    
+                    <a href="{% url 'read_travelogue' travelogue.id %}" class="cursor-pointer">
+                        <div class="w-full flex justify-center">
+                            <span class="font-medium mb-4">{{ travelogue.title }}</span>
+                        </div>
+                        <img src="{{ travelogue.image1.url }}" cclass="w-72 h-56 mx-auto object-contain"/>
+                    </a>
+                </div>
                 {% endfor %}
             {% endif %}
+            </div>
         </div>
     </div>
 </div>
