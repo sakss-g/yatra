@@ -4,11 +4,114 @@
 {% block title%} Host Dashboard {% endblock title%}
 
 {% block content%}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="h-screen flex flex-col w-full px-6 pt-4 pb-10 bg-theme gap-4">
     <div class="flex w-full justify-center " style="height: 3%;">
         <p class="text-center text-2xl font-semibold ">Dashboard</p>
     </div>
     <div class="flex flex-row w-full gap-6 " style="height: 97%;">
+        {% for rent in rents %}
+            <p>{{ rent.vehicle }}
+            {{ rent.start_date }}
+            {{ rent.end_date }}
+            </p>
+        {% endfor %}
     </div>
+<div class="flex flex-row w-full h-1/2 gap-6">
+                <div class="h-full w-1/2 bg-white rounded-md shadow-md">
+                    <div class="chart" style="width:570px ; height:410px ;">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <script>
+                        // setup
+                        const data = {
+                            labels: [
+                                {% for rent in totalrents  %}
+                                    "{{ rent.vehicle__number_plate }}",
+                                {% endfor %}
+                            ],
+                            datasets: [{
+                                label: 'Total Amount',
+                                data: [{% for rent in totalrents %}{{ rent.total }} , {% endfor %}],
+                                backgroundColor: 'rgb(255, 186, 186, 0.7)',
+                                borderWidth: 1,
+                                borderColor: 'rgb(200, 92, 142)',
+                            }]
+                        };
+
+                        // config
+                        const config = {
+                            type: 'bar',
+                            data:data,
+                            options: {
+                                indexAxis: 'x',
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Total Earned from each vehicle'
+                                    }
+                                },
+                            }
+                        };
+
+                        // render init block
+                        const myChart = new Chart(
+                            document.getElementById('myChart'),
+                            config
+                        );
+                    </script>
+
+                </div>
+
+                <div class="h-full w-1/2 bg-white rounded-md shadow-md">
+                    <div class="chart" style="width:570px ; height:400px ;">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                    <script>
+                        const data1 = {
+                            labels: [
+                                {% for v in vehicles %}
+                                    "{{ v.type }}",
+                                {% endfor %}
+                            ],
+                            datasets: [{
+                                label: 'User Count',
+                                data: [{% for v in vehicles %}
+                                    {{ v.total }},
+                                {% endfor %}],
+                                backgroundColor: ['rgba(229, 232, 244, 1)', 'rgba(106, 93, 123, 1)']
+                                // borderColor: 'rgba(255, 26, 104, 1)',
+                                // borderWidth: 1
+
+                            }
+                            ],
+                        };
+
+                        // config
+                        const config1 = {
+                            type: 'pie',
+                            data:data1,
+                            options: {
+                                indexAxis: 'y',
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Type of Vehicles'
+                                    }
+                                },
+                            }
+                        };
+
+
+                        // render init block
+                        const myChart1 = new Chart(
+                            document.getElementById('myChart1'),
+                            config1
+                        );
+                    </script>
+                </div>
+            </div>
 </div>
 {% endblock content %}

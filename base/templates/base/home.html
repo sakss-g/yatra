@@ -6,35 +6,30 @@
 
 {% block content %}
     <div class="flex flex-col h-screen bg-white">
-        <div class="flex flex-row h-24 bg-theme mx-60 mt-40 shadow-lg rounded-full border-medium-gray border-2 text-lg">
-            <div class="flex flex-col border-r-2 border-r-dark-gray" style="width:33%;">
-                <div class="mx-8 my-auto font-medium">
-                    Where  
-                    <form>
-                        <input placeholder="City, Loaction" class="bg-theme py-1 w-full">
-                    </form>                      
-                </div>                    
-            </div>
-            <div class="flex flex-row" style="width:33%;">
-                <div class="flex flex-col w-1/2 ml-5 mr-5 my-auto font-medium">
-                    From  
-                    <form>
-                        <input placeholder="Date" class="bg-theme py-1 w-full">
-                    </form>                      
-                </div>   
-            </div>
-            <div class="flex  border-l-2 border-l-dark-gray" style="width:30%;">
-                <div class="flex flex-col w-1/2 ml-5 mr-5 my-auto font-medium">
-                    Until  
-                    <form>
-                        <input placeholder="Date" class="bg-theme py-1 w-full">
-                    </form>                      
-                </div>   
-            </div>
-            <div class="flex cursor-pointer" style="width:3%;">
-                <img src="{% static 'images/search.svg' %}" alt="" class="w-10 ">
-            </div>
-        </div>
+        <form class="flex flex-row h-24 bg-theme mx-60 mt-40 shadow-lg rounded-full border-medium-gray border-2 text-lg" action={% url 'view_vehicles' %}>
+                <div class="flex flex-col border-r-2 border-r-dark-gray" style="width:33%;">
+                    <div class="mx-8 my-auto font-medium">
+                        Where: {{ form.loc }}
+                    </div>
+                </div>
+                <div class="flex flex-row" style="width:33%;">
+                    <div class="flex flex-col w-1/2 ml-5 mr-5 my-auto font-medium">
+                        From:
+                            {{ form.sdate }}
+
+                    </div>
+                </div>
+                <div class="flex  border-l-2 border-l-dark-gray" style="width:30%;">
+                    <div class="flex flex-col w-1/2 ml-5 mr-5 my-auto font-medium">
+                        Until:
+                            {{ form.edate }}
+
+                    </div>
+                </div>
+                <div class="flex cursor-pointer" style="width:3%;">
+                     <button type="submit"><img src="{% static 'images/search.svg' %}" alt="" class="w-10 "></button>
+                </div>
+        </form>
 
         <div class="mx-60 mb-16 flex flex-row bottom-0 absolute items-center z-10">
             <div class="flex ">
@@ -62,36 +57,36 @@
         </div>
 
         <div class="flex flex-row justify-between items-center mx-60">
-            <div class="featured-card bg-white">
+            <a class="featured-card bg-white" href="{% url 'view_vehicles' id=1 value="Jeep" %}">
                 <div class="featured-inner-div flex justify-center items-center bg-theme">
                     <img src="{% static 'images/jeep.png' %}" alt="" >
                 </div>
                 <p class="featured-inner-text">Jeep</p>
-            </div>
-            <div class="featured-card bg-white">
+            </a>
+            <a class="featured-card bg-white" href="{% url 'view_vehicles' id=1 value="Mini-Van" %}">
                 <div class="featured-inner-div flex justify-center items-center bg-theme">
                     <img src="{% static 'images/mini-van.png' %}" alt="" class="h-40 w-auto">
                 </div>
                 <p class="featured-inner-text">Mini-Van</p>
-            </div>
-            <div class="featured-card bg-white">
+            </a>
+            <a class="featured-card bg-white" href="{% url 'view_vehicles' id=1 value="SUV" %}">
                 <div class="featured-inner-div flex justify-center items-center bg-theme">
                     <img src="{% static 'images/suv.png' %}" alt="" class="h-32 w-auto">
                 </div>
                 <p class="featured-inner-text">SUV</p>
-            </div>
-            <div class="featured-card bg-white">
+            </a>
+            <a class="featured-card bg-white" href="{% url 'view_vehicles' id=1 value="Sedan" %}">
                 <div class="featured-inner-div flex justify-center items-center bg-theme">
                     <img src="{% static 'images/sedan.png' %}" alt="" class="h-32 w-auto">
                 </div>
                 <p class="featured-inner-text">Sedan</p>
-            </div>
-            <div class="featured-card bg-white">
+            </a>
+            <a class="featured-card bg-white" href="{% url 'view_vehicles' id=1 value="Other" %}">
                 <div class="featured-inner-div flex justify-center items-center bg-theme">
                     <img src="{% static 'images/others.png' %}" alt="" class="h-20 w-auto">
                 </div>
-                <p class="featured-inner-text">Others</p>
-            </div>
+                <p class="featured-inner-text">Other</p>
+            </a>
 
         </div>
     </div>
@@ -102,36 +97,36 @@
         </div>
 
         <div class="flex flex-row justify-between items-center mx-60">
-            <div class="featured-card bg-theme">
+            <a class="featured-card bg-theme" href="{% url 'view_vehicles' id=2 value="Kathmandu" %}">
                 <div class="featured-inner-div">
                     <img src="{% static 'images/kathmandu.png' %}" alt="">
                 </div>
                 <p class="featured-inner-text">Kathmandu</p>
-            </div>
-            <div class="featured-card bg-theme">
+            </a>
+            <a class="featured-card bg-theme" href="{% url 'view_vehicles' id=2 value="Pokhara" %}">
                 <div class="featured-inner-div">
                     <img src="{% static 'images/pokhara.png' %}" alt="">
                 </div>
                 <p class="featured-inner-text">Pokhara</p>
-            </div>
-            <div class="featured-card bg-theme">
+            </a>
+            <a class="featured-card bg-theme" href="{% url 'view_vehicles' id=2 value="Lumbini" %}">
                 <div class="featured-inner-div">
                     <img src="{% static 'images/lumbini.png' %}" alt="">
                 </div>
                 <p class="featured-inner-text">Lumbini</p>
-            </div>
-            <div class="featured-card bg-theme">
+            </a>
+            <a class="featured-card bg-theme" href="{% url 'view_vehicles' id=2 value="Chitwan" %}">
                 <div class="featured-inner-div">
                     <img src="{% static 'images/chitwan.png' %}" alt="">
                 </div>
                 <p class="featured-inner-text">Chitwan</p>
-            </div>
-            <div class="featured-card bg-theme">
+            </a>
+            <a class="featured-card bg-theme" href="{% url 'view_vehicles' id=2 value="Janakpur" %}">
                 <div class="featured-inner-div">
                     <img src="{% static 'images/janakpur.png' %}" alt="">
                 </div>
                 <p class="featured-inner-text">Janakpur</p>
-            </div>
+            </a>
 
         </div>
     </div>
@@ -159,6 +154,39 @@
         </div> 
         
     </div>
+    {% if not user.is_authenticated %}
+    <div class="h-auto bg-theme w-full">
+        <div class="h-auto flex flex-col w-3/5 mx-auto relative">
+            <div class="h-auto w-full py-16 flex justify-center relative">
+                <img src="{% static 'images/home-bg.png' %}" alt="" class="w-full h-auto">
+                
+            </div>
+            <div class="flex flex-row w-full h-full  absolute py-10">
+                <div class="h-full flex flex-col w-1/2">
+                    <div class="h-1/2 flex px-32 flex-col justify-end items-center w-full pb-16">
+                        <span class="text-3xl font-semibold text-center mb-4"><a href="{% url 'register_host' %}" class=" hover:underline">Become a host ></a></span>
+                        <span class="font-medium text-lg text-center">Accelerate your entrepreneurship and start building a small car sharing business on Yatra.</span>
+                    </div>
+                    <div class="h-1/2 w-full flex justify-end">
+                        <img src="{% static 'images/renter.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="h-full w-1/2">
+                    <div class="h-1/2 w-full flex justify-start">
+
+                        <img src="{% static 'images/host.png' %}" alt="" class="ml-8">
+                        
+                    </div>
+                    <div class="h-1/2 flex px-28 flex-col justify-start items-center w-full pt-16">
+
+                        <span class="text-3xl font-semibold text-center mb-4"><a href="{% url 'register_enduser' %}" class=" hover:underline">Become a renter ></a></span>
+                        <span class="font-medium text-lg text-center">Find the ideal car for your upcoming adventure, whether it be down the road or across the nation.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="flex flex-row justify-between px-5 bg-black h-auto py-10 text-white">
         <span><a href="{% url 'home' %}" class="text-4xl font-semibold">YATRA</a></span>
         <span class="mt-3"><a href="{% url 'terms_and_conditions' %}" class="text-xl font-medium">Terms and Conditions</a></span>

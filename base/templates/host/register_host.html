@@ -27,26 +27,21 @@
                     <form action="" method="post">
                         {% csrf_token %}
                         <div class="text-xl text-dark-gray w-full">
-                            <div class="flex flex-row">
-                                <div class="flex flex-col">
-                                    <label class="mb-3">First Name</label>
-                                    {% render_field form.first_name class="mr-5 input-fields" %} 
+                            <div class="flex flex-row mb-4">
+                                <div>
+                                    {% render_field form.first_name class="mr-5 input-fields" placeholder='First Name' %} 
                                 </div>
                                 
-                                <div class="flex flex-col">
-                                    <label class="mb-3">Last Name</label>
-                                    {% render_field form.last_name  class="input-fields"%}
+                                <div>
+                                    {% render_field form.last_name  class="input-fields" placeholder='Last Name' %}
                                 </div>
                             </div>
                             <div class="flex flex-col">
-                                <label class="mb-3">Contact Number</label>
-                                {% render_field form.phone_number class="input-fields" %}  
+                                {% render_field form.phone_number class="input-fields" placeholder='Contact Number' %}  
 
-                                <label class="mb-3">Email</label>
-                                {% render_field form.email class="input-fields" %}  
+                                {% render_field form.email class="input-fields mt-4" placeholder='Email' %}  
 
-                                <label class="mb-3">Password</label>
-                                <input type="password" name="password" class="input-fields"/>
+                                <input type="password" name="password" class="input-fields mt-4" placeholder="Password"/>
 
                                 <input type="submit" value="Sign Up" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray "/>
                             </div>

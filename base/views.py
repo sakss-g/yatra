@@ -14,10 +14,12 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Avg
 from django.core.mail import EmailMessage
 from django.db.models import Count
-
-
 import requests
 import json
+from django.db.models import Sum, F, IntegerField, ExpressionWrapper, BigIntegerField, DurationField
+from django.db.models.functions import ExtractMonth
+
+
 # Create your views here.
 def handle_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
@@ -39,9 +41,14 @@ def handle_payment(request):
     else:
         return redirect(response.json()["payment_url"])
 
+
 # all related views
 def home(request):
-    return render(request, 'base/home.html')
+    form = VehicleLocationDateFilter()
+    context = {
+        'form':form
+    }
+    return render(request, 'base/home.html', context)
 
 
 def login_user(request):
@@ -54,7 +61,6 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            print("user was created and logged in")
             
             if user.is_superuser:
                 return redirect('admin_dashboard')
@@ -67,15 +73,15 @@ def login_user(request):
                     return redirect('host_profile')
                 elif str(user.groups.first()) == 'enduser':
                     if user.enduser.is_blocked == True:
-                        logout(request)
                         messages.error(request, "You have been blocked")
+                        logout(request)
                     return redirect('home')
                 else:
-                    message = "User group was not found"
-                    return render(request, 'base/login.html', {'error':message})
+                    messages.error(request, "User group was not found")
+                    return render(request, 'base/login.html')
         else:
-            message = "User was not found"
-            return render(request, 'base/login.html', {'error':message})
+            messages.error(request, "User was not found")
+            return render(request, 'base/login.html')
     return render(request, 'base/login.html')
 
 @login_required
@@ -84,12 +90,24 @@ def logout_user(request):
     return redirect('home')
 
 
-def view_vehicles(request):
-    vehicles = Vehicle.objects.filter(is_approved="Approved")
+def view_vehicles(request, id=None, value=None):
+    if id is not None and value is not None:
+        if id == 1:
+            vehicles = Vehicle.objects.filter(is_approved="Approved", type=value)
+        else:
+            vehicles = Vehicle.objects.filter(is_approved="Approved", location__name=value)
+    else:
+        form = VehicleLocationDateFilter(request.GET or None)
+        if form.is_valid():
+            vehicles = form.filter_vehicle(Vehicle.objects.filter(is_approved="Approved"))
+        else:
+            vehicles = Vehicle.objects.filter(is_approved="Approved")
+
     context = {
         'vehicle_list':vehicles,
     }
     return render(request, 'vehicles/view_vehicles.html', context)
+
 
 def vehicle_details(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
@@ -193,6 +211,7 @@ def register_host(request):
 
             if host_form.is_valid:
                 host_form.save()
+                messages.success(request, "Account created successfully!!")
                 return redirect('login') 
         except:
             messages.error(request, "Email already exists!!")
@@ -202,13 +221,28 @@ def register_host(request):
 
 @login_required
 def host_dashboard(request):
-    return render(request, 'host/host_dashboard.html')
+
+    today = datetime.datetime.today().date()
+    rents = Rents.objects.filter(vehicle__host=request.user.host, start_date__lte=today, end_date__gte=today).order_by('-end_date').distinct()
+    vehicles = Vehicle.objects.filter(host__user=request.user).values('type').annotate(total=Count('type'))
+    totalrents = Rents.objects.filter(vehicle__host=request.user.host).annotate(tdays=ExpressionWrapper(F('end_date') - F('start_date'), output_field=BigIntegerField()))\
+        .annotate(days=F('tdays') + 86400000000).values(
+        'vehicle__number_plate').annotate(total=Sum(F('days') * F('vehicle__price')/86400000000))
+
+    context ={
+        'rents':rents,
+        'vehicles':vehicles,
+        'totalrents':totalrents
+    }
+    return render(request, 'host/host_dashboard.html', context)
 
 
+@login_required
 def host_profile(request):
     return render(request, 'host/host_profile.html')
 
 
+@login_required
 def host_update_profile(request):
     host = request.user.host
     host_update_form = HostUpdateForm(instance=host)
@@ -217,7 +251,10 @@ def host_update_profile(request):
         host_update_form = HostUpdateForm(request.POST, request.FILES, instance=host)
         if host_update_form.is_valid():
             host_update_form.save()
+            messages.success(request, "Profile updated successfully!!")
             return redirect('host_profile')
+        else:
+            messages.success(request, host_update_form.errors)
     context = {
         'host_update_form': host_update_form
     }
@@ -234,7 +271,10 @@ def host_upload_documents(request):
             host = host_documents_form.save(commit=False)
             host.is_approved = "Pending"
             host.save()
+            messages.success(request, "Document uploaded successfully!!")
             return redirect('host_profile')
+        else:
+            messages.error(request, host_documents_form.errors)
     context = {
         'form': host_documents_form
     }
@@ -249,8 +289,9 @@ def host_vehicles(request):
         transaction.amount = request.GET.get('amount')
         transaction.t_id = request.GET.get('transaction_id')
         transaction.save()
+        messages.success(request, "Transaction completed\nNow you can host vehicles")
     elif request.GET.get('message') is not None:
-        error = request.GET.get('message')
+        messages.error(request, request.GET.get('message'))
 
     vehicle_list = Vehicle.objects.filter(host=request.user.host)
     transactions = Transaction.objects.filter(host__user=request.user)
@@ -276,6 +317,7 @@ def add_vehicles(request):
             vehicle = vehicle_form.save(commit=False)
             vehicle.host = request.user.host
             vehicle.save()
+            messages.success(request, 'Vehicle hosting requested.')
             return redirect('host_vehicles') 
         else:
             messages.error(request, vehicle_form.errors)
@@ -294,6 +336,8 @@ def update_vehicles(request, pk):
             vehicle_update_form.save()
             messages.success(request, 'Vehicle Updated.')
             return redirect('host_vehicles')
+        else:
+            messages.error(request, vehicle_update_form.errors)
 
     context = {
         'form': vehicle_update_form,
@@ -314,6 +358,7 @@ def rented_history(request):
 def delete_vehicles(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
     vehicle.delete()
+    messages.success(request, 'Vehicle deleted.')
     return redirect('host_vehicles')
 
 
@@ -321,6 +366,7 @@ def approve_vehicle(request, pk):
     if request.method == "POST":
         vehicle = Vehicle.objects.get(id=pk)
         vehicle.is_approved = "Approved"
+        messages.success(request, 'Vehicle approved.')
         vehicle.save()
     return redirect('hosting_request')
 
@@ -328,6 +374,7 @@ def reject_vehicle(request, pk):
     if request.method == "POST":
         vehicle = Vehicle.objects.get(id=pk)
         vehicle.is_approved = "Rejected"
+        messages.success(request, 'Vehicle rejected.')
         vehicle.save()
     return redirect('hosting_request')
 
@@ -344,9 +391,6 @@ def open_vehicle(request, pk, no):
     elif no == 3:
         vehicle = vehicle.image3.path
     return FileResponse(open(vehicle, 'rb'))
-
-def host_dashboard(request):
-    return render(request, 'host/host_dashboard.html')
 
 
 # end users related views
@@ -367,6 +411,7 @@ def register_enduser(request):
 
             if enduser_form.is_valid:
                 enduser_form.save()
+                messages.success(request, "Registration successfull!")
                 return redirect('login') 
         except:
             messages.error(request, "Email already exists!!")
@@ -389,7 +434,11 @@ def enduser_update_profile(request):
         enduser_update_form = EndUserUpdateForm(request.POST, request.FILES, instance=enduser)
         if enduser_update_form.is_valid():
             enduser_update_form.save()
+            messages.success(request, "Profile updated successfully!!")
             return redirect('enduser_profile')
+        else:
+            messages.error(request, enduser_update_form.errors)
+
     context = {
         'enduser_update_form': enduser_update_form
     }
@@ -406,7 +455,10 @@ def enduser_upload_documents(request):
             enduser = enduser_documents_form.save(commit=False)
             enduser.is_approved = "Pending"
             enduser.save()
+            messages.success(request, "Documents uploaded successfully!")
             return redirect('enduser_profile')
+        else:
+            messages.error(request, enduser_documents_form.errors)
     context = {
         'form': enduser_documents_form
     }
@@ -445,6 +497,7 @@ def add_privacy_policy(request):
         if form.is_valid():
             add_privacy_policy = form.save(commit=False)
             add_privacy_policy.save()
+            messages.success(request, "Privacy policy added!")
             return redirect('privacy_policy') 
         else:
             messages.error(request, form.errors)
@@ -454,7 +507,8 @@ def add_privacy_policy(request):
     return render(request, 'privacypolicy/add_privacypolicy.html', context)
 
 def delete_privacy_policy(request, pk):
-    privacy_policy = PrivacyPolicy.objects.filter(id=pk).delete()
+    PrivacyPolicy.objects.filter(id=pk).delete()
+    messages.success(request, "Privacy policy deleted successfully.")
     return redirect('privacy_policy')
 
 
@@ -478,19 +532,20 @@ def add_terms_and_conditions(request):
         if form.is_valid():
             add_terms_and_conditions = form.save(commit=False)
             add_terms_and_conditions.save()
+            messages.success(request, "Terms and condition added!")
             return redirect('terms_and_conditions') 
         else:
             messages.error(request, form.errors)
+
     context = {
     'form': form
     }
     return render(request, 'termsandconditions/add_termsandconditions.html', context)
 
 def delete_terms_and_conditions(request, pk):
-    terms_and_conditions = TermsAndConditions.objects.filter(id=pk).delete()
+    TermsAndConditions.objects.filter(id=pk).delete()
+    messages.success(request, "Terms and condition deleted successfully!")
     return redirect('terms_and_conditions')
-
-
 
 
 def faqs(request):
@@ -513,6 +568,7 @@ def add_faqs(request):
         if form.is_valid():
             add_faq = form.save(commit=False)
             add_faq.save()
+            messages.success(request, "FAQs added!")
             return redirect('faqs') 
         else:
             messages.error(request, form.errors)
@@ -521,12 +577,11 @@ def add_faqs(request):
     }
     return render(request, 'faqs/add_faqs.html', context)
 
+
 def delete_faq(request, pk):
-    faq = FAQs.objects.filter(id=pk).delete()
+    FAQs.objects.filter(id=pk).delete()
+    messages.success(request, "FAQs deleted successfully!")
     return redirect('faqs')
-
-
-
 
 
 def view_transaction(request):
@@ -550,8 +605,10 @@ def view_transaction(request):
 
 
 def delete_user(request, pk):
-    user = User.objects.filter(id=pk).delete()
+    User.objects.filter(id=pk).delete()
+    messages.success(request, 'User deleted successfully.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 def admin_dashboard(request):
@@ -574,19 +631,8 @@ def admin_dashboard(request):
     vehicle_type_count = Vehicle.objects.all().count()
     if vehicle_type_count > 0:
         vehicle_types = Vehicle.objects.values('type').annotate(total=Count('type'))
-        # print(vehicle_types)
     else:
         vehicle_types = None
-
-
-    # fyp_count = StudentTopic.objects.all().count()
-    # if fyp_count > 0:
-    #     fyp_titles = StudentTopic.objects.values('field').annotate(total=Count('field'))
-    #     print(fyp_titles)
-    # else:
-    #     fyp_titles = None
-
-
 
     travelogues = Travelogue.objects.all()
     
@@ -603,7 +649,14 @@ def admin_dashboard(request):
     blocked_report_count = reports.filter(status='Blocked').count()
 
 
-    context={
+    year = datetime.date.today().year
+
+    transactions = Transaction.objects.filter(date__year=year).annotate(month=ExtractMonth('date')).values('month').annotate(total=Sum(F('amount')/100, output_field=IntegerField())).order_by('month')
+
+    for t in transactions.all():
+        print(t.get('total'))
+
+    context = {
         'total_user_count':total_user_count,
         'pending_user_count': pending_user_count,
         'rejected_user_count': rejected_user_count,
@@ -625,6 +678,8 @@ def admin_dashboard(request):
         'endusers_count': endusers_count,
 
         'vehicle_types': vehicle_types,
+
+        'transactions':transactions
     }
     return render(request, 'admin/admin_dashboard.html', context)
 
@@ -675,7 +730,7 @@ def hosts_admin(request):
     else:
         hosts = hosts.filter(is_approved="Approved")
 
-    paginator = Paginator(hosts, 10)
+    paginator = Paginator(hosts, 6)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)
@@ -690,10 +745,6 @@ def hosts_admin(request):
         'nameform': nameform,
         'statusform':statusform
     }
-    # hosts = Host.objects.all()
-    # context={
-    #     'users':hosts
-    # }
     return render(request, 'host/hosts_admin.html', context)
 
 
@@ -735,6 +786,7 @@ def approve_host(request, pk):
         host = Host.objects.get(id=pk)
         host.is_approved = "Approved"
         host.save()
+        messages.success(request, "Host approved.")
         return redirect('verify_user')
 
 
@@ -743,6 +795,7 @@ def reject_host(request,pk):
         host = Host.objects.get(id=pk)
         host.is_approved = "Rejected"
         host.save()
+        messages.success(request, "Host rejected.")
         return redirect('verify_user')
 
 
@@ -751,6 +804,7 @@ def approve_enduser(request, pk):
         enduser = EndUser.objects.get(id=pk)
         enduser.is_approved = "Approved"
         enduser.save()
+        messages.success(request, "Renter approved.")
         return redirect('verify_user')
 
 
@@ -759,6 +813,7 @@ def reject_enduser(request,pk):
         enduser = EndUser.objects.get(id=pk)
         enduser.is_approved = "Rejected"
         enduser.save()
+        messages.success(request, "Renter rejected.")
         return redirect('verify_user')
 
 
@@ -785,6 +840,7 @@ def approve_travelogue(request, pk):
         travelogue = Travelogue.objects.get(id=pk)
         travelogue.is_approved = "Approved"
         travelogue.save()
+        messages.success(request, 'Travelogue approved.')
     return redirect('verify_travelogue')
 
 
@@ -793,6 +849,7 @@ def reject_travelogue(request, pk):
         travelogue = Travelogue.objects.get(id=pk)
         travelogue.is_approved = "Rejected"
         travelogue.save()
+        messages.success(request, 'Travelogue rejected.')
     return redirect('verify_travelogue')
 
 
@@ -833,25 +890,28 @@ def view_reports(request):
 def handle_report(request, pk, fk):
     if request.method == "POST":
         report = ReportUser.objects.get(id=pk)
-        print(report)
         if fk == 1:
             report.status = 'NoAction'
             report.save()
+            messages.success(request, "No action taken.")
         elif fk == 2:
             if report.to.groups.filter(name='host').exists():
                 host = report.to.host
                 host.is_blocked = True
                 host.save()
+                messages.success(request, "User blocked.")
             else:
                 enduser = report.to.enduser
                 enduser.is_blocked = True
                 enduser.save()
+                messages.success(request, "User blocked.")
             report.status = 'Blocked'
             report.save()
         # print(request.user.groups.filter(name='enduser').exists())
         elif fk == 3:
             report.status = 'Warning'
             report.save()
+            messages.success(request, "Warning sent.")
             email = EmailMessage(
                 'Warning Notification',
                 'There has been complaints against you and you service. Continuing to get complaints will get you blocked',
@@ -864,10 +924,14 @@ def handle_report(request, pk, fk):
                 host = report.to.host
                 host.is_blocked = False
                 host.save()
+                messages.success(request, "User unblocked.")
+
             else:
                 enduser = report.to.enduser
                 enduser.is_blocked = False
                 enduser.save()
+                messages.success(request, "User unblocked.")
+
             report.status = 'NoAction'
             report.save()
         return redirect('view_reports')
@@ -905,6 +969,7 @@ def submit_travelogue(request):
             submit_travelogue = submit_travelogue_form.save(commit=False)
             submit_travelogue.enduser = request.user.enduser
             submit_travelogue.save()
+            messages.success(request, 'Travelogue uploaded.')
             return redirect('travelogues_uploaded') 
         else:
             messages.error(request, submit_travelogue_form.errors)
@@ -971,6 +1036,7 @@ def report_user(request, to):
             report.by = request.user
             report.to = User.objects.get(id=to)
             report.save()
+            messages.success(request, 'Report submitted.')
             if request.user.groups.filter(name='host').exists():
                 return redirect('rented_history')
             elif request.user.groups.filter(name='enduser').exists():
@@ -988,8 +1054,9 @@ def rate_rent(request, pk):
         rate = form.save(commit=False)
         rate.rent = rent
         rate.save()
+        messages.success(request, 'Vehicle Rented')
     else:
-        print("Invalid form")
+        messages.error(request, form.errors)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

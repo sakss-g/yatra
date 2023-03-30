@@ -92,6 +92,7 @@ urlpatterns = [
     path('openbluebook/<str:pk>', views.open_bluebook, name='open_bluebook'),
     path('openvehicle1/<str:pk>/<int:no>', views.open_vehicle, name='open_vehicle'),
     path('viewvehicles/',views.view_vehicles, name="view_vehicles"),
+    path('viewvehicles/<int:id>/<str:value>',views.view_vehicles, name="view_vehicles"),
     path('vehiclesdetails/<str:pk>',views.vehicle_details, name="vehicle_details"),
     path('open_citizenship/', views.open_citizenship, name='open_citizenship'),
 

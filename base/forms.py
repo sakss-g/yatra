@@ -1,5 +1,5 @@
 from django import forms
-from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser,RateRent, report_status, status, FAQs, TermsAndConditions,PrivacyPolicy
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser,RateRent, report_status, status, FAQs, TermsAndConditions,PrivacyPolicy, Location
 from django.forms import DateTimeInput
 from django.db.models import Q
 
@@ -133,4 +133,26 @@ class StatusFilterForm(forms.Form):
             queryset = queryset.filter(
                 is_approved=is_approved
             )
+        return queryset
+
+class VehicleLocationDateFilter(forms.Form):
+    loc = forms.ModelChoiceField(required=True, queryset=Location.objects.all())
+    sdate = forms.DateField(required=True, widget=forms.DateInput(attrs={'type':'date'}))
+    edate = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
+    def filter_vehicle(self,queryset):
+        loc = self.cleaned_data['loc']
+        sdate = self.cleaned_data['sdate']
+        edate = self.cleaned_data['edate']
+
+        if loc:
+            queryset = queryset.filter(
+                location=loc
+            )
+
+        if sdate and edate:
+            rents = Rents.objects.filter(start_date__gte=sdate, end_date__lte=edate)
+            id = []
+            for r in rents:
+                id.append(r.vehicle.id)
+            queryset = queryset.all().exclude(id__in=id)
         return queryset

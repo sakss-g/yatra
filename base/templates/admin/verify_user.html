@@ -133,7 +133,7 @@
                                 <td>{{ u.citizenship_id }}</td>
                                 <td><a href="{{ u.citizenship.url }}" target="_blank" style="color: blue; text-decoration: underline;">Citizenship Image</a></td>
                                 <td>
-                                    <div class="flex flex-row justify-center items-center">
+                                    <div class="flex flex-row justify-center items-center text-lg">
                                         <form action="{% url 'approve_host' u.id %}" method="post" style="margin-bottom: 0px;">
                                             {% csrf_token %}
                                             <button type="submit" class="bg-custom-green px-4 py-1.5 mr-4 mb-0 text-white rounded-lg" onclick="return ConfirmApprove()">Approve</button>

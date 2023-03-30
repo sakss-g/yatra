@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from pathlib import Path
+import datetime
 
 status = [
         ('Pending','Pending'),
@@ -91,13 +92,14 @@ class Vehicle(models.Model):
     is_rented = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.type+" "+self.description
+        return self.number_plate
 
 
 class Transaction(models.Model):
     t_id = models.CharField(primary_key=True, max_length=50)
     amount = models.CharField(max_length=25)
     host = models.ForeignKey(Host, on_delete=models.SET_NULL, related_name="transactionHost", null=True)
+    date = models.DateField(default=datetime.datetime.now)
 
 
 class Rents(models.Model):
@@ -105,8 +107,9 @@ class Rents(models.Model):
     renter = models.ForeignKey(EndUser, on_delete=models.SET_NULL, null=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    t_id = models.ForeignKey(Transaction, on_delete=models.SET_NULL, null=True)
 
+    def __str__(self):
+        return str(self.vehicle) + str(self.renter)
 
 class Travelogue(models.Model):
     enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name="blogger")

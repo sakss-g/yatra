@@ -26,17 +26,15 @@
                     <form action="" method="post">
                         {% csrf_token %}
                         <div class="flex flex-col text-xl text-dark-gray">
-                            <label class="mb-3">Email</label>
-                            <input type="text" name="email" class="input-fields"/>
+                            <input type="text" name="email" class="input-fields" placeholder="Email"/>
         
-                            <label class="mb-3">Password</label>
-                            <input type="password"  name="password" class="input-fields"/>
+                            <input type="password"  name="password" class="input-fields mt-8" placeholder="Password"/>
                             {% if error %}
                                 <div class="text-center">
                                     <p class="text-sm text-red mt-3">Username or Password did not match.</p>
                                 </div>
                             {% endif %}
-                            <input type="submit" value="Login" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray w-96"/>
+                            <input type="submit" value="Login" class="bg-black text-white py-3 mt-8 rounded-md shadow-md shadow-dark-gray w-96"/>
                         </div>
                         <div class="flex flex-col items-center justify-center pt-14 text-dark-gray">
                             <span>Don't have an account?</span> 
