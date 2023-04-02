@@ -59,7 +59,7 @@ module.exports = {
                 "poppins": "Poppins",
             },
             height:{
-                '128':'30rem',
+                '128':'31rem',
                 '200':'32rem',
             },
             keyframes: {

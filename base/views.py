@@ -20,7 +20,7 @@ from django.db.models import Sum, F, IntegerField, ExpressionWrapper, BigInteger
 from django.db.models.functions import ExtractMonth
 
 
-# Create your views here.
+@login_required
 def handle_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
     u = request.build_absolute_uri(reverse('host_vehicles'))
@@ -213,6 +213,8 @@ def register_host(request):
                 host_form.save()
                 messages.success(request, "Account created successfully!!")
                 return redirect('login') 
+            else:
+                messages.error(request, host_form.errors)
         except:
             messages.error(request, "Email already exists!!")
               
@@ -413,6 +415,8 @@ def register_enduser(request):
                 enduser_form.save()
                 messages.success(request, "Registration successfull!")
                 return redirect('login') 
+            else:
+                messages.error(request, enduser_form.errors)
         except:
             messages.error(request, "Email already exists!!")
     return render(request, 'enduser/register_enduser.html', {'form':enduser_form})

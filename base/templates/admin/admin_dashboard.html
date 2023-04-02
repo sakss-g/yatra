@@ -167,9 +167,10 @@
                                 label: 'Amount(in Rs)',
                                 data: [{% for t in transactions %}
                                     {{ t.total }},{% endfor %}],
-                                backgroundColor: ['rgba(229, 232, 244, 1)','rgba(0, 121, 145, 1)','rgba(62, 146, 204, 1)',]
-                                // borderColor: 'rgba(255, 26, 104, 1)',
-                                // borderWidth: 1
+                                backgroundColor: 'rgb(208,240,192, 0.7)',
+                                borderWidth: 1,
+                                borderColor: 'rgb(46,139,87)',
+                                
 
                             }
                             ],
@@ -185,7 +186,7 @@
                                 plugins: {
                                     title: {
                                         display: true,
-                                        text: 'Report Actions'
+                                        text: 'Revenue per month'
                                     }
                                 },
                             }

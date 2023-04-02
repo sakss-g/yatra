@@ -6,18 +6,134 @@
 {% block title%} Travelogues {% endblock title%}
 
 {% block content %}
-    <div class="flex flex-col mx-auto rounded-lg mt-32 bg-theme p-5 shadow-md text-lg mb-16 h-auto w-4/5" >
-        <span class="font-semibold text-2xl text-center pt-4 pb-8">{{ travelogue.title }}</span>
-        <div class="flex flex-row w-full">
-            <div class="flex flex-col w-1/4">
-                <img src="{{ travelogue.image1.url }}" class="mb-8"/>
-                {% if travelogue.image2 %}
-                    <img src="{{ travelogue.image1.url }}" />
-                {% endif %}
-            </div>
-            <div class="w-3/4 px-8">
-                <span class="font-medium text-justify mb-4">{{ travelogue.description }}</span>
-            </div>
+<style>
+    * {box-sizing: border-box}
+    body {font-family: Verdana, sans-serif; margin:0}
+    .mySlides {display: none}
+    img {vertical-align: middle;}
+    
+    /* Slideshow container */
+    .slideshow-container {
+      position: relative;
+      margin: auto;
+    }
+    
+    /* Next & previous buttons */
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      padding: 16px;
+      margin-top: -22px;
+      color: rgb(204, 204, 204);
+      font-weight: bold;
+      font-size: 18px;
+      transition: 0.6s ease;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+    }
+    
+    /* Position the "next button" to the right */
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+    
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover, .next:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    /* The dots/bullets/indicators */
+    .dot {
+      cursor: pointer;
+      height: 15px;
+      width: 15px;
+      margin: 0 2px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.6s ease;
+    }
+    
+    .active, .dot:hover {
+      background-color: #717171;
+    }
+    
+    /* Fading animation */
+    .fade {
+      animation-name: fade;
+      animation-duration: 1.5s;
+    }
+    
+    @keyframes fade {
+      from {opacity: .4} 
+      to {opacity: 1}
+    }
+    
+</style>
+<div class="w-full h-200 bg-center mt-24 bg-white  " >
+    <div class="slideshow-container mt-24 w-3/5 h-200">
+        <div class="mySlides fade ">
+            <img src="{{ travelogue.image1.url }}" class="h-200 w-full object-cover">
+        </div>
+
+        {% if travelogue.image2 %}
+        <div class="mySlides fade">
+            
+            <img src="{{ travelogue.image2.url }}" class="h-200 w-full object-cover">
+        </div>
+        {% endif %}
+        
+        <a class="prev" onclick="plusSlides(-1)">❮</a>
+        <a class="next" onclick="plusSlides(1)">❯</a>   
+    </div>
+</div>  
+
+<div class="bg-white w-full pt-4 h-10 text-center">
+    <span class="dot" onclick="currentSlide(1)"></span> 
+    {% if travelogue.image2 %}
+        <span class="dot" onclick="currentSlide(2)"></span> 
+    {% endif %}
+</div>  
+<div class="w-full bg-theme">    
+    <div class="w-3/5 h-auto flex flex-col py-16 mx-auto text-lg">
+        <div class="flex justify-center w-full mt-4">
+            <p class="text-xl text-center font-medium pt-2 pb-4">{{ travelogue.title }}</p>
+        </div>
+        <div class="flex flex-col mt-8">
+            {{ travelogue.description }}
         </div>
     </div>
+</div>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+    showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+    showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) {slideIndex = 1}    
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " active";
+}
+</script>
 {% endblock content %}

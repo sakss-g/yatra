@@ -10,7 +10,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Register End User</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     {% tailwind_css %}
 </head>
 <body class="bg-theme max-h-screen font-poppins">
@@ -22,6 +29,15 @@
         </div>
 
         <div class="flex justify-center items-center my-auto mx-auto h-full">
+            {% if messages %}
+                <div class= " absolute animate-right-to-left right-0 top-0" style="display: flex; width: 100%; justify-content: flex-end; margin-top:96px;">
+                    {% for message in messages %}
+                        <div class=" p-3 {{ message.tags }} mt-2 mr-6 " id="msg" role="alert" >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <div class="w-full bg-white  px-20 py-12 mx-auto my-auto rounded-xl shadow-2xl shadow-black">
                 <div class="flex flex-col text-xl">
                     <p class="text-center font-bold text-4xl pb-12">Become a renter</p>
@@ -58,4 +74,11 @@
         </div>
     </div>
 </body>
+<script>
+    setTimeout(function(){
+        if ($('#msg').length > 0) {
+            $('#msg').remove();
+        }
+    },4000);
+</script>
 </html>
