@@ -3,6 +3,7 @@ from base.models import Host, EndUser
 from django.contrib.auth.models import User, Group
 from django.urls import reverse
 
+
 class AuthenticationTestCase(TestCase):
     def setUp(self):
         # create test user 1

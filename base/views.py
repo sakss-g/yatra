@@ -36,7 +36,8 @@ def handle_payment(request):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    if response.json()["payment_url"] is None:
+    print(response.json())
+    if response.json().get("payment_url") is None:
         return redirect(response.json()["detail"])
     else:
         return redirect(response.json()["payment_url"])

@@ -23,6 +23,8 @@ urlpatterns = [
     path('hosting_request', views.hosting_request, name='hosting_request'),
     path('view_reports', views.view_reports, name='view_reports'),
     path('handle_report/<str:pk>/<int:fk>', views.handle_report, name='handle_report'),
+
+    # policies related url
     path('view_transactions/', views.view_transaction, name='view_transactions'),
     path('view_policies/', views.view_policies, name='view_policies'),
     path('terms_and_conditions/', views.terms_and_conditions, name='terms_and_conditions'),
