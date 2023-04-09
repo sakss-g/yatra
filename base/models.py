@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from pathlib import Path
 import datetime
+from ckeditor.fields import RichTextField
 
 status = [
         ('Pending','Pending'),
@@ -101,6 +102,12 @@ class Transaction(models.Model):
     host = models.ForeignKey(Host, on_delete=models.SET_NULL, related_name="transactionHost", null=True)
     date = models.DateField(default=datetime.datetime.now)
 
+class RentRequest(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
+    renter = models.ForeignKey(EndUser, on_delete=models.SET_NULL, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
 
 class Rents(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.SET_NULL, null=True)
@@ -114,7 +121,7 @@ class Rents(models.Model):
 class Travelogue(models.Model):
     enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name="blogger")
     title = models.CharField(max_length=50)
-    description = models.TextField(max_length=1500)
+    description = RichTextField(config_name='awesome_ckeditor')
     image1 = models.ImageField(upload_to="enduser/travelogue")
     image2 = models.ImageField(upload_to="enduser/travelogue", null=True, blank=True)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")

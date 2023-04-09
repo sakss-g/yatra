@@ -9,6 +9,8 @@
 {% if error %}
 <p class="text-white">{{error}}</p>
 {% endif %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 <div class="h-screen w-full px-6 py-10  bg-theme ">
     <div class="w-3/6 mx-auto mt-24 p-3 items-center overflow-y-auto hide-scrollbar">
         <p class="text-center text-3xl font-semibold pb-4">Share Your Experience</p>

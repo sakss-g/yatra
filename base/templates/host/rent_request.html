@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title%} Renting Request {% endblock title%}
+
+{% block content %}
+<div class="h-screen w-full px-6 py-10 bg-theme">
+{% if requests %}
+    {% for req in requests %}
+        {{ req.renter }} wants to rent {{ req.vehicle }}
+        <a href="{% url 'approve_rent' req.id %}">Approve</a><a href="{% url 'reject_rent' req.id %}">Reject</a>
+    {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

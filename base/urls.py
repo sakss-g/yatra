@@ -48,9 +48,11 @@ urlpatterns = [
     path('rented_history', views.rented_history, name='rented_history'),
     path('viewprofileenduser/<str:pk>', views.view_profile_enduser, name='view_profile_enduser'),
     path('host_dashboard/', views.host_dashboard, name='host_dashboard'),
+    path('rent_request/', views.rent_request, name='rent_request'),
+    path('approve_rent/<str:rid>', views.approve_rent, name='approve_rent'),
+    path('reject_rent/<str:rid>', views.reject_rent, name='reject_rent'),
 
-
-    # enduser related urls
+                  # enduser related urls
     path('registerenduser/', views.register_enduser, name='register_enduser'),
     path('enduserdashboard/', views.enduser_dashboard, name='enduser_dashboard'),
     path('enduserprofile/', views.enduser_profile, name='enduser_profile'),

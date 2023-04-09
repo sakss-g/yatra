@@ -144,18 +144,16 @@ img {vertical-align: middle;}
                 <input type="hidden" name="id" value="{{ vehicle.id }}"/>
                 <div class="flex flex-col mb-4">
                     <span class="font-medium mb-2">From</span>
-                    <input type="text" id="datepicker1" name="start"  readonly class="rounded-md full">
+                    <input type="text" id="datepicker1" name="start"  required readonly class="rounded-md full">
                 </div>
                 <div class="flex flex-col mb-4">
                     <span class="font-medium mb-2">To</span>
-                    <input type="text" id="datepicker2" name="end" readonly class="rounded-md full">
+                    <input type="text" id="datepicker2" name="end" required readonly class="rounded-md full">
                 </div>
                 
                 <div class="w-full justify-end flex mt-8">
                     <button type="submit" class="bg-blue w-full py-1.5 text-white rounded-md border no-underline">Rent</button>
-
                 </div>
-                
             </form>
             {% endif %}
         </div> 
@@ -164,7 +162,7 @@ img {vertical-align: middle;}
 <script>
     window.addEventListener("load", (event) => {
         console.log('Got here')
-      console.log( [{% for d in dates %} '{{ d }}', {% endfor %}])
+        console.log( [{% for d in dates %} '{{ d }}', {% endfor %}])
         console.log('Printed dates')
     });
 

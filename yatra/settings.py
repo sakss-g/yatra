@@ -30,8 +30,8 @@ KHALTI_API_KEY = secretkeys.khati_secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = ['testserver']
+ALLOWED_HOSTS=['127.0.0.1', '0.0.0.0']
 
 # Application definition
 
@@ -47,9 +47,11 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
+    'ckeditor'
 ]
 
 TAILWIND_APP_NAME = 'theme'
+
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -135,11 +137,12 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'theme/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 LOGIN_URL = 'login'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
+CKEDITOR_BASEPATH = "/ckeditor/ckeditor/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
@@ -161,3 +164,11 @@ EMAIL_HOST_USER = 'sakss.hi19@gmail.com'
 EMAIL_HOST_PASSWORD = "nhgbejnvgkrkpndg"
 EMAIL_PORT = 587
 
+
+CKEDITOR_CONFIGS = {
+    'awesome_ckeditor': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 960,
+    },
+}

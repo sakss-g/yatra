@@ -24,6 +24,7 @@ from django.db.models.functions import ExtractMonth
 def handle_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
     u = request.build_absolute_uri(reverse('host_vehicles'))
+    print(u)
     payload = json.dumps({
         "return_url": u,
         "website_url": u,
@@ -104,8 +105,13 @@ def view_vehicles(request, id=None, value=None):
         else:
             vehicles = Vehicle.objects.filter(is_approved="Approved")
 
+    f = VehicleSortForm(request.GET or None)
+    if f.is_valid():
+        vehicles = f.sort_vehicle(vehicles)
+
     context = {
         'vehicle_list':vehicles,
+        'form':f,
     }
     return render(request, 'vehicles/view_vehicles.html', context)
 
@@ -129,7 +135,7 @@ def vehicle_details(request, pk):
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         print(current_date)
         can_rent = True
-        if request.user.is_anonymous:
+        if request.user.is_anonymous or not request.user.enduser.is_approved:
             messages.error(request, "You need to be a verified user to rent")
         elif start_date <= current_date:
             messages.error(request, "Start Date cannot be today or before now")
@@ -159,29 +165,26 @@ def vehicle_details(request, pk):
 
             if can_rent:
                 try:
-                    rent = Rents()
+                    rent = RentRequest()
                     rent.renter = request.user.enduser
                     rent.vehicle = vehicle
                     rent.start_date = start_date
                     rent.end_date = end_date
                     rent.save()
-                    vehicle.save()
-                    messages.success(request, "Vehicle Rented")
+                    messages.success(request, "Vehicle requested for rent")
                     return redirect('view_vehicles')
                 except Exception as e:
                     print(e)
                     messages.error(request, "Error!!!! Could not rent")
         else:
             try:
-                rent = Rents()
+                rent = RentRequest()
                 rent.renter = request.user.enduser
                 rent.vehicle = vehicle
                 rent.start_date = start_date
                 rent.end_date = end_date
                 rent.save()
-                vehicle.is_rented = True
-                vehicle.save()
-                messages.success(request,"Vehicle Rented")
+                messages.success(request,"Vehicle requested for rent")
                 return redirect('view_vehicles')
             except Exception as e:
                 print(e)
@@ -195,6 +198,28 @@ def vehicle_details(request, pk):
 
 
 # host related views
+def rent_request(request):
+    requests = RentRequest.objects.all()
+    context = {
+        'requests':requests
+    }
+    return render(request, 'host/rent_request.html', context)
+
+def approve_rent(request, rid):
+    req = RentRequest.objects.get(id = rid)
+    rent = Rents()
+    rent.renter = req.renter
+    rent.vehicle = req.vehicle
+    rent.start_date = req.start_date
+    rent.end_date = req.end_date
+    rent.save()
+    req.delete()
+    return redirect('rent_request')
+
+def reject_rent(request, rid):
+    RentRequest.objects.get(id=rid).delete()
+    return redirect('rent_request')
+
 def register_host(request):
     host_form = HostForm()
 
@@ -202,7 +227,7 @@ def register_host(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         try:
-            user = User.objects.create(username=email, password=make_password(password))
+            user = User.objects.create(username=email, password=make_password(password), email=email)
             group = Group.objects.get(name="host")
             user.groups.add(group)
             user.save()
@@ -404,7 +429,7 @@ def register_enduser(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         try:
-            user = User.objects.create(username=email, password=make_password(password))
+            user = User.objects.create(username=email, password=make_password(password), email=email)
             group = Group.objects.get(name="enduser")
             user.groups.add(group)
             user.save()

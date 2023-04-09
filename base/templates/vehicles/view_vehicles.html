@@ -1,7 +1,7 @@
 {% extends 'base/header.html' %}
 {% load static %}
 {% load user_group %}
-
+{% load widget_tweaks %}
 {% block title%} View Vehicles {% endblock title%}
 
 {% block content %}
@@ -12,6 +12,10 @@
         <div class="w-4/5 mx-auto flex flex-wrap">
 
         {% if vehicle_list %}
+            <form>
+               {% render_field form.sort_by %}
+                <input type="submit" value="Sort"/>
+            </form>
             {% for vehicle in vehicle_list %}
                 {% if vehicle.host %}
                 <div class="flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16 h-128" style="width:30%;">

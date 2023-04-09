@@ -185,6 +185,13 @@
                                 Renter History
                             </li>
                         </a>
+
+                    <a href="{% url 'rent_request' %}" class="nav-bar-items{% if url_name == 'rented_history' or url_name == 'report_user' %} active {% endif %}">
+                            <img src="{% static 'images/request.svg' %}" alt="">
+                            <li class="nav-bar-li">
+                                Renting Request
+                            </li>
+                        </a>
                     </ul>
                     {% endwith %}
                 </div>

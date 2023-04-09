@@ -156,3 +156,18 @@ class VehicleLocationDateFilter(forms.Form):
                 id.append(r.vehicle.id)
             queryset = queryset.all().exclude(id__in=id)
         return queryset
+
+sort_choices = (('ascending', 'ascending'),('descending', 'descending'))
+class VehicleSortForm(forms.Form):
+    sort_by = forms.ChoiceField(choices=sort_choices, required=True)
+
+    def sort_vehicle(self, queryset):
+        sort = self.cleaned_data['sort_by']
+
+        if sort:
+            if sort == 'ascending':
+                queryset = queryset.order_by('price')
+            else:
+                queryset = queryset.order_by('-price')
+
+        return queryset
