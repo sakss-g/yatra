@@ -25,6 +25,14 @@
                                 <span class="font-medium">Contact Number: </span><span>{{ hist.renter.phone_number }}</span>
                             </div>
                         </div>
+                        <div class="flex flex-row justify-between mb-4">
+                            <div>
+                                <span class="font-medium">Start Date: </span> {{ hist.start_date }} 
+                            </div>
+                            <div>
+                                <span class="font-medium">End Date: </span> {{ hist.end_date }} 
+                            </div>
+                        </div>
                         <div class="flex flex-row mb-4">
                             <div>
                                 <span class="font-medium">Number Plate: </span>{{ hist.vehicle.number_plate }}
@@ -49,11 +57,4 @@
         </div>
     </div>
 </div>
-    <!-- <div class="flex flex-col">
-    {% for hist in history %}
-            <div>
-                <a href="{% url 'view_profile_enduser' pk=hist.renter.id %}"><p>{{ hist.renter }}</p></a>
-                <p>{{ hist.vehicle }}</p></div>
-    {% endfor %}
-     </div> -->
 {% endblock %}

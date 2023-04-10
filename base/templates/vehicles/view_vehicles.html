@@ -8,14 +8,17 @@
 <div class="h-screen w-full px-6 py-10 bg-theme overflow-y-auto hide-scrolllbar">
     <div class="p-3 overflow-y-auto mt-24 scrollbar-hide">
         <p class="text-center text-3xl font-semibold pt-2 pb-4">All Vehicles</p>
-
+        <div class="w-5/6 px-12 flex flex-row justify-end mx-auto mb-4">
+            <form>
+                {% render_field form.sort_by class="rounded-md" %}
+                 <input type="submit" value="Sort" class="bg-custom-green px-8 py-2 text-white rounded mr-2"/>
+             </form>
+        </div>
+        
         <div class="w-4/5 mx-auto flex flex-wrap">
 
         {% if vehicle_list %}
-            <form>
-               {% render_field form.sort_by %}
-                <input type="submit" value="Sort"/>
-            </form>
+            
             {% for vehicle in vehicle_list %}
                 {% if vehicle.host %}
                 <div class="flex flex-col mx-auto rounded-lg bg-theme p-5 shadow-md text-lg mb-16 h-128" style="width:30%;">

@@ -46,21 +46,21 @@
                         <div class="text-xl text-dark-gray w-full">
                             <div class="flex flex-row mb-4">
                                 <div class="flex flex-col">
-                                    {% render_field form.first_name class="mr-5 input-fields" placeholder='First Name' %} 
+                                    {% render_field form.first_name class="mr-5 input-fields required" placeholder='First Name' %} 
                                 </div>
                                 
                                 <div class="flex flex-col">
-                                    {% render_field form.last_name  class="input-fields" placeholder='Last Name' %}
+                                    {% render_field form.last_name  class="input-fields required" placeholder='Last Name' %}
                                 </div>
                             </div>
                             <div class="flex flex-col">
-                                {% render_field form.phone_number class="input-fields" placeholder='Contact Number' %}  
+                                {% render_field form.phone_number class="input-fields required" placeholder='Contact Number' %}  
                                 
-                                {% render_field form.email class="input-fields mt-4" placeholder='Email' %}  
+                                {% render_field form.email class="input-fields mt-4 required" placeholder='Email' %}  
 
-                                <input type="password" name="password" class="input-fields mt-4" placeholder="Password"/>
+                                <input type="password" name="password" required class="input-fields mt-4" placeholder="Password"/>
 
-                                <input type="submit" value="Sign Up" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray "/>
+                                <input type="submit" value="Sign Up" class="bg-black text-white py-3 mt-5 rounded-md shadow-md shadow-dark-gray " required/>
                             </div>
                             
                         </div>

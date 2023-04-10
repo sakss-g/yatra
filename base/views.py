@@ -199,7 +199,7 @@ def vehicle_details(request, pk):
 
 # host related views
 def rent_request(request):
-    requests = RentRequest.objects.all()
+    requests = RentRequest.objects.filter(vehicle__host=request.user.host)
     context = {
         'requests':requests
     }
@@ -214,10 +214,13 @@ def approve_rent(request, rid):
     rent.end_date = req.end_date
     rent.save()
     req.delete()
+    messages.success(request, "Rent Request Approved")
+
     return redirect('rent_request')
 
 def reject_rent(request, rid):
     RentRequest.objects.get(id=rid).delete()
+    messages.success(request, "Rent Request Rejected")
     return redirect('rent_request')
 
 def register_host(request):
