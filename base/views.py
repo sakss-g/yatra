@@ -18,8 +18,9 @@ import requests
 import json
 from django.db.models import Sum, F, IntegerField, ExpressionWrapper, BigIntegerField, DurationField
 from django.db.models.functions import ExtractMonth
+from .decorators import admin_only, allowed_users
 
-
+@allowed_users(allowed_roles=['host'])
 @login_required
 def handle_payment(request):
     url = "https://a.khalti.com/api/v2/epayment/initiate/"
@@ -128,12 +129,9 @@ def vehicle_details(request, pk):
             dates.append((h.start_date + datetime.timedelta(days)).strftime("%Y-%m-%d"))
     if request.method == "POST":
         start_date = request.POST.get('start')
-        print(type(start_date))
-        print(start_date)
+
         end_date = request.POST.get('end')
-        print(end_date)
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        print(current_date)
         can_rent = True
         if request.user.is_anonymous or not request.user.enduser.is_approved:
             messages.error(request, "You need to be a verified user to rent")
@@ -197,6 +195,7 @@ def vehicle_details(request, pk):
     return render(request, 'vehicles/vehicle_detail.html', context)
 
 
+@allowed_users(allowed_roles=['host'])
 # host related views
 def rent_request(request):
     requests = RentRequest.objects.filter(vehicle__host=request.user.host)
@@ -205,6 +204,7 @@ def rent_request(request):
     }
     return render(request, 'host/rent_request.html', context)
 
+@allowed_users(allowed_roles=['host'])
 def approve_rent(request, rid):
     req = RentRequest.objects.get(id = rid)
     rent = Rents()
@@ -218,6 +218,7 @@ def approve_rent(request, rid):
 
     return redirect('rent_request')
 
+@allowed_users(allowed_roles=['host'])
 def reject_rent(request, rid):
     RentRequest.objects.get(id=rid).delete()
     messages.success(request, "Rent Request Rejected")
@@ -250,6 +251,7 @@ def register_host(request):
     return render(request, 'host/register_host.html', {'form':host_form})
 
 
+@allowed_users(allowed_roles=['host'])
 @login_required
 def host_dashboard(request):
 
@@ -269,11 +271,13 @@ def host_dashboard(request):
 
 
 @login_required
+@allowed_users(allowed_roles=['host'])
+
 def host_profile(request):
     return render(request, 'host/host_profile.html')
 
-
 @login_required
+@allowed_users(allowed_roles=['host'])
 def host_update_profile(request):
     host = request.user.host
     host_update_form = HostUpdateForm(instance=host)
@@ -291,7 +295,7 @@ def host_update_profile(request):
     }
     return render(request, 'host/host_update_profile.html', context)
 
-
+@allowed_users(allowed_roles=['host'])
 def host_upload_documents(request):
     host = request.user.host
     host_documents_form = HostDocumentsForm(instance=host)
@@ -311,7 +315,7 @@ def host_upload_documents(request):
     }
     return render(request, 'host/host_upload_documents.html', context)
 
-
+@allowed_users(allowed_roles=['host'])
 def host_vehicles(request):
     error = ''
     if request.GET.get('pidx') is not None:
@@ -338,7 +342,7 @@ def host_vehicles(request):
     }
     return render(request, 'vehicles/host_vehicles.html', context)
 
-
+@allowed_users(allowed_roles=['host'])
 def add_vehicles(request):
     vehicle_form = VehicleForm()
 
@@ -351,12 +355,14 @@ def add_vehicles(request):
             messages.success(request, 'Vehicle hosting requested.')
             return redirect('host_vehicles') 
         else:
+            print(vehicle_form.errors)
             messages.error(request, vehicle_form.errors)
     context = {
     'form': vehicle_form
     }
     return render(request, 'vehicles/add_vehicles.html', context)
 
+@allowed_users(allowed_roles=['host'])
 def update_vehicles(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
     vehicle_update_form = VehicleForm(instance=vehicle)
@@ -376,7 +382,7 @@ def update_vehicles(request, pk):
     }
     return render(request, 'vehicles/update_vehicles.html', context)
 
-
+@allowed_users(allowed_roles=['host'])
 def rented_history(request):
     history = Rents.objects.filter(vehicle__host=request.user.host)
     context = {
@@ -385,14 +391,14 @@ def rented_history(request):
 
     return render(request, 'host/rented_history.html', context)
 
-
+@allowed_users(allowed_roles=['host'])
 def delete_vehicles(request, pk):
     vehicle = Vehicle.objects.get(id=pk)
     vehicle.delete()
     messages.success(request, 'Vehicle deleted.')
     return redirect('host_vehicles')
 
-
+@admin_only
 def approve_vehicle(request, pk):
     if request.method == "POST":
         vehicle = Vehicle.objects.get(id=pk)
@@ -401,6 +407,7 @@ def approve_vehicle(request, pk):
         vehicle.save()
     return redirect('hosting_request')
 
+@admin_only
 def reject_vehicle(request, pk):
     if request.method == "POST":
         vehicle = Vehicle.objects.get(id=pk)
@@ -451,14 +458,19 @@ def register_enduser(request):
     return render(request, 'enduser/register_enduser.html', {'form':enduser_form})
 
 
+@allowed_users(allowed_roles=['enduser'])
 def enduser_dashboard(request):
     return render(request, 'enduser/enduser_dashboard.html')
 
 
+@login_required
+@allowed_users(allowed_roles=['enduser'])
 def enduser_profile(request):
     return render(request, 'enduser/enduser_profile.html')
 
 
+@login_required
+@allowed_users(allowed_roles=['enduser'])
 def enduser_update_profile(request):
     enduser = request.user.enduser
     enduser_update_form = EndUserUpdateForm(instance=enduser)
@@ -478,6 +490,8 @@ def enduser_update_profile(request):
     return render(request, 'enduser/enduser_update_profile.html', context)
 
 
+@login_required
+@allowed_users(allowed_roles=['enduser'])
 def enduser_upload_documents(request):
     enduser = request.user.enduser
     enduser_documents_form = EndUserDocumentsForm(instance=enduser)
@@ -497,6 +511,7 @@ def enduser_upload_documents(request):
     }
     return render(request, 'enduser/enduser_upload_documents.html', context)
 
+@allowed_users(allowed_roles=['enduser'])
 def renting_history(request):
     history = Rents.objects.filter(renter=request.user.enduser)
 
@@ -522,6 +537,7 @@ def privacy_policy(request):
     else:
         return render(request, 'base/privacypolicy.html', context)
 
+@admin_only
 def add_privacy_policy(request):
     form = PrivacyPolicyForm()
 
@@ -539,6 +555,8 @@ def add_privacy_policy(request):
     }
     return render(request, 'privacypolicy/add_privacypolicy.html', context)
 
+
+@admin_only
 def delete_privacy_policy(request, pk):
     PrivacyPolicy.objects.filter(id=pk).delete()
     messages.success(request, "Privacy policy deleted successfully.")
@@ -557,6 +575,7 @@ def terms_and_conditions(request):
         return render(request, 'base/termsandconditions.html', context)
 
 
+@admin_only
 def add_terms_and_conditions(request):
     form = TermsAndConditionsForm()
 
@@ -575,6 +594,8 @@ def add_terms_and_conditions(request):
     }
     return render(request, 'termsandconditions/add_termsandconditions.html', context)
 
+
+@admin_only
 def delete_terms_and_conditions(request, pk):
     TermsAndConditions.objects.filter(id=pk).delete()
     messages.success(request, "Terms and condition deleted successfully!")
@@ -593,6 +614,7 @@ def faqs(request):
         return render(request,'base/faqs.html', context)        
 
 
+@admin_only
 def add_faqs(request):
     form = FAQsForm()
 
@@ -611,6 +633,7 @@ def add_faqs(request):
     return render(request, 'faqs/add_faqs.html', context)
 
 
+@admin_only
 def delete_faq(request, pk):
     FAQs.objects.filter(id=pk).delete()
     messages.success(request, "FAQs deleted successfully!")
@@ -637,13 +660,14 @@ def view_transaction(request):
     return render(request, 'admin/all_transactions.html',  context)
 
 
+@admin_only
 def delete_user(request, pk):
     User.objects.filter(id=pk).delete()
     messages.success(request, 'User deleted successfully.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-
+@admin_only
 def admin_dashboard(request):
     hosts = Host.objects.all()
     endusers = EndUser.objects.all()
@@ -717,6 +741,7 @@ def admin_dashboard(request):
     return render(request, 'admin/admin_dashboard.html', context)
 
 
+@admin_only
 def end_users_admin(request):
     nameform = UserFilterForm(request.GET or None)
     if nameform.is_valid():
@@ -749,6 +774,7 @@ def end_users_admin(request):
     return render(request, 'enduser/endusers_admin.html', context)
 
 
+@admin_only
 def hosts_admin(request):
     nameform = UserFilterForm(request.GET or None)
     if nameform.is_valid():
@@ -781,6 +807,7 @@ def hosts_admin(request):
     return render(request, 'host/hosts_admin.html', context)
 
 
+@admin_only
 def verify_user(request):
     unverified_hosts = Host.objects.filter(is_approved="Pending")
     unverified_endusers = EndUser.objects.filter(is_approved="Pending")
@@ -814,6 +841,8 @@ def open_citizenship(request, pk):
     citizenship = Host.objects.get(id=pk).citizenship.path
     return FileResponse(open(citizenship, 'rb'))    
 
+
+@admin_only
 def approve_host(request, pk):
     if request.method == "POST":
         host = Host.objects.get(id=pk)
@@ -823,6 +852,7 @@ def approve_host(request, pk):
         return redirect('verify_user')
 
 
+@admin_only
 def reject_host(request,pk):
     if request.method == "POST":
         host = Host.objects.get(id=pk)
@@ -832,6 +862,7 @@ def reject_host(request,pk):
         return redirect('verify_user')
 
 
+@admin_only
 def approve_enduser(request, pk):
     if request.method == "POST":
         enduser = EndUser.objects.get(id=pk)
@@ -841,6 +872,7 @@ def approve_enduser(request, pk):
         return redirect('verify_user')
 
 
+@admin_only
 def reject_enduser(request,pk):
     if request.method == "POST":
         enduser = EndUser.objects.get(id=pk)
@@ -850,6 +882,7 @@ def reject_enduser(request,pk):
         return redirect('verify_user')
 
 
+@admin_only
 def hosting_request(request):
     form = StatusFilterForm(request.GET or None)
     if form.is_valid():
@@ -868,6 +901,7 @@ def hosting_request(request):
     return render(request, 'admin/hosting_request.html',context)
 
 
+@admin_only
 def approve_travelogue(request, pk):
     if request.method == "POST":
         travelogue = Travelogue.objects.get(id=pk)
@@ -877,6 +911,7 @@ def approve_travelogue(request, pk):
     return redirect('verify_travelogue')
 
 
+@admin_only
 def reject_travelogue(request, pk):
     if request.method == "POST":
         travelogue = Travelogue.objects.get(id=pk)
@@ -886,6 +921,7 @@ def reject_travelogue(request, pk):
     return redirect('verify_travelogue')
 
 
+@admin_only
 def verify_travelogues(request):
     form = StatusFilterForm(request.GET or None)
     if form.is_valid():
@@ -903,6 +939,7 @@ def verify_travelogues(request):
     return render(request, 'admin/verify_travelogues.html',context)
 
 
+@admin_only
 def view_reports(request):
     form = ReportFilterForm(request.GET or None)
     if form.is_valid():
@@ -993,6 +1030,7 @@ def read_travelogue(request, pk):
     return render(request, 'travelogues/read_travelogues.html', context)
 
 
+@allowed_users(allowed_roles=['enduser'])
 def submit_travelogue(request):
     submit_travelogue_form = SubmitTravelogueForm()
 
@@ -1005,6 +1043,7 @@ def submit_travelogue(request):
             messages.success(request, 'Travelogue uploaded.')
             return redirect('travelogues_uploaded') 
         else:
+            print(submit_travelogue_form.errors)
             messages.error(request, submit_travelogue_form.errors)
     context = {
     'form': submit_travelogue_form
@@ -1012,6 +1051,7 @@ def submit_travelogue(request):
     return render(request, 'travelogues/submit_travelogue.html', context)
 
 
+@allowed_users(allowed_roles=['enduser'])
 def travelogues_uploaded(request):
     travelogues = Travelogue.objects.filter(enduser=request.user.enduser)
     context = {
@@ -1025,7 +1065,7 @@ def open_travelogue(request, pk):
     return FileResponse(open(travelogue, 'rb'))
 
 
-#userprofile
+@allowed_users(allowed_roles=['host'])
 def view_profile_enduser(request, pk):
     enduser = EndUser.objects.get(id=pk)
     renthistory = Rents.objects.filter(renter=enduser, vehicle__host=request.user.host)    
@@ -1035,6 +1075,7 @@ def view_profile_enduser(request, pk):
     }
     return render(request, 'host/enduser_profile.html', context)
 
+@allowed_users(allowed_roles=['enduser'])
 def view_profile_host(request, pk, fk):
     host = Host.objects.get(id=pk)
     vehicles = Vehicle.objects.filter(host=host)
@@ -1074,7 +1115,9 @@ def report_user(request, to):
                 return redirect('rented_history')
             elif request.user.groups.filter(name='enduser').exists():
                 return redirect('renting_history')
-
+        else:
+            print(reportform.errors)
+            messages.error(request, reportform.errors)
     context = {
         'form':reportform
     }
@@ -1087,7 +1130,7 @@ def rate_rent(request, pk):
         rate = form.save(commit=False)
         rate.rent = rent
         rate.save()
-        messages.success(request, 'Vehicle Rented')
+        messages.success(request, 'Vehicle Rated')
     else:
         messages.error(request, form.errors)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -8,6 +8,8 @@
 {% if error %}
 <p>{{error}}</p>
 {% endif %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 <div class="h-screen w-full px-6 py-10 bg-theme">
     <div class="bg-white h-full flex flex-col shadow-xl ">
         <div class="p-3 overflow-y-auto scrollbar-hide">
@@ -19,7 +21,7 @@
                     <div class="flex justify-between mt-4">
                         <div class="flex flex-col mt-4 w-80">
                             <label class="mb-2">Number Plate</label>
-                            {% render_field form.number_plate class="input-fields w-full"  %}
+                            {% render_field form.number_plate class="input-fields w-full required"  %}
                         </div>
                         <div class="flex flex-col mt-4 w-80">
                             <label class="mb-2">Location </label>
@@ -29,11 +31,11 @@
                     <div class="flex justify-between">
                         <div class="flex flex-col mt-4 w-80">
                             <label class="mb-2">Bluebook ID</label>
-                            {% render_field form.bluebook_id class="input-fields w-full" %}
+                            {% render_field form.bluebook_id class="input-fields w-full required" %}
                         </div>
                         <div class="flex flex-col mt-4 w-80">
                             <label class="mb-2">Type</label>
-                            {% render_field form.type class="input-fields w-full" %}
+                            {% render_field form.type class="input-fields w-full required" %}
                         </div>
                         
                     </div>
@@ -55,7 +57,7 @@
                             {% render_field form.image1 class="required" %}
                             {% render_field form.image2 class="required" %}
                         </div>
-                        {% render_field form.image3 class="mb-4 required" %}
+                        {% render_field form.image3 class="mb-4" %}
                     </div>
 
 

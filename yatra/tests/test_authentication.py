@@ -2,12 +2,13 @@ from django.test import TestCase
 from base.models import Host, EndUser
 from django.contrib.auth.models import User, Group
 from django.urls import reverse
+from django.shortcuts import reverse
 
 
 class AuthenticationTestCase(TestCase):
     def setUp(self):
         # create test user 1
-        self.group1 = Group.objects.create(name='hosts')
+        self.group1 = Group.objects.create(name='host')
         user1 = User.objects.create_user(username="testhost1", password="testhost1")
         user1.groups.add(self.group1)
         user1.save()
@@ -22,7 +23,7 @@ class AuthenticationTestCase(TestCase):
         self.assertEqual(self.host.user, user1)
 
         # create test user 2
-        self.group2 = Group.objects.create(name='endusers')
+        self.group2 = Group.objects.create(name='enduser')
         user2 = User.objects.create_user(username="testenduser1", password="testenduser1")
         user1.groups.add(self.group2)
         user2.save()
@@ -86,8 +87,10 @@ class AuthenticationTestCase(TestCase):
                             "phone_number" : "models",
                             "password":"password123"}
                          )
-        self.assertTemplateUsed(response, 'host/register_host.html')
-        self.assertEqual(response.status_code, 200)
+        print(response)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
 
 
     def test_register_enduser(self):
@@ -98,8 +101,9 @@ class AuthenticationTestCase(TestCase):
                                           "phone_number": "models",
                                           "password": "password123"}
                                     )
-        self.assertTemplateUsed(response, 'enduser/register_enduser.html')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+
 
 
 

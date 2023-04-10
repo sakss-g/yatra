@@ -86,7 +86,7 @@ class Vehicle(models.Model):
     image2 = models.ImageField(upload_to="host/vehicle")
     image3 = models.ImageField(upload_to="host/vehicle", null=True, blank=True)
     description = models.TextField(max_length=500)
-    feature = models.TextField(max_length=500)
+    feature = RichTextField(config_name='awesome_ckeditor2')
     price = models.PositiveIntegerField() 
     type = models.CharField(max_length=10, choices=types)
     is_approved = models.CharField(max_length=10, choices=status, default="Pending")

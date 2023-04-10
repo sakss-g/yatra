@@ -39,8 +39,8 @@
                         <td>{{user.first_name}} {{user.last_name}}</td>
                         <td>{{user.email}}</td>
                         <td>{% if user.phone_number %}{{user.phone_number}}{% else %}N/A{% endif %}</td>
-                        <td>{% if user.citizenship_id %}{{user.citizenship_id}}{% else %}N/A{% endif %}</td>
                         <td>{% if user.license_no %}{{user.license_no}}{% else %}N/A{% endif %}</td>
+                        <td>{% if user.citizenship_id %}{{user.citizenship_id}}{% else %}N/A{% endif %}</td>
                         <td>
                             <div class="flex flex-row justify-around">
                                 <a href="{% url 'delete_user' user.user.id %}" onclick="return ConfirmDelete()">
