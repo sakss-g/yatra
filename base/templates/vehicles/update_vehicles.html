@@ -5,9 +5,8 @@
 {% block title%} Update Vehicles {% endblock title%}
 
 {% block content %}
-{% if error %}
-<p>{{error}}</p>
-{% endif %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 <div class="h-screen w-full px-6 py-10 bg-theme">
     <div class="bg-white h-full flex flex-col shadow-xl ">
         <div class="p-3 overflow-y-auto scrollbar-hide">

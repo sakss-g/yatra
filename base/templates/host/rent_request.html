@@ -40,8 +40,8 @@
                                 </div>
                             </div>
                             <div class="flex flex-row mb-4 w-full justify-end">
-                                <a href="{% url 'approve_rent' req.id %}" class="bg-custom-green px-6 py-1.5 rounded text-white">Approve</a>
-                                <a href="{% url 'reject_rent' req.id %}" class="bg-danger px-6 py-1.5 rounded ml-4 text-white">Reject</a>
+                                <a href="{% url 'approve_rent' req.id %}" class="bg-custom-green px-6 py-1.5 rounded text-white" onclick="return ConfirmApprove()">Approve</a>
+                                <a href="{% url 'reject_rent' req.id %}" class="bg-danger px-6 py-1.5 rounded ml-4 text-white" onclick="return ConfirmReject()">Reject</a>
                             </div>
                         </div>
                     </div>
@@ -50,4 +50,12 @@
         </div>
     </div>
 </div>
+<script>
+    function ConfirmApprove() {
+      return confirm("Are you sure you want to approve rent?");
+    }
+    function ConfirmReject() {
+      return confirm("Are you sure you want to reject rent?");
+    }
+</script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser, Transaction, RateRent,FAQs, TermsAndConditions, PrivacyPolicy
+from .models import Host, EndUser, Vehicle, Rents, Travelogue, ReportUser, Transaction, RateRent,FAQs, TermsAndConditions, PrivacyPolicy, RentRequest
 
 # Register your models here.
 admin.site.register(Host)
@@ -13,3 +13,4 @@ admin.site.register(RateRent)
 admin.site.register(FAQs)
 admin.site.register(TermsAndConditions)
 admin.site.register(PrivacyPolicy)
+admin.site.register(RentRequest)

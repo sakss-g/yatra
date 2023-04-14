@@ -140,24 +140,26 @@ def vehicle_details(request, pk):
         elif end_date <= start_date:
             messages.error(request, "End Date cannot be before Start Date")
         elif vehicle.is_rented:
+            sd = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+            ed = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+            date_range2 = ed -sd
             for hist in history:
-                sd = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-                ed = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
                 date_range1 = hist.end_date - hist.start_date
-                date_range2 = ed -sd
-
                 if date_range1.days > date_range2.days:
-                    for days in range(0, date_range1.days+1):
-                        if ed == hist.start_date + datetime.timedelta(days) or sd == hist.start_date + datetime.timedelta(days):
+                    range1 = [hist.start_date+datetime.timedelta(x) for x in range(0, date_range1.days+1)]
+                    for days in range(0, date_range2.days+1):
+                        if sd+datetime.timedelta(days) in range1:
                             messages.error(request, "Vehicle already booked for this date range!!!")
                             can_rent = False
                             break
                 else:
+                    range2 = [sd+datetime.timedelta(x) for x in range(0, date_range2.days+1)]
                     for days in range(0, date_range2.days+1):
-                        if hist.start_date == sd+datetime.timedelta(days) or hist.end_date == sd+datetime.timedelta(days):
+                        if hist.start_date+datetime.timedelta(days) in range2:
                             messages.error(request, "Vehicle already booked for this date range!!!")
                             can_rent = False
                             break
+
                 if not can_rent:
                     break
 
@@ -212,6 +214,9 @@ def approve_rent(request, rid):
     rent.vehicle = req.vehicle
     rent.start_date = req.start_date
     rent.end_date = req.end_date
+    vehicle = req.vehicle
+    vehicle.is_rented = True
+    vehicle.save()
     rent.save()
     req.delete()
     messages.success(request, "Rent Request Approved")
@@ -885,12 +890,15 @@ def reject_enduser(request,pk):
 @admin_only
 def hosting_request(request):
     form = StatusFilterForm(request.GET or None)
+    print(Vehicle.objects.filter(is_approved="Rejected"))
     if form.is_valid():
         filter=request.GET.get('is_approved')
         unverified_vehicles = form.filter_report(Vehicle.objects.all())
     else:
         filter='Pending'
         unverified_vehicles = Vehicle.objects.filter(is_approved='Pending')
+    
+    print(unverified_vehicles)
     
     context = {
         'unverified_vehicles': unverified_vehicles ,
