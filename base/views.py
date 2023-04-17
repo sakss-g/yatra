@@ -83,7 +83,7 @@ def login_user(request):
                     messages.error(request, "User group was not found")
                     return render(request, 'base/login.html')
         else:
-            messages.error(request, "User was not found")
+            messages.error(request, "Incorrect email or password")
             return render(request, 'base/login.html')
     return render(request, 'base/login.html')
 
@@ -402,6 +402,27 @@ def delete_vehicles(request, pk):
     vehicle.delete()
     messages.success(request, 'Vehicle deleted.')
     return redirect('host_vehicles')
+
+@admin_only
+def hosting_request(request):
+    form = StatusFilterForm(request.GET or None)
+    print(Vehicle.objects.filter(is_approved="Rejected"))
+    if form.is_valid():
+        filter=request.GET.get('is_approved')
+        unverified_vehicles = form.filter_report(Vehicle.objects.all())
+    else:
+        filter='Pending'
+        unverified_vehicles = Vehicle.objects.filter(is_approved='Pending')
+    
+    print(unverified_vehicles)
+    
+    context = {
+        'unverified_vehicles': unverified_vehicles ,
+        'filter': filter,
+        'form': form
+    }
+
+    return render(request, 'admin/hosting_request.html',context)
 
 @admin_only
 def approve_vehicle(request, pk):
@@ -887,26 +908,7 @@ def reject_enduser(request,pk):
         return redirect('verify_user')
 
 
-@admin_only
-def hosting_request(request):
-    form = StatusFilterForm(request.GET or None)
-    print(Vehicle.objects.filter(is_approved="Rejected"))
-    if form.is_valid():
-        filter=request.GET.get('is_approved')
-        unverified_vehicles = form.filter_report(Vehicle.objects.all())
-    else:
-        filter='Pending'
-        unverified_vehicles = Vehicle.objects.filter(is_approved='Pending')
-    
-    print(unverified_vehicles)
-    
-    context = {
-        'unverified_vehicles': unverified_vehicles ,
-        'filter': filter,
-        'form': form
-    }
 
-    return render(request, 'admin/hosting_request.html',context)
 
 
 @admin_only

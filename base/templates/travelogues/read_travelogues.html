@@ -103,7 +103,7 @@
             <p class="text-xl text-center font-medium pt-2 pb-4">{{ travelogue.title }}</p>
         </div>
         <div class="flex flex-col mt-8">
-            {{ travelogue.description }}
+            {{ travelogue.description |safe }}
         </div>
     </div>
 </div>
