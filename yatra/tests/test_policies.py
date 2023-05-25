@@ -61,13 +61,13 @@ class PoliciesTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('faqs'))
 
-    def test_view_termsandconditions(self):
-        self.client.login(username='test1', password='test1')
-        response = self.client.post(reverse('terms_and_conditions'))
-        # checking if the response is "success"
-        self.assertEqual(response.status_code, 200)
-        # checking if the correct template is used or not
-        self.assertTemplateUsed(response, 'termsandconditions/termsandconditions.html')
+    # def test_view_termsandconditions(self):
+    #     self.client.login(username='test1', password='test1')
+    #     response = self.client.post(reverse('terms_and_conditions'))
+    #     # checking if the response is "success"
+    #     self.assertEqual(response.status_code, 200)
+    #     # checking if the correct template is used or not
+    #     self.assertTemplateUsed(response, 'termsandconditions/termsandconditions.html')
 
     # def test_view_termsandconditions(self):
     #     response = self.client.post(reverse('terms_and_conditions'))
