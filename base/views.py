@@ -375,7 +375,9 @@ def update_vehicles(request, pk):
     if request.method == "POST":
         vehicle_update_form = VehicleForm(request.POST, request.FILES, instance=vehicle)
         if vehicle_update_form.is_valid():
-            vehicle_update_form.save()
+            v = vehicle_update_form.save(commit=False)
+            v.is_approved ='Pending'
+            v.save()
             messages.success(request, 'Vehicle Updated.')
             return redirect('host_vehicles')
         else:

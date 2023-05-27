@@ -48,7 +48,7 @@
                         {% render_field form.feature class="input-fields resize-none w-full required" rows="4" %}
 
                         <lable class="mb-2 mt-4">Hosting Price Per day</lable>
-                        {% render_field form.price class="required input-fields" %}
+                        {% render_field form.price class="required input-fields" pattern="^([1-9]\d{3}|10(?:[0-9]{2}|00))" %}
 
                         <label  class="mb-2 mt-4">Vehicle Images</label>
                         <div class="flex flex-row w-full mb-4 justify-between">

@@ -6,22 +6,23 @@
 {% block title%} Terms and Conditions{% endblock title%}
 
 {% block content %}
-<div class="h-screen w-full px-6 py-10  bg-theme ">
+<div class="h-screen w-full px-6 py-10  bg-theme">
     <p class="text-center text-3xl font-semibold pb-4 mt-24">Terms and Conditions</p>
 
     <div class="w-4/5 mx-auto mt-4 p-3 items-center overflow-y-auto hide-scrollbar">
-    {% for terms_and_condition in terms_and_conditions %}
-    <div class="w-3/5 flex flex-col mx-auto rounded-lg   p-5 text-lg">
-        <details>
-            <summary class="font-medium mb-4">
-                {{ forloop.counter }}. &nbsp; &nbsp;{{ terms_and_condition.term }}
-            </summary>
-            <div>
-                <span class="font-medium">&nbsp;&nbsp; &rarr; &nbsp; &nbsp;</span>{{ terms_and_condition.explanation }}
-            </div>
-        </details>
+        {% for terms_and_condition in terms_and_conditions %}
+        <div class="w-3/5 flex flex-col mx-auto rounded-lg   p-5 text-lg">
+            <details>
+                <summary class="font-medium mb-4">
+                    {{ forloop.counter }}. &nbsp; &nbsp;{{ terms_and_condition.term }}
+                </summary>
+                <div>
+                    <span class="font-medium">&nbsp;&nbsp; &rarr; &nbsp; &nbsp;</span>{{ terms_and_condition.explanation }}
+                </div>
+            </details>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
-</div>
+
 {% endblock content %}

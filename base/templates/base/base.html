@@ -137,7 +137,7 @@
                 
                 <div class="flex flex-row absolute bottom-0 justify-evenly py-3 px-4 w-full">
                     <a href="{% url 'enduser_profile' %}" class=" ">
-                        <img src="{% static 'images/default_profile.jpg' %}" style="object-fit: contain" alt="" class="w-20 h-20 object-cover rounded-full ">
+                        <img src="{{ user.enduser.pic.url }}" style="object-fit: contain" alt="" class="w-20 h-20 object-cover rounded-full ">
                     </a>
     
                     <div class="flex flex-col px-8 justify-evenly">
@@ -200,7 +200,7 @@
                 
                 <div class="flex flex-row absolute bottom-0 justify-evenly py-3 px-4 w-full">
                     <a href="{% url 'host_profile' %}" class=" ">
-                        <img src="{% static 'images/default_profile.jpg' %}" style="object-fit: contain" alt="" class="w-20 h-20 object-cover rounded-full ">
+                        <img src="{{ user.host.pic.url }}" style="object-fit: contain" alt="" class="w-20 h-20 object-cover rounded-full ">
                     </a>
     
                     <div class="flex flex-col px-8 justify-evenly">
